@@ -1,14 +1,14 @@
-/config.php
-/config_override.php
+config.php
+config_override.php
 
-/.htaccess
-/cache/
+.htaccess
+cache/
 
-/custom/history/
-/custom/modulebuilder/
-/custom/working/
-/custom/modules/*/Ext/
-/custom/application/Ext/
+custom/history/
+custom/modulebuilder/
+custom/working/
+custom/modules/*/Ext/
+custom/application/Ext/
 
 # The silent upgrade scripts aren't needed.
 /silentUpgrade*.php
@@ -16,7 +16,7 @@
 *.log
 
 /upload/*
-/upload_backup/
+
 !/upload/.gitkeep
 
 portal2/config.js
