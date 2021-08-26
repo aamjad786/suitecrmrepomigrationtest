@@ -127,7 +127,7 @@ class SugarApplication
 
         $authController = new AuthenticationController();
 
-        if (($user_unique_key != $server_unique_key) && (!in_array($this->controller->action, $allowed_actions)) &&
+       /* if (($user_unique_key != $server_unique_key) && (!in_array($this->controller->action, $allowed_actions)) &&
                 (!isset($_SESSION['login_error']))) {
             session_destroy();
 
@@ -156,7 +156,7 @@ class SugarApplication
             }
 
             $authController->authController->redirectToLogin($this);
-        }
+        }*/
 
         $GLOBALS['current_user'] = BeanFactory::newBean('Users');
         if (isset($_SESSION['authenticated_user_id'])) {
@@ -169,9 +169,10 @@ class SugarApplication
                 die();
             }//fi
         } elseif (!($this->controller->module == 'Users' && in_array($this->controller->action, $allowed_actions))) {
-            session_destroy();
-            SugarApplication::redirect('index.php?action=Login&module=Users');
-            die();
+           // session_destroy();
+           // SugarApplication::redirect('index.php?action=Login&module=Users');
+           // die();
+           $authController->authController->pre_login();
         }
         $GLOBALS['log']->debug('Current user is: ' . $GLOBALS['current_user']->user_name);
 

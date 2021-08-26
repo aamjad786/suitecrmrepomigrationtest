@@ -63,7 +63,8 @@ class Configurator
         'enable_line_editing_list',
         'enable_line_editing_detail',
         'hide_subpanels',
-        'stackTrace'
+        'stackTrace',
+        'CAS_host', 'CAS_port', 'CAS_context'
     ];
     public $errors = array('main' => '');
     public $logger = null;
