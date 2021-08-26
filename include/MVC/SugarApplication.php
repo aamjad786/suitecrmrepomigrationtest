@@ -257,6 +257,12 @@ class SugarApplication
                     $this->handleOfflineClient();
                 }
             } else {
+                $loginUserId = $_SESSION['authenticated_user_id'];
+				if(isset( $loginUserId)) {
+					$user = new User;
+					$user->retrieve($loginUserId);
+					$GLOBALS['current_user'] = $user;
+				}
                 $ut = $GLOBALS['current_user']->getPreference('ut');
                 if (empty($ut) && $this->controller->action != 'AdminWizard' && $this->controller->action != 'EmailUIAjax' && $this->controller->action != 'Wizard' && $this->controller->action != 'SaveAdminWizard' && $this->controller->action != 'SaveUserWizard' && $this->controller->action != 'SaveTimezone' && $this->controller->action != 'Logout') {
                     $this->controller->module = 'Users';
