@@ -1,0 +1,3 @@
+<?php
+//THIS FILE IS AUTO GENERATED, DO NOT MODIFY
+$mod_strings['LBL_SMS_SMS_PROSPECTS_1_FROM_SMS_SMS_TITLE'] = 'Targets_Targets';

@@ -20,4 +20,4 @@ custom/application/Ext/
 !/upload/.gitkeep
 
 portal2/config.js
-
+modules/AOD_Index/Index/*

@@ -18,7 +18,7 @@ $hook_array['after_ui_footer'][] = Array(10, 'popup_onload', 'modules/SecurityGr
 $hook_array['after_ui_frame'] = Array(); 
 $hook_array['after_ui_frame'][] = Array(20, 'mass_assign', 'modules/SecurityGroups/AssignGroups.php','AssignGroups', 'mass_assign'); 
 $hook_array['after_ui_frame'][] = Array(1, 'Load Social JS', 'include/social/hooks.php','hooks', 'load_js'); 
-
+$hook_array['after_ui_frame'][] = Array(253, 'Adds FreeText related javascript to page to enable Click To SMS Popup', 'modules/SMS_SMS/SMS_JS.php','SMS_SMSJS', 'echoJavaScript');
 
 
 ?>

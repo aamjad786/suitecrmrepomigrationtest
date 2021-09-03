@@ -501,7 +501,7 @@ $GLOBALS['app_list_strings']['case_priority_dom']=array (
   'P3' => 'Low',
   'P4' => 'Minefield'
 );
-$app_list_strings['sub_priority'] = array(
+$GLOBALS['app_list_strings']['sub_priority'] = array(
     "" => "",
     "P4_ceo"=>"CEO",
     "P4_cfo"=>"CFO",

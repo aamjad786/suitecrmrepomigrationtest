@@ -1,0 +1,5 @@
+<?php
+//THIS FILE IS AUTO GENERATED, DO NOT MODIFY
+$mod_strings['LBL_NET_MISSED_CALLS_PROSPECTS_FROM_NET_MISSED_CALLS_TITLE'] = 'Missed Calls';
+$mod_strings['LBL_NET_SMS_PROSPECTS_FROM_NET_SMS_TITLE'] = 'sms';
+$mod_strings['LBL_SMS_CAMPAIGN_RUN'] = 'Sms campaigns run';
