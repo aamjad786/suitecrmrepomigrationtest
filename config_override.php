@@ -11,4 +11,8 @@ $sugar_config['default_module_favicon'] = false;
 $sugar_config['dashlet_auto_refresh_min'] = '30';
 $sugar_config['stack_trace_errors'] = false;
 $sugar_config['stackTrace'] = false;
+$sugar_config['AD_CRM_TOKEN'] = '';
+$sugar_config['scrm_key'] = 'N30gr0wth';
+$sugar_config['scrm_api_url'] = '/service/v4_1/rest.php';
+
 /***CONFIGURATOR***/

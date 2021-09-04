@@ -96,7 +96,8 @@ if (function_exists('spl_autoload_register')) {
      *
      * @return bool
      */
-    function __autoload($class)
+    // Solved DEprecated warning: Deprecated: __autoload() is deprecated, use spl_autoload_register() instead 
+    function spl_autoload_register($class)
     {
         return CAS_autoload($class);
     }
