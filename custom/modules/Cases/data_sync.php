@@ -419,7 +419,7 @@ class DataSync{
 
     //Return 1 on success, 0 on failure
     private function sendnetcore($tag_name,$to,$message,$bean){
-        require_once('SendSMS.php');    
+        require_once('custom/include/SendSMS.php');    
         $sms = new SendSMS();
         $sms->send_sms_to_user($tag_name,$to, $message, $bean);
 

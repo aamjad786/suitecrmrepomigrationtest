@@ -166,7 +166,7 @@ if (isset ( $_REQUEST ['option'] )) {
 			$to = $_REQUEST["to"];
 			$message = $_REQUEST['sms'];
 			if(!empty($to) && !empty($message)){
-				require_once('SendSMS.php');
+				require_once('custom/include/SendSMS.php');
 				$send_sms = new SendSMS();
 				echo $send_sms->send_sms_to_user($tag_name="Cust_CRM_40",$to, $message, null, 'scrm_Custom_Reports');
 			}

@@ -18,7 +18,7 @@ class Escalation_Functions{
 	    return $user;
 	}
     function sendUpdateSms($message){
-        require_once('SendSMS.php');
+        require_once('custom/include/SendSMS.php');
         $env = getenv('SCRM_ENVIRONMENT');
         $myfile = fopen("Logs/CasesEscalationMail.log", "a");
         $sms = new SendSMS();
@@ -36,7 +36,7 @@ class Escalation_Functions{
     }
 
     function sendUpdateEmail($body){
-    	require_once('SendEmail.php');
+    	require_once('custom/include/SendEmail.php');
     	$myfile = fopen("Logs/CasesEscalationMail.log", "a");
         //Send email to the service manager.
         $emailId = $userData->email1;

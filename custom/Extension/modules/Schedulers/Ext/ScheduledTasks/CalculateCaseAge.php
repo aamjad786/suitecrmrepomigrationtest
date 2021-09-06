@@ -240,7 +240,7 @@ function sendIterimResponse($item) {
     if (!empty($item)) {
         require_once('include/entryPoint.php');
         require_once('custom/include/SendEmail.php');
-        require_once 'SendSMS.php';
+        require_once 'custom/include/SendSMS.php';
         $env = getenv('SCRM_ENVIRONMENT');
         $merchantEmailId = $item->merchant_email_id_c;
         if (!empty($merchantEmailId)) {
