@@ -16,7 +16,7 @@
  ?>
 <html>
     <head>
-
+	
     </head> 
     <body>
    <!--   <h2>List Of Reports</h2>-->
@@ -27,7 +27,7 @@
 				<td>
 						<table  cellspacing="10" cellpadding="0" border="0" >  
 							   
-							 	  <th><h2>Reports</h2></th> 
+							 	  <th><h2 style="color:black">Reports</h2></th> 
 							 	  <?php if ($is_admin ){ ?> 
 								<tr class="oddListRowS1" height="20">
 									<td class="nowrap" width="1%">
@@ -85,7 +85,7 @@
 									<a target="_blank" style="text-decoration: none" href="?module=scrm_Custom_Reports&action=LeadSourceReport"><span style ="font-family: Arial;font-size:14px;" ><b>11. Lead Source Report</b></span></a> 
 									</td>
 								</tr>
-								<th><h2>Custom modules</h2></th>  
+								<th><h2 style="color:black">Custom modules</h2></th>  
 								<tr class="oddListRowS1" height="20">
 									<td class="nowrap" width="1%">
 									<a target="_blank" style="text-decoration: none" href="?module=scrm_Custom_Reports&action=fileUpload"><span style ="font-family: Arial;font-size:14px;" ><b>1.Csv File Upload </b></span></a> 
@@ -110,7 +110,7 @@
 							<?php } 
 							if($is_admin || in_array('Paylater Admin',$roles)){
 							?>
-								<th><h2>Paylater Reports</h2></th>  
+								<th><h2 style="color:black">Paylater Reports</h2></th>  
 								<tr class="oddListRowS1" height="20">
 									<td class="nowrap" width="1%">
 									<a target="_blank" style="text-decoration: none" href="?module=scrm_Custom_Reports&action=PL1Report"><span style ="font-family: Arial;font-size:14px;" ><b>1. Partner Wise Summary </b></span></a> 
@@ -134,7 +134,7 @@
 							<?php } 
 							if($is_admin || $is_renewal_user){
 							?>
-								<th><h2>Renewals Reports</h2></th>  
+								<th><h2 style="color:black">Renewals Reports</h2></th>  
 								<tr class="oddListRowS1" height="20">
 									<td class="nowrap" width="1%">
 									<a target="_blank" style="text-decoration: none" href="?module=scrm_Custom_Reports&action=RenewalCustomerReport"><span style ="font-family: Arial;font-size:14px;" ><b>1. Renewals Customer Reports </b></span></a> 
@@ -144,7 +144,7 @@
 							}
 							if($is_admin || (in_array('Customer support executive',$roles))) {
 								?>
-								<th><h2>Customer Support Reports</h2></th>  
+								<th><h2 style="color:black">Customer Support Reports</h2></th>  
 								<tr class="oddListRowS1" height="20">
 									<td class="nowrap" width="1%">
 									<a target="_blank" style="text-decoration: none" href="?module=scrm_Custom_Reports&action=CallsReport"><span style ="font-family: Arial;font-size:14px;" ><b>1. Calls Reports </b></span></a> 

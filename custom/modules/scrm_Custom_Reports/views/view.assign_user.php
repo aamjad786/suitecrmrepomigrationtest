@@ -287,7 +287,7 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
             echo "<p><b>NGID:</b> $userBean->user_name</p>";
             echo "<p><b>Name: </b>$userBean->name</p>";
             echo "<p><b>Reports to: </b>$userBean->reports_to_name</p>";
-            echo "<p><b>Designation: </b>$userBean->designation</p>";
+            echo "<p><b>Designation: </b>$userBean->designation_c</p>";
             echo "<p><b>Department: </b>$userBean->department</p>";
             if (!empty($userBean->email1)) {
                 echo "<p><b>E-mail: </b>$userBean->email1</p>";

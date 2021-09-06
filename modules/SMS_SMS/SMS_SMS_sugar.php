@@ -60,9 +60,13 @@ class SMS_SMS_sugar extends Basic {
 		var $msg_response;
 		var $delivery_status;
 			var $disable_row_level_security = true;
-		function SMS_SMS_sugar(){	
+
+	public function __construct()
+	{
+		parent::__construct();
 		parent::Basic();
 	}
+			
 	
 	function bean_implements($interface){
 		switch($interface){

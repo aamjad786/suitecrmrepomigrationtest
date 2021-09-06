@@ -62,24 +62,7 @@
                             {$EMAIL_LINK_TYPE}
                         </td>
                     </tr>
-                    {if !$HIDE_IF_CAN_USE_DEFAULT_OUTBOUND}
-                    <tr>
-                        <td scope="row" width="15%">
-                            {$MOD.LBL_EMAIL_PROVIDER|strip_semicolon}:
-                        </td>
-                        <td width="35%">
-                            {$mail_smtpserver}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="top"  scope="row">
-                            {$MOD.LBL_MAIL_SMTPUSER|strip_semicolon}:
-                        </td>
-                        <td width="35%">
-                            {$mail_smtpuser}
-                        </td>
-                    </tr>
-                    {/if}
+                   
                 </table>
             </div>
         </div>

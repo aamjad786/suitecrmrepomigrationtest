@@ -13,23 +13,6 @@ global $db, $sugar_config;
 $scrm_key = $sugar_config['scrm_key'];
 $url      = $sugar_config['scrm_api_url'];
 
-// use Psr\Http\Message\RequestInterface;
-// use Psr\Http\Message\ResponseInterface;
-// use Psr\Http\Message\UriInterface;
-// use GuzzleHttp\Client;
-
-// $restClient = new GuzzleHttp\Client([
-//     'base_uri' => $url,
-//     'defaults' => [
-//         'auth'    => [$_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']]
-//     ],
-//     'verify' => false
-// ]);
-
-// $onRedirect = function(RequestInterface $request, ResponseInterface $response,UriInterface $uri) {
-//    $GLOBALS['log']->debug('Redirecting! ' . $request->getUri() . ' to ' . $uri );
-// };
-
 $apiModule = array(
     'Target',
     'Lead',
@@ -98,6 +81,8 @@ if ($action == 'Audit') {
 else
 if ($module == "Lead" && $action == 'Create') {
    
+    $GLOBALS['log']->debug('================>'.var_export($rawData, true));
+    
     $can_create_lead = false;
 
     if(validate_mobile(trim($rawData->phone_mobile)) !=1)
@@ -138,7 +123,7 @@ if ($module == "Lead" && $action == 'Create') {
     if($can_create_lead) {
         $count = 0;
 
-        if(empty($rawData->dwh_sync_c) && !($rawData->is_renewal)){
+        if(empty($rawData->dwh_sync_c) && !($rawData->is_renewal_c)){
                 $lead_id = checkDuplicateLead($rawData->phone_mobile,$rawData->scheme_c);
         }
         if(!empty($lead_id)){
@@ -188,7 +173,7 @@ if ($module == "Lead" && $action == 'Create') {
                 $opp_bean->amount = get_var_value($rawData->amount);
                 $opp_bean->loan_amount_sanctioned_c = get_var_value($rawData->loan_amount_sanctioned_c);
                 $opp_bean->dwh_sync_c = get_var_value($rawData->dwh_sync_c);
-                $opp_bean->source_type=get_var_value($rawData->source_type);
+                $opp_bean->source_type_c=get_var_value($rawData->source_type_c);
                 $opp_bean->application_id_c = get_var_value($rawData->application_id_c);
                 $opp_bean->processing_fees = get_var_value($rawData->processing_fees);
                 $opp_bean->APR = get_var_value($rawData->APR);
@@ -386,72 +371,6 @@ if ($module == "Lead" && $action == 'Fetch') {
 
     }
 }
-/*else if ($module == "Opportunity_Status" && $action == 'Create') {
-    $opp_id = $rawData->opportunity_id;
-    $GLOBALS['log']->debug($rawData->created_by);
-    (isset($rawData->created_by) ? $created_by = $rawData->created_by : '');
-    (isset($rawData->modified_user_id) ? $modified_user_id = $rawData->modified_user_id : '');
-    (isset($rawData->status) ? $status = $rawData->status : '');
-    (isset($rawData->sub_status) ? $sub_status = $rawData->sub_status : '');
-    (isset($rawData->appointment_date) ? $appointment_date = $rawData->appointment_date : '');
-    (isset($rawData->comments) ? $comments = $rawData->comments : '');
-    if (!isset($opp_id) or empty($opp_id)) {
-        $msg = array(
-            'Success' => false,
-            'Message' => 'Mandatory field(s) are missing'
-        );
-    }
-    else {
-        $name_value_list = array(
-            array(
-                'name' => 'created_by',
-                'value' => $created_by
-            ) ,
-            array(
-                'name' => 'assigned_user_id',
-                'value' => $created_by
-            ) ,
-            (isset($rawData->modified_user_id) ? array(
-                'name' => 'modified_user_id',
-                'value' => $modified_user_id
-            ) : '') ,
-            (isset($rawData->status) ? array(
-                'name' => 'status',
-                'value' => $status
-            ) : '') ,
-            (isset($rawData->sub_status) ? array(
-                'name' => 'sub_status',
-                'value' => $sub_status
-            ) : '') ,
-            (isset($rawData->appointment_date) ? array(
-                'name' => 'appointment_date',
-                'value' => $appointment_date
-            ) : '') ,
-            (isset($rawData->comments) ? array(
-                'name' => 'comments',
-                'value' => $comments
-            ) : ''),
-        );
-
-        $GLOBALS['log']->debug($name_value_list);
-        $id = createrecord($session_id, 'sales_opportunity_status', $name_value_list, $url);
-
-        $msg =  array(
-            'Success' => $opp_id != $id,
-            'Message' => 'Opportunity Status records',
-            'OpportunityStatusId' => $id,
-            'OpportunityId'=> $opp_id
-        );
-        if(isset($id) && ($opp_id != $id) ) {
-            // 'Opportunities', $opp_id,
-            // 'Os_Opportunity_Status', $id
-            $relation_result = createrelationship($session_id, 'Opportunities', $opp_id, 'opportunities_sales_opportunity_status_1', array($id), null, 0, $url);
-            $msg += array('relation_result' => $relation_result);
-        }else {
-            $msg['Success'] = false;
-        }
-    }
-}*/
 else
 if ($module == "Opportunities" && $action == 'Update') {
     $myfile = fopen("Logs/OpportunityUpdateCrmApi.log", "a");

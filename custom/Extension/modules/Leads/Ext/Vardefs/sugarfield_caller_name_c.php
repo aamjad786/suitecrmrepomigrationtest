@@ -1,0 +1,6 @@
+<?php
+ // created: 2016-09-15 11:53:59
+$dictionary['Lead']['fields']['caller_name_c']['inline_edit']='1';
+$dictionary['Lead']['fields']['caller_name_c']['labelValue']='Caller Name';
+
+ ?>

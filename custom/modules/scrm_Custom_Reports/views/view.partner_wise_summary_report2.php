@@ -22,7 +22,7 @@ class Report{
 	    $result = $db->query($query);
 	    $data = array();
 	    while($row = $db->fetchByAssoc($result)){
-	    	$partner_name = $row['partner_name_c'];
+	    	$partner_name = $row['partner_name'];
 	    	$disposition = $row['disposition'];
 	    	$month = $row['month'];
 	    	$count = $row['total_count'];

@@ -32,9 +32,9 @@
 require_once('modules/SMS_SMS/SMS_SMS_sugar.php');
 class SMS_SMS extends SMS_SMS_sugar {
 	
-	function SMS_SMS(){	
-		parent::SMS_SMS_sugar();
-	}
+	public function __construct()    {
+        parent::__construct();
+    }
 	
 }
 ?>
