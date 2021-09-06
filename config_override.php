@@ -14,5 +14,6 @@ $sugar_config['stackTrace'] = false;
 $sugar_config['AD_CRM_TOKEN'] = '';
 $sugar_config['scrm_key'] = 'N30gr0wth';
 $sugar_config['scrm_api_url'] = '/service/v4_1/rest.php';
-
+$sugar_config['addAjaxBannedModules'][0] = 'SecurityGroups';
+$sugar_config['addAjaxBannedModules'][1] = 'Neo_Customers';
 /***CONFIGURATOR***/

@@ -262,8 +262,8 @@ class SugarApplication
 					$user = new User;
 					$user->retrieve($loginUserId);
 					$GLOBALS['current_user'] = $user;
-                    $_SESSION['authenticated_user_language'] = $GLOBALS['current_language'];
 				}
+                
                 $ut = $GLOBALS['current_user']->getPreference('ut');
                 if (empty($ut) && $this->controller->action != 'AdminWizard' && $this->controller->action != 'EmailUIAjax' && $this->controller->action != 'Wizard' && $this->controller->action != 'SaveAdminWizard' && $this->controller->action != 'SaveUserWizard' && $this->controller->action != 'SaveTimezone' && $this->controller->action != 'Logout') {
                     $this->controller->module = 'Users';

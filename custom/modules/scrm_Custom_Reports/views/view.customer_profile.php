@@ -902,7 +902,7 @@ DISP6;
 		<tr id='tr_financial_year' style='visibility:collapse'>
 			<td>Financial Year:</td>
 			<td>
-				<select name='financial_year_c' id='financial_year_c' value='$_REQUEST[financial_year_c]'> 
+				<select name='financial_year' id='financial_year' value='$_REQUEST[financial_year]'> 
 				</select>
 			</td>
 
@@ -929,7 +929,7 @@ DISP6;
 			            from_year: $('#from_year').val(),
 			            to_month: $('#to_month').val(),
 			            to_year: $('#to_year').val(),
-			            financial_year_c: $('#financial_year_c').val(),
+			            financial_year: $('#financial_year').val(),
 			            submit: 1
 			        },
 			        success: function(msg) {
@@ -951,7 +951,7 @@ DISP6;
 				$("#from_month").html('');
 				$("#to_year").html('');
 				$("#to_month").html('');
-				$("#financial_year_c").html('');
+				$("#financial_year").html('');
 				$("#mail_status").html('');
 				$('#imageLoading').css('display','block');
 				if($(this).val() == 'Loan Statement'){
@@ -1020,7 +1020,7 @@ DISP6;
 				        	}
 				        	else if(obj['document_type'] == 'Interest Certificate'){
 								$.each(obj['response'], function(ob_key, ob_value){
-									$('#financial_year_c').append($('<option>', {
+									$('#financial_year').append($('<option>', {
 									    value: ob_value,
 									    text: ob_value
 									}));

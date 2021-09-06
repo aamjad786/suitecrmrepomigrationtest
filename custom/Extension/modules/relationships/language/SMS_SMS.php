@@ -1,3 +1,5 @@
 <?php
 //THIS FILE IS AUTO GENERATED, DO NOT MODIFY
-$mod_strings['LBL_LEADS_SMS_SMS_1_FROM_LEADS_TITLE'] = 'lead_sms_sms';
+$mod_strings['LBL_SMS_SMS_PROSPECTS_1_FROM_PROSPECTS_TITLE'] = 'Targets_Targets';
+$mod_strings['LBL_CASES_SMS_SMS_1_FROM_CASES_TITLE'] = 'Cases';
+$mod_strings['LBL_NEO_CUSTOMERS_SMS_SMS_1_FROM_NEO_CUSTOMERS_TITLE'] = 'Master Data';
