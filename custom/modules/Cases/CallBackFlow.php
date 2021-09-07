@@ -154,7 +154,7 @@ class CallBackFlow {
         $toTime = date("g:i A", strtotime("$endTime UTC"));
         $message = "Dear Customer, We have registered your request under service request number $requestNumber. Our executive will call you between $fromTime & $toTime on $date. Team NeoGrowth";
         fwrite($this->log, "\n" . "SMS :: " . $message . "to ". $case_bean->merchant_contact_number_c);
-        require_once('SendSMS.php');    
+        require_once('custom/include/SendSMS.php');    
         $sms = new SendSMS();
         if($app_host == 'prod'){
             $email_result = $email->send_email_to_user($sub,$body,array($case_bean->merchant_email_id_c),null,$case_bean,array('helpdesk@neogrowth.in'), array(),1);
