@@ -36,5 +36,11 @@ $mod_strings['LBL_OPPORTUNITY_STATUS'] = 'Opportunity Status';
 $mod_strings['LBL_DATE_MODIFIED'] = 'Date Modified';
 $mod_strings['LBL_DWH_SYNC_C'] = 'dwh sync c';
 $mod_strings['LBL_LEAD_DESCRIPTION'] = 'Lead Description';
-
+$mod_strings['LBL_EXPORT_CAMPAIGN_ID'] = 'Campaign ID';
+$mod_strings['LBL_OPPORTUNITY_TYPE'] = 'Opportunity Type';
+$mod_strings['LBL_EXPORT_ASSIGNED_USER_NAME'] = 'Assigned User Name';
+$mod_strings['LBL_EXPORT_ASSIGNED_USER_ID'] = 'Assigned User ID';
+$mod_strings['LBL_EXPORT_MODIFIED_USER_ID'] = 'Modified By ID';
+$mod_strings['LBL_EXPORT_CREATED_BY'] = 'Created By ID';
+$mod_strings['LBL_EXPORT_NAME'] =  'Name From LBL_EXPORT_NAME';
 ?>
