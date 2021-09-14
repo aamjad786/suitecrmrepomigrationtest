@@ -14,6 +14,7 @@ custom/application/Ext/
 /silentUpgrade*.php
 
 *.log
+*env
 
 /upload/*
 
@@ -21,3 +22,4 @@ custom/application/Ext/
 
 portal2/config.js
 modules/AOD_Index/Index/*
+

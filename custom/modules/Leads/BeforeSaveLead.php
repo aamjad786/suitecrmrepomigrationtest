@@ -3,7 +3,7 @@
 if (!defined('sugarEntry')) define('sugarEntry', true);
 require_once('data/BeanFactory.php');
 require_once('include/entryPoint.php');
-require_once('SendSMS.php');
+require_once('custom/include/SendSMS.php');
 class BeforeSaveLead
 {
 
