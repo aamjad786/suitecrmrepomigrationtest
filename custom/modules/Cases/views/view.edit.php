@@ -68,8 +68,9 @@ class CasesViewEdit extends ViewEdit {
 
     function display(){
        
-        
-        $case_details = $this->bean->case_details;
+        $this->ss->assign("CURRENT_USER_NAME", $GLOBALS['current_user']->user_name);
+        $this->ss->assign("CURRENT_USER_DEPARTMENT", $GLOBALS['current_user']->department);
+        $case_details_c = $this->bean->case_details_c;
 
         //JS to make field mendatory 
         $user = BeanFactory::getBean('Users',$this->bean->assigned_user_id);
@@ -208,7 +209,7 @@ class CasesViewEdit extends ViewEdit {
 </script>
 EOQ;
 
-    $jsscript_case_details = <<<EOQ1
+    $jsscript_case_details_c = <<<EOQ1
     <script>
         
         //{parent_key: '', key: '', value: ''},
@@ -391,7 +392,7 @@ EOQ1;
 
         $on_load = 1;   //on load is used for added jquery logics
 
-        echo $jsscript_case_details;
+        echo $jsscript_case_details_c;
 
         global $mod_strings;    
 
@@ -433,7 +434,7 @@ EOQ1;
         }
         ?>
             <script>
-                $(document).on('change','#case_details',function(){
+                $(document).on('change','#case_details_c',function(){
                     if($(this).val() == 'information_closure_process_campaign' && 
                     $('#case_category_c').val() =='information' && 
                     $('#case_subcategory_c').val()=='information_closure_process'){
@@ -553,7 +554,7 @@ EOQ1;
 
                             if(value.parent == sub_category_c){ //check the sub_category_c
 
-                                // console.log('qrc_ftr_mapping');
+                                console.log('qrc_ftr_mapping');
                                 console.log(value);
                                 $("#type").val(value.qrc); //select the option element as a string
                                 if(role_type>1)
@@ -642,11 +643,11 @@ EOQ1;
                         var priority_level = $("#priority").val();
                         // console.log(priority_level);
                         if(priority_level == 'P4'){
-                            $("#sub_priority").attr('disabled','disabled');
+                            $("#sub_priority_c").attr('disabled','disabled');
                             $("#priority").attr('disabled','disabled');       
                         }
                         else{
-                            $("#sub_priority").hide();
+                            $("#sub_priority_c").hide();
                             $("#sub_priority_label").hide();
                             $("#priority option[value='P4']").remove();                           
                         }
@@ -668,7 +669,7 @@ EOQ1;
                 
             ?>
             <script>
-                $('#not_apply').change(function() {
+                $('#not_apply_c').change(function() {
                     validates();
                     });
 
@@ -687,7 +688,7 @@ EOQ1;
                    validates();
                  });
 
-                 $('#case_details').change(function(){
+                 $('#sub_priority_c').change(function(){
                    validates();
 
                  });
@@ -711,7 +712,7 @@ EOQ1;
                 	console.log('inside validateProcessorName');
                   if($('#processor_name_c').val()==''){
                      // $('#processor_name_c').addClass('required');
-                      console.log("validateCaseDetails failed");
+                      console.log("validateProcessorName failed");
                       return false;
                       
                     
@@ -878,16 +879,16 @@ EOQ1;
                  }
 
                 function validateCaseDetails(){
-                	console.log('inside validateCaseDetails');
-                  if( ($('#case_details > option').length >1) && $('#case_details').val()=='' && $("#not_apply").is(":checked")==false){
-                      $('#case_details').addClass('required');
-                      console.log("validateCaseDetails failed");
+                	console.log('inside 1111 validateCaseDetails');
+                  if( ($('#case_details_c > option').length >1) && $('#case_details_c').val()=='' && $("#not_apply_c").is(":checked")==false){
+                      $('#case_details_c').addClass('required');
+                      console.log("1111 validateCaseDetails failed");
                       return false;
                       
                     
                    }else{
-                   	console.log("validateCaseDetails passed");
-                      $('#case_details').removeClass('required');
+                   	console.log("1111 validateCaseDetails passed");
+                      $('#case_details_c').removeClass('required');
                       return true;
                     }
                 }
@@ -1029,7 +1030,7 @@ EOQ1;
                 <?php $new = empty($this->bean->id)?0:1;
                 $new = empty($this->bean->case_category_c)?0:1;
                 $new = empty($this->bean->case_subcategory_c)?0:1;
-                $new = $this->bean->category_count<1?0:1;
+                $new = $this->bean->category_count_c<1?0:1;
                 $csteamcheck=!in_array('Customer support executive',$roles);
                 ?>
                 var new_case="<?php echo $new?>";
