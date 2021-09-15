@@ -87,13 +87,13 @@ array (
         'default' => true,
         'width' => '10%',
       ),
-      'pushed_lead' => 
+      'pushed_lead_c' => 
       array (
         'type' => 'int',
         'label' => 'Lead pushed to EOS',
         'width' => '10%',
         'default' => true,
-        'name' => 'pushed_lead',
+        'name' => 'pushed_lead_c',
       ),
       'lead_source' => 
       array (
