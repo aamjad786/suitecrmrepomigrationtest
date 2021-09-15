@@ -1,5 +1,5 @@
 <?php
-// created: 2021-02-09 12:31:31
+// created: 2021-09-14 17:59:08
 $searchFields['Leads'] = array (
   'first_name' => 
   array (
@@ -438,19 +438,20 @@ $searchFields['Leads'] = array (
   array (
     'query_type' => 'default',
   ),
-  'range_pushed_lead' => 
+  'range_pushed_lead_c' => 
   array (
     'query_type' => 'default',
     'enable_range_search' => true,
   ),
-  'start_range_pushed_lead' => 
+  'start_range_pushed_lead_c' => 
   array (
     'query_type' => 'default',
     'enable_range_search' => true,
   ),
-  'end_range_pushed_lead' => 
+  'end_range_pushed_lead_c' => 
   array (
     'query_type' => 'default',
     'enable_range_search' => true,
   ),
+  
 );
