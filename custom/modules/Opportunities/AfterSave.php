@@ -136,7 +136,7 @@ class AfterSaveOpportunity
     {
         if ($bean->stored_fetched_row_c["control_program_c"] != "NeoCash Insta") {
             global $db;
-            $q = "select source_type_c from leads_cstm where opportunity_id='$bean->id'";
+            $q = "select source_type_c from leads l join leads_cstm lcstm on l.id=lcstm.id_c where opportunity_id='$bean->id'";
             $result = $db->query($q);
             $source = "";
             $myfile = fopen("Logs/clustermap.log", 'a');
@@ -230,12 +230,12 @@ class AfterSaveOpportunity
             $file1 = fopen("Logs/unassignuser.log", "a");
             fwrite($file1, "unassigned-city_cluster_insta");
             global $db, $current_user;
-            $q = "select source_type_c from leads where opportunity_id='$bean->id'";
+            $q = "select source_type_c from leads l join leads_cstm lcstm on l.id=lcstm.id_c where opportunity_id='$bean->id'";
             $result = $db->query($q);
             $source = "";
             if (!empty($current_user->id) && $current_user->id != 1) {
                 $bean->source_type_c = "SalesApp";
-                $q1 = "update opportunities set source_type_c='SalesApp' where id='$bean->id'";
+                $q1 = "update opportunities_cstm set source_type_c='SalesApp' where id='$bean->id'";
                 $db->query($q1);
             }
             $myfile = fopen("Logs/clustermap.log", 'a');
@@ -323,7 +323,7 @@ class AfterSaveOpportunity
         if ($bean->lead_source == "dsa online" && $bean->stored_fetched_row_c["lead_source"] == "dsa online") {
 
             global $db, $current_user;
-            $q = "select source_type_c from leads_cstm where opportunity_id='$bean->id'";
+            $q = "select source_type_c from leads l join leads_cstm lcstm on l.id=lcstm.id_c where opportunity_id='$bean->id'";
             $result = $db->query($q);
             $source = "";
             if (!empty($current_user->id) && $current_user->id != 1) {
@@ -385,7 +385,7 @@ class AfterSaveOpportunity
 
     public function cam_mapping_insta(&$bean, $event, $args) 
     {
-        if (($bean->stored_fetched_row_c["_c"] == "NeoCash Insta" || $bean->control_program_c == "NeoCash Insta") && !empty($bean->application_id_c)) {
+        if (($bean->stored_fetched_row_c["control_program_c"] == "NeoCash Insta" || $bean->control_program_c == "NeoCash Insta") && !empty($bean->application_id_c)) {
             // Only Sacntioned and Reffered by CAM is Not empty only it will work. CSI -1121
             if ((!empty($bean->sales_stage) && $bean->sales_stage == 'Sanctioned') && !empty($bean->refferd_by_cam) && $bean->digital == 'no') {
     
