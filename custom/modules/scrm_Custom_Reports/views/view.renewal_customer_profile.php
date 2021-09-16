@@ -423,15 +423,15 @@ DISP1;
                         document.getElementById('detailpanel_4').className += ' expanded';
                     </script>
                 </h4>
-                <table border='0' cellpadding='0' cellspacing='0' width='100%' class='panelContainer list view table default footable-loaded footable' >
+                <table border='0' cellpadding='0' cellspacing='0' width='100%' >
                 ";
 
             echo $HTML = <<<DISP5
             <div style='border-bottom:1px solid #dddddd; align:left;'>
-                <th scope='col'>
-                    <div style='white-space: normal;' align='left'>
+                <th scope='col' >
+                    <div style="color:black">
                             Request ID
-                            &nbsp;&nbsp;
+                            
                     </div>
                 </th>
                 <th scope='col'>

@@ -1,4 +1,6 @@
 <?php
+$dotenv = Dotenv\Dotenv::create(__DIR__);
+$dotenv->load();
 // created: 2021-07-27 18:49:12
 $sugar_config = array (
   'addAjaxBannedModules' => 
@@ -94,13 +96,13 @@ $sugar_config = array (
   'datef' => 'm/d/Y',
   'dbconfig' => 
   array (
-    'db_host_name' => 'localhost',
+    'db_host_name' => getenv('DATABASE_HOST'),
     'db_host_instance' => 'SQLEXPRESS',
-    'db_user_name' => 'root',
-    'db_password' => 'nuc1234$',
-    'db_name' => 'newsuitecrm',
+    'db_user_name' => getenv('DATABASE_USER'),
+    'db_password' => getenv('DATABASE_PASSWORD'),
+    'db_name' => getenv('DATABASE_NAME'),
     'db_type' => 'mysql',
-    'db_port' => '',
+    'db_port' => getenv('DATABASE_PORT'),
     'db_manager' => 'MysqliManager',
     'collation' => 'utf8_general_ci',
     'charset' => 'utf8',

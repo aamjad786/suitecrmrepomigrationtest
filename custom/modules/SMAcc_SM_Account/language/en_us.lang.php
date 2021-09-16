@@ -1,5 +1,5 @@
 <?php
-// created: 2019-03-22 14:43:25
+// created: 2021-09-13 07:25:37
 $mod_strings = array (
   'LBL_APP_ID' => 'App ID',
   'LBL_RECENT_NOTE_UPDATE' => 'recent note update',
@@ -18,7 +18,7 @@ $mod_strings = array (
   'LBL_TOTAL_REPAYMENT_AMOUNT' => 'Total Repayment Amount',
   'LBL_LOAN_TENURE' => 'The Loan Tenure(in days)',
   'LBL_RATE_OF_INTEREST' => 'Rate of Interest',
-  'LBL_FUNDED_DATE' => 'Funded Date',
+  'LBL_FUNDED_DATE' => 'Funded Date 1',
   'LBL_PROCESSING_FEE' => 'Processing Fee',
   'LBL_EDITVIEW_PANEL1' => 'Loan Details',
   'LNK_NEW_RECORD' => 'Create Onboarding',
@@ -27,10 +27,4 @@ $mod_strings = array (
   'LBL_LIST_FORM_TITLE' => 'Onboarding List',
   'LBL_SEARCH_FORM_TITLE' => 'Search Onboarding',
   'LBL_HOMEPAGE_TITLE' => 'My Onboarding',
-);
-
-$GLOBALS['app_list_strings']['insurance'] = array(
-  '' => '',
-  'INTERESTED' => 'Interested',
-  'NOT_IINTERESTED' => 'Not Interested'
 );
