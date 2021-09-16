@@ -242,6 +242,11 @@ if ($module == "Lead" && $action == 'Update') {
         
         $lead = new Lead();
         $retrieved_data  = $lead->retrieve($lead_id);
+        
+        require_once 'custom/CustomLogger/CustomLogger.php';
+        $customLogget=new CustomLogger('customcrmapi.log');
+        $customLogget->log('debug', '$retrieved_data =====>'.print_r($retrieved_data));
+        
         // $lead->assigned_user_id = NULL;
         if(!empty($retrieved_data)){
             foreach($rawData as $k=>$v){
@@ -393,8 +398,8 @@ if ($module == "Opportunities" && $action == 'Update') {
             $op->sales_stage = $rawData->opportunity_stage;
             $op->amount = $rawData->amount;
             $op->pickup_appointment_feedback_c = $rawData->feedback;
-            $op->remarks = $rawData->remarks;
-            $op->source_type=$rawData->source_type;
+            $op->remarks_c = $rawData->remarks_c;
+            $op->source_type_c=$rawData->source_type_c;
             $op->loan_amount_sanctioned_c = $rawData->loan_amount_sanctioned_c;
             $op->assigned_user_id = $rawData->user_id;
 
@@ -404,27 +409,27 @@ if ($module == "Opportunities" && $action == 'Update') {
             $op->application_id_c = $rawData->application_id;
             if(!empty($rawData->date_updated_EOS))
             {
-                $op->eos_opportunity_status=$rawData->opportunity_status;
-                $op->eos_sub_status=$rawData->sub_status;
+                $op->eos_opportunity_status=$rawData->eos_opportunity_status_c;
+                $op->eos_sub_status_c=$rawData->eos_sub_status_c;
 
                 $time=strtotime($rawData->date_updated_EOS);
                 $time=$time-(330*60);
                 $op->date_updated_by_EOS=date("Y-m-d H:i:s", $time);
             }
                 $op->opportunity_status_c = $rawData->opportunity_status;
-                $op->sub_status=$rawData->sub_status;
+                $op->sub_status_c=$rawData->sub_status_c;
             $op->pickup_appointment_date_c=$rawData->pickup_appointment_date_c;
-            $op->control_program=$rawData->control_program;
-            $op->stage_drop_off=$rawData->stage_drop_off;
-            $op->app_form_link=$rawData->app_form_link;
+            $op->control_program_c=$rawData->control_program_c;
+            $op->stage_drop_off_c=$rawData->stage_drop_off_c;
+            $op->app_form_link_c=$rawData->app_form_link_c;
             // $time=strtotime($rawData->date_updated_EOS);
             // $time=$time-(330*60);
             // $op->date_updated_by_EOS=date("Y-m-d H:i:s", $time);
-            $op->eos_disposition=$rawData->eos_disposition;
-            $op->eos_sub_disposition=$rawData->eos_sub_disposition;
+            $op->eos_disposition_c=$rawData->eos_disposition_c;
+            $op->eos_sub_disposition_c=$rawData->eos_sub_disposition_c;
             $op->pickup_appointment_pincode_c=$rawData->Address_pin;
             $op->pickup_appointment_address_c=$rawData->Address_Street;
-            $op->reject_reason=$rawData->reject_reason;
+            $op->reject_reason_c=$rawData->reject_reason_c;
             $op->is_eligible=$rawData->is_eligible;
 
 

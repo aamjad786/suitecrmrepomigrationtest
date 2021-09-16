@@ -199,7 +199,7 @@ class AfterSaveLead
 
 		$opportunityCity = ucfirst(strtoupper($_REQUEST['pickup_appointment_city_c']));
 		if (($disposition == 'interested' || $disposition == 'pick_up') && ($lead_source == "Marketing" || $lead_source == "Alliances" || $lead_source == "missed_calls_sms" || $lead_source == "Missed Calls" || $lead_source == "Web Site" || $lead_source == "Facebook" || $lead_source == "Tele marketing")) {
-			$userToBeAssigned = $this->assignUserToOpportunity($opportunityCity);
+			$userToBeAssigned = '';
 			$opportunity_bean->assigned_user_id =  $userToBeAssigned;
 			$opportunity_bean->user_id_c = $userToBeAssigned;
 		} else {

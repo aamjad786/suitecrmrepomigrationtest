@@ -207,8 +207,8 @@ array (
           0 => 'description',
           1 => 
           array (
-            'name' => 'product_type',
-            'comment' => 'product_type',
+            'name' => 'product_type_c',
+            'comment' => 'product_type_c',
             'label' => 'Product Type',
           ),
         ),
@@ -216,13 +216,13 @@ array (
         array (
           0 => 
           array (
-            'name' => 'bank_account_name',
+            'name' => 'bank_account_name_c',
             'comment' => 'Name of Bank',
             'label' => 'Bank Account Name',
           ),
           1 => 
           array (
-            'name' => 'bank_account_count',
+            'name' => 'bank_account_count_c',
             'comment' => 'number of accounts',
             'label' => 'No. of Bank Accounts',
           ),
@@ -231,7 +231,7 @@ array (
         array (
           0 => 
           array (
-            'name' => 'bank_account_type',
+            'name' => 'bank_account_type_c',
             'comment' => 'Type of Bank Account',
             'label' => 'Bank Account Type',
           ),
@@ -258,12 +258,12 @@ array (
         array (
           0 => 
           array (
-            'name' => 'accept_online',
+            'name' => 'accept_online_c',
             'label' => 'accept Debit/Credit/Online payments',
           ),
           1 => 
           array (
-            'name' => 'indicative_deal_amount',
+            'name' => 'indicative_deal_amount_c',
             'comment' => 'Indicative Deal Amount',
             'label' => 'Indicative Deal Amount',
           ),
@@ -412,7 +412,7 @@ array (
         array (
           0 => 
           array (
-            'name' => 'pushed_lead',
+            'name' => 'pushed_lead_c',
             'comment' => 'If the lead is pushed or not.',
             'label' => 'Lead Pushed',
           ),
@@ -512,7 +512,7 @@ array (
           ),
           1 => 
           array (
-            'name' => 'control_program',
+            'name' => 'control_program_c',
             'comment' => 'Control Program',
             'label' => 'Control Program',
           ),
@@ -521,13 +521,13 @@ array (
         array (
           0 => 
           array (
-            'name' => 'hear_about_us',
+            'name' => 'hear_about_us_c',
             'comment' => 'How did you hear about us?',
             'label' => 'LBL_HEAR_ABOUT_US',
           ),
           1 => 
           array (
-            'name' => 'mention_the_detail',
+            'name' => 'mention_the_detail_c',
             'comment' => 'mention_the_other_detail',
             'label' => 'LBL_OTHERS',
           ),
@@ -550,13 +550,13 @@ array (
         array (
           0 => 
           array (
-            'name' => 'app_form_link',
+            'name' => 'app_form_link_c',
             'comment' => 'form link',
             'label' => 'App form Link',
           ),
           1 => 
           array (
-            'name' => 'stage_drop_off',
+            'name' => 'stage_drop_off_c',
             'comment' => 'Stage Drop-off',
             'label' => 'Stage Drop-off',
           ),
@@ -574,13 +574,13 @@ array (
         array (
           0 => 
           array (
-            'name' => 'scheme',
-            'comment' => 'Scheme',
+            'name' => 'scheme_c',
+            'comment' => 'scheme_c',
             'label' => 'Scheme',
           ),
           1 => 
           array (
-            'name' => 'Alliance_Lead_Docs_shared',
+            'name' => 'Alliance_Lead_Docs_shared_c',
             'comment' => 'Alliance_Lead_Docs_shared',
             'label' => 'Alliance Lead Docs shared',
           ),
@@ -628,12 +628,12 @@ array (
         array (
           0 => 
           array (
-            'name' => 'turnover',
+            'name' => 'turnover_c',
             'label' => 'Previous Year Turnover',
           ),
           1 => 
           array (
-            'name' => 'average_monthly_sales',
+            'name' => 'average_monthly_sales_c',
             'comment' => 'Average monthly sales',
             'label' => 'Average Monthly Sales',
           ),
@@ -719,7 +719,7 @@ array (
           ),
           1 => 
           array (
-            'name' => 'gst_registration',
+            'name' => 'gst_registration_cv',
             'label' => 'GST registration',
           ),
         ),
@@ -741,12 +741,12 @@ array (
         array (
           0 => 
           array (
-            'name' => 'loan_moratorium',
+            'name' => 'loan_moratorium_c',
             'label' => 'Did you opt for loan moratorium?',
           ),
           1 => 
           array (
-            'name' => 'sales_3_month',
+            'name' => 'sales_3_month_c',
             'label' => 'Average monthly sales for last 3 months',
           ),
         ),
@@ -754,7 +754,7 @@ array (
         array (
           0 => 
           array (
-            'name' => 'has_shop',
+            'name' => 'has_shop_c',
             'label' => 'Do you own a house/shop?',
           ),
           1 => '',

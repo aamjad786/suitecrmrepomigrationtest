@@ -161,7 +161,7 @@ class Neo_Customers extends Neo_Customers_sugar {
 
         function send_sms_to_customer(){
             $item = $this;
-            require_once('SendSMS.php');
+            require_once('custom/include/SendSMS.php');
             $env = getenv('SCRM_ENVIRONMENT');
             $user_mobile_number = $item->mobile;
             
@@ -233,7 +233,7 @@ class Neo_Customers extends Neo_Customers_sugar {
             fwrite($this->log,"body=$body");
             fwrite($this->log,"Subject=$subject");
             // if(!empty($email)){
-                require_once('SendEmail.php');
+                require_once('custom/include/SendEmail.php');
                 $send_email = new SendEmail();
 
                 if(empty($body)){

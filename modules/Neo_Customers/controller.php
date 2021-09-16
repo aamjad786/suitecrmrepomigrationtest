@@ -167,7 +167,7 @@ class Neo_CustomersController extends SugarController {
 
 	public function massUpdateEmailNotification($post,$seed){
 		global $current_user;
-		require_once('SendEmail.php');
+		require_once('custom/include/SendEmail.php');
 
 		$updatedRecords 			= array();
 		$assignedToUserRecords 		= false;

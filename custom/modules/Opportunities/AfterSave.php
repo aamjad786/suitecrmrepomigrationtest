@@ -4,13 +4,15 @@ if (!defined('sugarEntry'))
     define('sugarEntry', true);
 require_once('data/BeanFactory.php');
 require_once('include/entryPoint.php');
-require_once('SendSMS.php');
-require_once('SendEmail.php');
+require_once('custom/include/SendSMS.php');
+require_once('custom/include/SendEmail.php');
 require_once('modules/ACLRoles/ACLRole.php');
 class AfterSaveOpportunity
 {
+
     public function send_appointment_smstocam(&$bean, $event, $args)
     {
+
         $myfile = fopen("Logs/appointment_sms.log", 'a');
         fwrite($myfile, date("d/m/Y H:i:s"));
         global $db;
@@ -134,7 +136,7 @@ class AfterSaveOpportunity
     {
         if ($bean->stored_fetched_row_c["control_program_c"] != "NeoCash Insta") {
             global $db;
-            $q = "select source_type_c from leads where opportunity_id='$bean->id'";
+            $q = "select source_type_c from leads_cstm where opportunity_id='$bean->id'";
             $result = $db->query($q);
             $source = "";
             $myfile = fopen("Logs/clustermap.log", 'a');
@@ -316,8 +318,100 @@ class AfterSaveOpportunity
         }
     }
 
+    public function dsa_spoc_assign(&$bean, $event, $args)
+    {
+        if ($bean->lead_source == "dsa online" && $bean->stored_fetched_row_c["lead_source"] == "dsa online") {
+
+            global $db, $current_user;
+            $q = "select source_type_c from leads_cstm where opportunity_id='$bean->id'";
+            $result = $db->query($q);
+            $source = "";
+            if (!empty($current_user->id) && $current_user->id != 1) {
+                //allow manual intervention in assigned to
+                $bean->source_type_c = "SalesApp";
+                $q1 = "update opportunities_cstm set source_type_c='SalesApp' where id='$bean->id'";
+                $db->query($q1);
+            }
+            $myfile = fopen("Logs/clustermap.log", 'a');
+            fwrite($myfile, date("d/m/Y H:i:s"));
+            while (($row = $db->fetchByAssoc($result)) != null) {
+                $source = $row['source_type_c'];
+            }
+
+            fwrite($myfile, "\n" . $bean->assigned_user_id . "\n");
+            if ($source != "SalesApp" && $bean->source_type_c != "SalesApp" && $bean->stored_fetched_row_c['source_type_c'] != "SalesApp") {
+
+                $eligible = $bean->stored_fetched_row_c['is_eligible'];
+
+                //echo "$eligible";exit;
+
+                $sales_stages = array('Credit', 'Sanctioned', 'Rejected', 'awaiting_resolution_confirmation');
 
 
+                if ((in_array($bean->is_eligible, array("Yes", "No")) && strcmp($eligible, $bean->is_eligible) != 0)) {
+
+                    if (in_array($bean->sales_stage, $sales_stages)) {
+
+                        $dsa = $bean->dsa_id;
+                        $table = "cluster_city_mapping_dsa";
+                        $q = "select * from $table where dsa='$dsa'";
+                        $result = $db->query($q);
+                        while (($row = $db->fetchByAssoc($result)) != null) {
+                            $spoc = $row['spoc_id'];
+                        }
+                        if (!empty($spoc)) {
+                            $ngid = $spoc;
+                            $user_bean = BeanFactory::getBean('Users');
+                            $query = 'users.deleted=0 and users.user_name = "' . $ngid . '"';
+                            $users = $user_bean->get_full_list('', $query);
+                            $userId = "";
+                            if (!empty($users)) {
+                                $user = $users[0];
+                                $userId = $user->id;
+                            } else {
+                                $userId = "1";
+                            }
+                        }
+                        $bean->assigned_user_id = $userId;
+                        fwrite($myfile, "\n" . $bean->assigned_user_id . "\n");
+                        fwrite($myfile, "\n" . $source . "\n");
+                        $query = "update opportunities set assigned_user_id='$bean->assigned_user_id' where id='$bean->id'";
+                        $db->query($query);
+                    }
+                }
+            }
+        }
+    }
+
+    public function cam_mapping_insta(&$bean, $event, $args) 
+    {
+        if (($bean->stored_fetched_row_c["_c"] == "NeoCash Insta" || $bean->control_program_c == "NeoCash Insta") && !empty($bean->application_id_c)) {
+            // Only Sacntioned and Reffered by CAM is Not empty only it will work. CSI -1121
+            if ((!empty($bean->sales_stage) && $bean->sales_stage == 'Sanctioned') && !empty($bean->refferd_by_cam) && $bean->digital == 'no') {
+    
+                $user_bean = BeanFactory::getBean('Users');
+    
+                $query = 'users.deleted=0 and users.user_name = "' . $bean->refferd_by_cam . '"';
+    
+                $users = $user_bean->get_full_list('', $query);
+    
+                $userId = "";
+    
+                if (!empty($users)) {
+                    global $db;
+    
+                    $user = $users[0];
+    
+                    $userId = $user->id;
+    
+                    $query = "update opportunities set assigned_user_id='$userId' where id='$bean->id'";
+    
+                    $db->query($query);
+                }
+                return;
+            }
+        }
+    }
     public function assignmentMail(&$bean, $event, $args)
     {
 
@@ -327,7 +421,7 @@ class AfterSaveOpportunity
         //BeanFactory::getBean('Users',$escalate_to);
 
 
-        require_once('SendEmail.php');
+        require_once('custom/include/SendEmail.php');
 
         $email = new SendEmail();
 
@@ -350,7 +444,7 @@ class AfterSaveOpportunity
 
         $body = "
 		<pre>Hi,</br>
-    You have been assigned a new<b>$type</b> Opportunity - $customer/$cust_mobile. Please check your Sales App to start working on this assignment.</br>
+        You have been assigned a new<b>$type</b> Opportunity - $customer/$cust_mobile. Please check your Sales App to start working on this assignment.</br>
 		
 			Thanks,</br>
 			Team NeoGrowth";
