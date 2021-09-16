@@ -39,7 +39,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
  ********************************************************************************/
 
 
-$module_name='SMAcc_SM_Account';
+$module_name='neo_Paylater_Open';
 $subpanel_layout = array(
 	'top_buttons' => array(
 		array('widget_class' => 'SubPanelTopCreateButton'),
