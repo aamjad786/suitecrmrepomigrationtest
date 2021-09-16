@@ -879,15 +879,15 @@ EOQ1;
                  }
 
                 function validateCaseDetails(){
-                	console.log('inside 1111 validateCaseDetails');
+                	//console.log('inside 1111 validateCaseDetails');
                   if( ($('#case_details_c > option').length >1) && $('#case_details_c').val()=='' && $("#not_apply_c").is(":checked")==false){
                       $('#case_details_c').addClass('required');
-                      console.log("1111 validateCaseDetails failed");
+                      console.log("validateCaseDetails failed");
                       return false;
                       
                     
                    }else{
-                   	console.log("1111 validateCaseDetails passed");
+                   	console.log("validateCaseDetails passed");
                       $('#case_details_c').removeClass('required');
                       return true;
                     }
