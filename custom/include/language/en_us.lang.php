@@ -1926,3 +1926,8 @@ $app_list_strings['moduleListSingular']['scrm_Cases']='Case Escalation';
 
 $app_list_strings['moduleList']['neo_Paylater_Open']='Paylater';
 $app_list_strings['moduleListSingular']['neo_Paylater_Open']='Paylater';
+
+$app_strings['LBL_GROUPTAB5_1631783180'] = 'Cases';
+
+$app_strings['LBL_GROUPTAB6_1631783180'] = 'New Group';
+?>
