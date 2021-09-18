@@ -30,7 +30,7 @@ class AfterSaveOpportunity
         $assigned_user_old = $bean->fetched_row['assigned_user_id'];
         $assigned_user_new = $bean->assigned_user_id;
 
-        if (preg_match("/Customer Acquisition/i", $user_bean->designation) && in_array($source, $sources)) {
+        if (preg_match("/Customer Acquisition/i", $user_bean->designation_c) && in_array($source, $sources)) {
 
             if (($bean->deleted == 0) && (!empty($assigned_user_new) || strcmp($assigned_user_new, $assigned_user_old) != 0) && empty($bean->dwh_sync_c)) {
                 $customer = $bean->name;
@@ -91,13 +91,13 @@ class AfterSaveOpportunity
         $myfile = fopen("Logs/appointment_sms.log", 'a');
         fwrite($myfile, date("d/m/Y H:i:s"));
         global $db;
-        $opp_status = $bean->opportunity_status_c;
+        $opp_status = isset($bean->opportunity_status_c)?$bean->opportunity_status_c:"";
         $user_id   = $bean->assigned_user_id;
         $user_bean = new User();
         $user_bean->retrieve($user_id);
         $old_opp_status = $bean->fetched_row['opportunity_status_c'];
         $assigned_user_new = $bean->assigned_user_id;
-        if (preg_match("/Customer Acquisition/i", $user_bean->designation)) {
+        if (preg_match("/Customer Acquisition/i", $user_bean->designation_c)) {
 
             if (($bean->deleted == 0) && !empty($opp_status) && strcmp($old_opp_status, $opp_status) != 0) {
                 $customer = $bean->name;
@@ -147,7 +147,7 @@ class AfterSaveOpportunity
 
             $positive = array('appointment_done_followup', 'appointment_done_will_get_documents_later', 'appointment_done_picked_up_documents', 'appointment_done_cam_visit_customer', 'Appointment fixed', 'appointment_done_cam_to_visit_customer');
 
-            $positive_status = in_array($bean->opportunity_status_c, $positive);
+            $positive_status = in_array(isset($bean->opportunity_status_c)?$bean->opportunity_status_c:"", $positive);
             $leadsources = array("Marketing", "Alliances");
             fwrite($myfile, "\n" . $bean->assigned_user_id . "\n");
             if ($source != "SalesApp" && $bean->source_type_c != "SalesApp") {
@@ -473,7 +473,7 @@ class AfterSaveOpportunity
 
         fwrite($myfile, $assigned_user_new . " " . $assigned_user_old . "\n");
 
-        if (preg_match("/Customer Acquisition/i", $user_bean->designation) && !empty($bean->assigned_user_id) && strcmp($assigned_user_new, $assigned_user_old) != 0) {
+        if (preg_match("/Customer Acquisition/i", $user_bean->designation_c) && !empty($bean->assigned_user_id) && strcmp($assigned_user_new, $assigned_user_old) != 0) {
 
             $user_bean = BeanFactory::getBean('Users', $bean->assigned_user_id);
 
