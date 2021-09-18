@@ -101,7 +101,7 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
         $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
         
         global $sugar_config;
-        $httpServer = $sugar_config['host_name'];
+        $httpServer = $sugar_config['HOST_NAME'];
 
         $url = $protocol . $httpServer . $_SERVER['REQUEST_URI'];
     	$url = substr($url,0,strpos($url,"?"))."?entryPoint=UserRoleAssignment";
@@ -172,7 +172,7 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
         $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
         global $sugar_config;
-        $httpHost = $sugar_config['host_name'];
+        $httpHost = $sugar_config['HOST_NAME'];
 
         $url = $protocol . $httpHost . $_SERVER['REQUEST_URI'];
     	$url = substr($url,0,strpos($url,"?"))."?entryPoint=UserRoleAssignment";

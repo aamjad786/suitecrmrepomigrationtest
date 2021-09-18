@@ -317,7 +317,7 @@ array (
   'google_auth_json' => '',
   'hide_subpanels' => true,
   'history_max_viewed' => 50,
-  'host_name' => 'localhost',
+  'host_name' => getenv('HOST_NAME'),
   'imap_test' => false,
   'import_max_execution_time' => 3600,
   'import_max_records_per_file' => 100,
