@@ -87,7 +87,7 @@ class AfterSaveLead
 
 	public function create_opportunity($bean)
 	{
-
+		
 		$first_name = $bean->first_name;
 		$last_name = $bean->last_name;
 		$salutation = $bean->salutation;
@@ -98,25 +98,25 @@ class AfterSaveLead
 		//$assigned_user_id = $bean->assigned_user_id;
 		$merchant_name_c = $bean->merchant_name_c;
 		$acspm = $bean->acspm_c;
-		$seller_id_online_platform = $bean->seller_id_online_platform;
-		$seller_partner_rating_online_platform = $bean->seller_partner_rating_online_platform;
-		$seller_customer_rating_online_platform = $bean->seller_customer_rating_online_platform;
-		$business_age_in_months = $bean->business_age_in_months;
-		$settlement_cycle_in_days = $bean->settlement_cycle_in_days;
-		$partner_id = $bean->partner_id;
+		$seller_id_online_platform_c = $bean->seller_id_online_platform_c;
+		$seller_partner_rating_online_platform_c = $bean->seller_partner_rating_online_platform_c;
+		$seller_customer_rating_online_platform_c = $bean->seller_customer_rating_online_platform_c;
+		$business_age_in_months_c = $bean->business_age_in_months_c;
+		$settlement_cycle_in_days_c = $bean->settlement_cycle_in_days_c;
+		$partner_id_c = $bean->partner_id_c;
 		$sales_3_month_c = $bean->sales_3_month_c;
-		$industry_c = $bean->industry_c;
+		$industry_type_c = $bean->industry_type_c;
 		$merchant_name_c = $bean->merchant_name_c;
-		$business_vintage_years_c = $bean->business_vintage_years_c;
-		$loan_amount_c = $bean->loan_amount_c;
-		$avg_sales_per_month_c = $bean->avg_sales_per_month_c;
+		// $business_vintage_years_c = $bean->business_vintage_years_c;
+		$loan_amount_c = isset($bean->loan_amount_c)?$bean->loan_amount_c:"";
+		// $avg_sales_per_month_c = $bean->avg_sales_per_month_c;
 		$lead_source = $bean->lead_source;
 		$scheme_c = $bean->scheme_c;
 		$control_program_c = $bean->control_program_c;
 		$Alliance_Lead_Docs_shared_c = $bean->Alliance_Lead_Docs_shared_c;
 		$stage_drop_off_c = $bean->stage_drop_off_c;
 		$app_form_link_c = $bean->app_form_link_c;
-		$dsa_id = $bean->dsa_id;
+		$dsa_id_c = $bean->dsa_id_c;
 
 		$postalcode = $bean->primary_address_postalcode;
 		$city = $bean->primary_address_city;
@@ -125,7 +125,7 @@ class AfterSaveLead
 		$sub_source_c = $bean->sub_source_c;
 		$referral_agent = $bean->refered_by;
 		$source_type_c = $bean->source_type_c;
-		$digital = strtolower($bean->digital);
+		$digital_c = strtolower($bean->digital_c);
 		$opportunity_bean = new Opportunity();
 		$new = 1;
 		if (!empty($bean->opportunity_id)) {
@@ -157,22 +157,22 @@ class AfterSaveLead
 		$opportunity_bean->original_app_id_c = $bean->original_app_id_c;
 		$opportunity_bean->is_renewal_c = $bean->is_renewal_c;
 		$opportunity_bean->product_type_c = $bean->product_type_c;
-		$opportunity_bean->seller_id_online_platform = $seller_id_online_platform;
-		$opportunity_bean->seller_customer_rating_online_platform = $seller_customer_rating_online_platform;
-		$opportunity_bean->seller_partner_rating_online_platform = $seller_partner_rating_online_platform;
-		$opportunity_bean->business_age_in_months = $business_age_in_months;
-		$opportunity_bean->settlement_cycle_in_days = $settlement_cycle_in_days;
-		$opportunity_bean->partner_id = $partner_id;
+		$opportunity_bean->seller_id_online_platform_c = $seller_id_online_platform_c;
+		$opportunity_bean->seller_customer_rating_online_platform_c = $seller_customer_rating_online_platform_c;
+		$opportunity_bean->seller_partner_rating_online_platform_c = $seller_partner_rating_online_platform_c;
+		$opportunity_bean->business_age_in_months_c = $business_age_in_months_c;
+		$opportunity_bean->settlement_cycle_in_days_c = $settlement_cycle_in_days_c;
+		$opportunity_bean->partner_id_c = $partner_id_c;
 		$opportunity_bean->sales_3_month_c = $sales_3_month_c;
-		$opportunity_bean->industry = $industry_c;
+		$opportunity_bean->industry_type_c = $industry_type_c;
 		$opportunity_bean->source_type_c = $source_type_c;
 		$opportunity_bean->control_program_c = $control_program_c;
 		$opportunity_bean->app_form_link_c = $app_form_link_c;
 		$opportunity_bean->stage_drop_off_c = $stage_drop_off_c;
-		$opportunity_bean->dsa_id = $dsa_id;
-		$datetime = $_REQUEST['pickup_appointment_date_time_c'];
+		$opportunity_bean->dsa_id_c = $dsa_id_c;
+		$datetime = isset($_REQUEST['pickup_appointment_date_time_c'])?$_REQUEST['pickup_appointment_date_time_c']:"" ;
 		global $current_user, $db;
-		$opportunity_bean->digital = $this->first_val_if_present(strtolower($_REQUEST['digital']), $digital);
+		$opportunity_bean->digital_c = $this->first_val_if_present(strtolower($_REQUEST['digital_c']), $digital_c);
 		if (!empty($datetime)) {
 
 			$datef = $current_user->getPreference('datef');
@@ -185,19 +185,18 @@ class AfterSaveLead
 
 		// $opportunity_bean->loan_amount_c = $loan_amount_c;
 
-		$opportunity_bean->loan_amount_c = $this->first_val_if_present($_REQUEST['loan_amount_required_c'], $loan_amount_c);
-		$opportunity_bean->pickup_appointment_contact_c = $this->first_val_if_present($_REQUEST['pickup_contact_number_c'], $phone_mobile);
-		$opportunity_bean->pickup_appointment_address_c = $this->first_val_if_present($_REQUEST['pickup_appointment_address_c'], $street);
-
-		$opportunity_bean->pickup_appointment_pincode_c = $this->first_val_if_present($_REQUEST['pickup_appointment_pincode_c'], $postalcode);
-		$opportunity_bean->pickup_appointment_city_c = $this->first_val_if_present($_REQUEST['pickup_appointment_city_c'], $city);
+		$opportunity_bean->loan_amount_c = $this->first_val_if_present(isset($_REQUEST['loan_amount_required_c'])?$_REQUEST['loan_amount_required_c']:"", $loan_amount_c);
+		$opportunity_bean->pickup_appointment_contact_c = $this->first_val_if_present(isset($_REQUEST['pickup_contact_number_c'])?$_REQUEST['pickup_contact_number_c']:"", $phone_mobile);
+		$opportunity_bean->pickup_appointment_address_c = $this->first_val_if_present(isset($_REQUEST['pickup_appointment_address_c'])?$_REQUEST['pickup_appointment_address_c']:"", $street);
+		$opportunity_bean->pickup_appointment_pincode_c = $this->first_val_if_present(isset($_REQUEST['pickup_appointment_pincode_c'])?$_REQUEST['pickup_appointment_pincode_c']:"", $postalcode);
+		$opportunity_bean->pickup_appointment_city_c = $this->first_val_if_present(isset($_REQUEST['pickup_appointment_city_c'])?$_REQUEST['pickup_appointment_city_c']:"", $city);
 		//$opportunity_bean->assigned_user_id = $this->first_val_if_present($bean->user_id_c,$bean->assigned_user_id); 
 		//$opportunity_bean->user_id_c = $bean->assigned_user_id; 
 
 
 		$disposition = $bean->disposition_c;
 
-		$opportunityCity = ucfirst(strtoupper($_REQUEST['pickup_appointment_city_c']));
+		
 		if (($disposition == 'interested' || $disposition == 'pick_up') && ($lead_source == "Marketing" || $lead_source == "Alliances" || $lead_source == "missed_calls_sms" || $lead_source == "Missed Calls" || $lead_source == "Web Site" || $lead_source == "Facebook" || $lead_source == "Tele marketing")) {
 			$userToBeAssigned = '';
 			$opportunity_bean->assigned_user_id =  $userToBeAssigned;

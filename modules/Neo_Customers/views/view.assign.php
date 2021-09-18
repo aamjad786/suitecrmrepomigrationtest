@@ -160,7 +160,7 @@ class Neo_CustomersViewassign extends SugarView {
             echo "<p style='color:red'>User '$ngid' not found in CRM. Click Submit to pull.</p>";
         }
         $renewal_user = $this->getRenewalUser($user->id);
-        if (!empty($renewal_user)) {
+        /*if (!empty($renewal_user)) {
             echo "<p><b>City: </b>".$renewal_user['city']."</p>";
             echo "<p><b>Role: </b>".$renewal_user['role']."</p>";
             $ticket_size_values = explode(",",$renewal_user['ticket_size']);
@@ -171,7 +171,7 @@ class Neo_CustomersViewassign extends SugarView {
                 echo $ticket_size_arr[$v].",";
             }
             echo "</p>";
-        }
+        }*/
     }
 
     function getRenewalUser($user_id){

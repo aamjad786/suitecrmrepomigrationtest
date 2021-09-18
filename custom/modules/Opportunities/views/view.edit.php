@@ -311,7 +311,7 @@ EOQ;
 		global $db;
 		$users = array();
 		// echo "<pre>";print_r($assigned_user_id);exit;
-		$query = "SELECT id,user_name,CONCAT(first_name, ' ', last_name) AS 'name' FROM users WHERE deleted = 0 and status = 'Active' and (reports_to_id='" . $assigned_user_id . "' AND designation LIKE '%Customer Acquisition%')";
+		$query = "SELECT id,user_name,CONCAT(first_name, ' ', last_name) AS 'name' FROM users u join users_cstm ucstm on u.id=ucstm.id_c  WHERE deleted = 0 and status = 'Active' and (reports_to_id='" . $assigned_user_id . "' AND designation_c LIKE '%Customer Acquisition%')";
 
 		$results = $db->query($query);
 		$i = 0;

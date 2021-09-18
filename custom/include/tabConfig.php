@@ -1,5 +1,6 @@
-<?php 
-$GLOBALS["tabStructure"] =array (
+<?php
+// created: 2021-09-16 11:09:48
+$GLOBALS['tabStructure'] = array (
   'LBL_TABGROUP_SALES' => 
   array (
     'label' => 'LBL_TABGROUP_SALES',
@@ -10,9 +11,6 @@ $GLOBALS["tabStructure"] =array (
       2 => 'Contacts',
       3 => 'Opportunities',
       4 => 'Leads',
-      5 => 'Contracts',
-      6 => 'Quotes',
-      7 => 'Forecasts',
     ),
   ),
   'LBL_TABGROUP_MARKETING' => 
@@ -27,6 +25,7 @@ $GLOBALS["tabStructure"] =array (
       4 => 'Campaigns',
       5 => 'Prospects',
       6 => 'ProspectLists',
+      7 => 'Cases',
     ),
   ),
   'LBL_TABGROUP_SUPPORT' => 
@@ -53,6 +52,13 @@ $GLOBALS["tabStructure"] =array (
       4 => 'Emails',
       5 => 'Tasks',
       6 => 'Notes',
+    ),
+  ),
+  'LBL_GROUPTAB5_1631783180' => 
+  array (
+    'label' => 'LBL_GROUPTAB5_1631783180',
+    'modules' => 
+    array (
     ),
   ),
   'LBL_TABGROUP_COLLABORATION' => 

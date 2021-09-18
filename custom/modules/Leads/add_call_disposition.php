@@ -17,7 +17,7 @@ class Class_Disposition_Add
         $ID                = $bean->id;
         $disposition_c     = $bean->disposition_c;
         $sub_disposition_c = $bean->sub_disposition_c;
-        $remarks_c = $bean->remarks_c;
+        // $remarks_c = $bean->remarks_c;
 
         if (($disposition_c == "Interested" && $sub_disposition_c == "Lead generated") || ($disposition_c == 'Pickup generation_Appointment')) {
             $db->query("UPDATE `leads_cstm` SET lead_type_l_c='Hot' WHERE`id_c`='$ID'");
@@ -52,7 +52,7 @@ class Class_Disposition_Add
             $lead->disposition_c     = $disposition_c;
             $lead->sub_disposition_c = $sub_disposition_c;
             $lead->assigned_user_id  = $agent_id;
-            $lead->remarks_c  = $remarks_c;
+            // $lead->remarks_c  = $remarks_c;
             $lead->save();
             $bean->load_relationship('leads_scrm_disposition_history_1');
             $bean->leads_scrm_disposition_history_1->add($lead->id);

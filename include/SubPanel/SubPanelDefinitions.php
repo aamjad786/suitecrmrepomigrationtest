@@ -537,6 +537,7 @@ class aSubPanel
         global $beanFiles ;
 
         $module_name = $this->get_module_name() ;
+       // echo module_name;
         if (! empty($module_name)) {
             $bean_name = $beanList [ $this->get_module_name() ] ;
 

@@ -169,14 +169,14 @@ if ($module == "Lead" && $action == 'Create') {
                 $opp_id = getOppID($id);
                 $opp_bean = new Opportunity();
                 $opp_bean->retrieve($opp_id);
-                $opp_bean->remarks = get_var_value($rawData->remarks);
+                $opp_bean->remarks_c = get_var_value($rawData->remarks_c);
                 $opp_bean->amount = get_var_value($rawData->amount);
                 $opp_bean->loan_amount_sanctioned_c = get_var_value($rawData->loan_amount_sanctioned_c);
                 $opp_bean->dwh_sync_c = get_var_value($rawData->dwh_sync_c);
                 $opp_bean->source_type_c=get_var_value($rawData->source_type_c);
                 $opp_bean->application_id_c = get_var_value($rawData->application_id_c);
-                $opp_bean->processing_fees = get_var_value($rawData->processing_fees);
-                $opp_bean->APR = get_var_value($rawData->APR);
+                $opp_bean->processing_fees_c = get_var_value($rawData->processing_fees_c);
+                $opp_bean->APR_c = get_var_value($rawData->APR_c);
                 if(!empty($rawData->pickup_appointment_city_c))
                 {
                     $opp_bean->pickup_appointment_city_c=get_var_value(strtoupper($rawData->pickup_appointment_city_c));
@@ -409,7 +409,7 @@ if ($module == "Opportunities" && $action == 'Update') {
             $op->application_id_c = $rawData->application_id;
             if(!empty($rawData->date_updated_EOS))
             {
-                $op->eos_opportunity_status=$rawData->eos_opportunity_status_c;
+                $op->eos_opportunity_status_c=$rawData->eos_opportunity_status_c;
                 $op->eos_sub_status_c=$rawData->eos_sub_status_c;
 
                 $time=strtotime($rawData->date_updated_EOS);
