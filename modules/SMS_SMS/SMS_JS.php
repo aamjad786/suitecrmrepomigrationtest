@@ -22,8 +22,8 @@ class SMS_SMSJS {
             {
                 //JS Third-Party Libraries
                 if( preg_match("/^6\.[1-4]/",$GLOBALS['sugar_version']) ) {
-                    echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>';
-                    echo '<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js" type="text/javascript"></script>';
+                    echo '<script src="custom/include/js/ajax/jquery.min.js" type="text/javascript"></script>';
+                    echo '<script src="custom/include/js/jquery-ui.js" type="text/javascript"></script>';
                 }
                 echo '<script src="modules/SMS_SMS/javascripts/freeTextSMS.js?v=1" type="text/javascript"></script>';
                 if($_REQUEST['module'] == 'ProspectLists'){

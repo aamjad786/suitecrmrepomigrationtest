@@ -1,6 +1,6 @@
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
+  <link rel="stylesheet" type="text/css" href="custom/include/css/jquery.dataTables.css">
 </head>
 <body>
 <?php
@@ -33,8 +33,8 @@
     </tbody>
   </table>';
   ?>
-  <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
-  <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="custom/include/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="custom/include/js/ajax/jquery.dataTables.min.js"></script>
   <script>
   $(function(){
     $("#example").dataTable({"serverSide": true});

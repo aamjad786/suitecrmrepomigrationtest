@@ -134,18 +134,18 @@ class CasesViewneo_users extends ViewList{
 
 	function displayHeaders(){
         echo $HEADERS1 = <<<HEADERS1
-                <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css">
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css">
+                <link rel="stylesheet" type="text/css" href="custom/include/css/dataTables.min.css">
+        <link rel="stylesheet" type="text/css" href="custom/include/css/fixedColumns.dataTables.min.css">
+        <link rel="stylesheet" type="text/css" href="custom/include/css/buttons.dataTables.min.css">
         <link rel="stylesheet" href="custom/modules/scrm_Custom_Reports/Report.css" type="text/css">
 
 
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
+        <script type="text/javascript" charset="utf8" src="custom/include/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" charset="utf8" src="custom/include/js/dataTables.fixedColumns.min.js"></script>
+        <script type="text/javascript" charset="utf8" src="custom/include/js/dataTables.buttons.min.js"></script>
+        <script type="text/javascript" charset="utf8" src="custom/include/js/buttons.colVis.min.js"></script>
         
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+        <link rel="stylesheet" type="text/css" href="custom/include/css/daterangepicker.css" />
 
 
         <script>

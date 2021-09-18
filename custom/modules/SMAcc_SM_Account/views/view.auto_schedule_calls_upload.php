@@ -38,9 +38,9 @@ class SMAcc_SM_AccountViewAuto_schedule_calls_upload extends SugarView {
 
     function displayForm(){
         echo $html = <<<HTMLFORM
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+        <script type="text/javascript" src="custom/include/js/moment.min.js"></script>
+        <script type="text/javascript" src="custom/include/js/daterangepicker.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="custom/include/css/daterangepicker.css" />
                 <script>
                 $(function() {
                     var start = moment(new Date()).add(1,'days');

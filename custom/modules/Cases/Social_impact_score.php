@@ -13,9 +13,8 @@ $queryToGetSocialImpactScore = "SELECT * from social_impact_score where called =
 
 $socialImpactScore = $db->query($queryToGetSocialImpactScore);
 ?>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"/>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"/>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href="custom/include/css/dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href="custom/include/css/buttons.dataTables.min.css"/>
 <center><h1 style="color:#3C8DBC; margin-bottom: 40px; margin-top:20px"><b>Social Impact Score </b></h1></center>
 
 
@@ -273,14 +272,14 @@ if (!empty($_REQUEST['messageType']) && !empty($_REQUEST['Message'])) {
         }
     }
 </script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+<script type="text/javascript" src="custom/include/js/jquery.min.js"></script>
+<script type="text/javascript" src="custom/include/js/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="custom/include/js/moment.min.js"></script>
+<script type="text/javascript" src="custom/include/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="custom/include/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="custom/include/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="custom/include/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="custom/include/js/buttons.print.min.js"></script>
 <script>
     $(document).ready(function() {
         $('#myTable').DataTable( {
@@ -293,12 +292,7 @@ if (!empty($_REQUEST['messageType']) && !empty($_REQUEST['Message'])) {
             ]
         } );
     });
-    $(document).ready(function() {
-        $('.myTable').DataTable( {
-        
-        } );
-    });
-</script>
+    </script>
 <?php
 
    
@@ -320,6 +314,7 @@ if (isset($_REQUEST)) {
             $message = "Application employee count is updated successfully";
             $messageType = "SUCCESS";
 
+            //change
             header("Location:" . $environment . "/index.php?module=Cases&action=Social_impact_score&messageType=$messageType&Message=$message");
         }
     }

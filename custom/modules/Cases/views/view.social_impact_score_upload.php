@@ -98,22 +98,21 @@ HTMLFORM;
         <div id ='form_message'></div>
         <br>
         </span>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-        <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"/>
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"/>
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css"/>
+        <script type="text/javascript" src="custom/include/js/jquery.min.js"></script>
+        <script type="text/javascript" src="custom/include/js/moment.min.js"></script>
+        <script type="text/javascript" src="custom/include/js/daterangepicker.min.js"></script>
+        <script type="text/javascript" src="custom/include/js/jquery-3.3.1.js"></script>
+        <script type="text/javascript" src=custom/include/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="custom/include/js/dataTables.buttons.min.js"></script>
+        <script type="text/javascript" src="custom/include/js/buttons.flash.min.js"></script>
+        <script type="text/javascript" src="custom/include/js/jszip.min.js"></script>
+        <script type="text/javascript" src="custom/include/js/pdfmake.min.js"></script>
+        <script type="text/javascript" src="custom/include/js/vfs_fonts.js"></script>
+        <script type="text/javascript" src="custom/include/js/buttons.html5.min.js"></script>
+        <script type="text/javascript" src="custom/include/js/buttons.print.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="custom/include/css/daterangepicker.css"/>
+        <link rel="stylesheet" type="text/css" href="custom/include/css/dataTables.min.css"/>
+        <link rel="stylesheet" type="text/css" href="custom/include/css/buttons.dataTables.min.css"/>
        
         <script type="text/javascript">
         $(document).ready(function() {

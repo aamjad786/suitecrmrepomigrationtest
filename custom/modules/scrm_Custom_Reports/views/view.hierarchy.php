@@ -14,10 +14,10 @@ class scrm_Custom_ReportsViewhierarchy extends SugarView {
 	function display()
 	{
 		?>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+		<script src="custom/include/js/cloudflare/jquery.min.js"></script>
+		<script src="custom/include/js/cloudflare/jstree.min.js"></script>
 
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+		<link rel="stylesheet" href="custom/include/css/cloudflare/style.min.css" />
 		<style type="text/css">
 		 .jstree li > a > .jstree-icon {  display:none !important; } 
 		 a.search { color:green !important; }
