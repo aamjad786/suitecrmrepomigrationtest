@@ -99,7 +99,10 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
             echo "<p>Removing $ngid from $role role.....</p>";
         }
         $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-        $httpServer = "localhost";
+        
+        global $sugar_config;
+        $httpServer = $sugar_config['host_name'];
+
         $url = $protocol . $httpServer . $_SERVER['REQUEST_URI'];
     	$url = substr($url,0,strpos($url,"?"))."?entryPoint=UserRoleAssignment";
         $useragent = $_SERVER['HTTP_USER_AGENT'];
@@ -168,7 +171,9 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
 
         $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
-        $httpHost = "localhost";
+        global $sugar_config;
+        $httpHost = $sugar_config['host_name'];
+
         $url = $protocol . $httpHost . $_SERVER['REQUEST_URI'];
     	$url = substr($url,0,strpos($url,"?"))."?entryPoint=UserRoleAssignment";
 
