@@ -192,7 +192,7 @@ SCRIPT;
     		// echo $_REQUEST['user_id'];
     	}
     	$user = $this->getUserBean($user_id);
-    	echo "<p>$user->user_name - $user->full_name <br> $user->designation</p>";
+    	echo "<p>$user->user_name - $user->full_name <br> $user->designation_c</p>";
     	global $db;
     	$query = "
     		SELECT 
@@ -200,7 +200,7 @@ SCRIPT;
     			u.user_name AS 'user_name',
     			u.first_name AS 'first_name',
     			u.last_name AS 'last_name',
-    			u.designation AS 'designation',
+    			ucstm.designation_c AS 'designation',
     			concat(mu.first_name, ' ', mu.last_name) AS 'reports_to_name',
 
     			FORMAT(sth.target,0,'en_IN') AS 'target',
@@ -231,6 +231,7 @@ SCRIPT;
     			FORMAT(sth.dsa_cases_disbursed_amount,0,'en_IN') AS 'dsa_cases_disbursed_amount'
 
     		FROM users u
+			JOIN users_cstm ucstm ON u.id=ucstm.id_c
     		LEFT JOIN users mu ON mu.id = u.reports_to_id
     		LEFT JOIN scrm_targets_history sth ON sth.user_profile_id = u.id
     		WHERE u.reports_to_id = '$user_id'
@@ -246,12 +247,13 @@ SCRIPT;
     		array_push($results_array, $row);
     	}
     	$results_array1 = array();
-    	$query="SELECT 
+    	$query="
+		SELECT 
     			u.id AS 'id',
     			u.user_name AS 'user_name',
     			u.first_name AS 'first_name',
     			u.last_name AS 'last_name',
-    			u.designation AS 'designation',
+    			ucstm.designation_c AS 'designation',
     			concat(u.first_name, ' ', u.last_name) AS 'reports_to_name',
 
     			FORMAT(sth.target,0,'en_IN') AS 'target',
@@ -282,7 +284,7 @@ SCRIPT;
     			FORMAT(sth.dsa_cases_disbursed_amount,0,'en_IN') AS 'dsa_cases_disbursed_amount'
 
     		FROM users u
-    		
+    		JOIN users_cstm ucstm ON u.id=ucstm.id_c
     		LEFT JOIN scrm_targets_history sth on u.id=sth.user_profile_id where (sth.user_profile_id='1' or sth.description is null)
     		AND sth.user_type='CAM'
     		AND sth.target_amount_achieved > 0
@@ -439,8 +441,7 @@ DSA_PERFORMANCE_REPORT_TABLE;
     			u.user_name AS 'user_name',
     			u.first_name AS 'first_name',
     			u.last_name AS 'last_name',
-    			u.designation AS 'designation',
-
+    			ucstm.designation_c AS 'designation',
     			sth.lead_source AS 'lead_source',
     			sth.cases_picked_up AS 'cases_picked_up',
     			sth.dsa_cases_logged_in AS 'dsa_cases_logged_in',
@@ -448,10 +449,10 @@ DSA_PERFORMANCE_REPORT_TABLE;
     			sth.dsa_cases_disbursed AS 'dsa_cases_disbursed'
 
     		FROM users u
+			JOIN users_cstm ucstm ON u.id=ucstm.id_c
     		LEFT JOIN scrm_targets_history sth ON sth.user_profile_id = u.id
     		AND sth.date_entered >= '$from_date'
     		AND sth.date_entered <= '$to_date'
-
     		WHERE u.id = '$user_id'
     		AND u.deleted = 0
     		AND u.status = 'Active'

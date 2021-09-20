@@ -127,9 +127,31 @@ SCRIPT;
     		// echo $_REQUEST['user_id'];
     	}
     	$user = $this->getUserBean($user_id);
-    	echo "<p>$user->user_name - $user->full_name <br> $user->designation</p>";
+    	echo "<p>$user->user_name - $user->full_name <br> $user->designation_c</p>";
     	global $db;
-    	$query = "select users.id,users.user_name,users.designation,value_disbursed channel_visit,users.first_name,users.last_name,target_amount_pending as customer_visit,cases_logged_in as login_count,achieved as disbursed_count,(value_disbursed+target_amount_pending) as total_visits from scrm_targets_history join users on users.id=user_profile_id where  users.reports_to_id='$user_id' and month='$this->requested_month' and (value_disbursed>0 or target_amount_pending>0)
+    	$query = "
+		SELECT 
+			u.id,
+			u.user_name,
+			ucstm.designation_c AS designation,
+			value_disbursed channel_visit,
+			u.first_name,
+			u.last_name,
+			target_amount_pending AS customer_visit,
+			cases_logged_in AS login_count,
+			achieved AS disbursed_count,
+			(value_disbursed + target_amount_pending) AS total_visits
+		FROM
+			scrm_targets_history
+				JOIN
+			users u ON u.id = user_profile_id
+				JOIN
+			users_cstm ucstm ON u.id = ucstm.id_c
+		WHERE
+			u.reports_to_id = '$user_id'
+			AND month = '$this->requested_month'
+			AND (value_disbursed > 0
+			OR target_amount_pending > 0)
     		";
 
     	// print_r($query); echo "<br>";
