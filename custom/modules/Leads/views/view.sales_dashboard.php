@@ -141,7 +141,7 @@ SCRIPT;
     			u.user_name AS 'user_name',
     			u.first_name AS 'first_name',
     			u.last_name AS 'last_name',
-    			u.designation_c AS 'designation',
+    			ucstm.designation_c AS 'designation',
     			concat(mu.first_name, ' ', mu.last_name) AS 'reports_to_name',
 
     			FORMAT(sth.target,0,'en_IN') AS 'target',
@@ -184,6 +184,7 @@ SCRIPT;
     			FORMAT(sth.login_target,0,'en_IN') AS 'login_target'
     		
     		FROM users u
+			JOIN users_cstm ucstm ON u.id=ucstm.id_c
     		LEFT JOIN users mu ON mu.id = u.reports_to_id
     		LEFT JOIN scrm_targets_history sth ON sth.user_profile_id = u.id
     		WHERE u.reports_to_id = '$user_id'
