@@ -6,7 +6,7 @@ require_once('include/SugarCharts/SugarChartFactory.php');
 require_once('include/MVC/View/SugarView.php');
 include_once('include/SugarPHPMailer.php');
 include_once('modules/Administration/Administration.php');
-require_once 'SendEmail.php';
+require_once('custom/include/SendEmail.php');;
 require_once('modules/EmailTemplates/EmailTemplate.php');
 // global db;
 // echo "hi";die();

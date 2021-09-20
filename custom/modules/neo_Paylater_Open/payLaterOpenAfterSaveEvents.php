@@ -1,7 +1,7 @@
 <?php
 require_once('CurlReq.php');
-require_once('SendEmail.php');
-require_once('SendSMS.php');
+require_once('custom/include/SendEmail.php');
+require_once('custom/include/SendSMS.php');
 global $current_user,$db;
 
 class payLaterOpenAfterSaveEvents {

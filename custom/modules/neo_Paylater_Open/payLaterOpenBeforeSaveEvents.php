@@ -3,7 +3,7 @@
 class payLaterOpenBeforeSaveEvents {
 
     function sendEmailToCustomer($bean, $event, $arguments) {
-        require_once('SendEmail.php');
+        require_once('custom/include/SendEmail.php');
         $updatedUser = $bean->assigned_user_id;
         $beforeSaveData = $bean->fetched_row;
         $productType = $bean->product;

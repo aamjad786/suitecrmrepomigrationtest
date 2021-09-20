@@ -203,7 +203,7 @@ class Renewals_functions{
                 $desc = "Hello,<br/>Customer has enquired on a lead you are already working on. Please go to $url.<br/><br/><br/>";
                 fwrite($this->log,"\nURL=$url\n");
 
-            require_once 'SendEmail.php';
+            require_once('custom/include/SendEmail.php');;
             $send = new SendEmail();
             if($env=='prod'){
                 $send->send_email_to_user($sub,$desc,array($email),null,$bean);
@@ -493,7 +493,7 @@ class Renewals_functions{
             $ids            = array();
             $changed_values = array();
             $message="Dear Customer, You are now eligible for top-up loan. Give miss call on 9152007511 or write to us at renewal@neogrowth.in (T&C)";
-            require_once 'SendSMS.php';
+            require_once 'custom/include/SendSMS.php';
             //print_r($results);
             fwrite($this->log, "\nrows fetched from db fetch (audit log entries) :: " . $results->num_rows);
             while($row = $db->fetchByAssoc($results)){
