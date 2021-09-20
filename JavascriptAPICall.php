@@ -106,11 +106,11 @@ if ($apiName == 'getApplicationDataFromLMM') {
         // Approved
         $update_case = 'UPDATE cases s join cases_cstm c on s.id=c.id_c SET c.case_category_approval_c =1, c.case_category_counts_c = case_category_counts_c + 1, s.assigned_user_id ="'.$assigned_user.'",deleted=0,c.checker_comment_c="'.$_REQUEST['checker_comments'].'" ,c.checker_c="'.$_REQUEST['user_id'].'", c.date_of_changes_c = "'.$datetime.'" WHERE id = "'.$_REQUEST['id'].'"';
 
-        $audit_query1 ="insert into cases_audit values ('$auditid','$case->id','$timestamp','1','case_subcategory_c,'relate','$oldSubCategory','$case->case_subcategory_c',null,null)";
+        $audit_query1 ="insert into cases_audit values ('$auditid','$case->id','$timestamp','1','$case_subcategory_c','relate','$oldSubCategory','$case->case_subcategory_c',null,null)";
 
         $auditid=create_guid();
 
-        $audit_query2 ="insert into cases_audit values ('$auditid','$case->id','$timestamp','1','case_category_c,'relate','$oldCategory','$case->case_category_c',null,null)";
+        $audit_query2 ="insert into cases_audit values ('$auditid','$case->id','$timestamp','1','$case_category_c','relate','$oldCategory','$case->case_category_c',null,null)";
 
         $s = $db->query($update_case);
 

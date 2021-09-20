@@ -11,13 +11,10 @@ $hook_array['before_save'][] = Array(1, 'Preserve bean data before save', 'custo
 $hook_array['before_save'][] = Array(1, 'Unfunded App id TDS case check', 'custom/modules/Cases/data_sync.php', 'DataSync', 'checkUnfundedTDScase'); //added
 $hook_array['before_save'][] = Array(1, 'resolution comment check during case closure', 'custom/modules/Cases/data_sync.php', 'DataSync', 'resolutioncheck'); //added
 $hook_array['before_save'][] = Array(1, 'Check is Ambit or not', 'custom/modules/Cases/data_sync.php', 'DataSync', 'checkAmbit'); //added
-
 $hook_array['before_save'][] = Array(2, 'Cases push feed', 'modules/Cases/SugarFeeds/CaseFeed.php','CaseFeed', 'pushFeed'); 
-
 $hook_array['before_save'][] = Array(3, 'Fetch Processor Name from AS API', 'custom/modules/Cases/data_sync.php', 'DataSync', 'processorName'); //added
 //$hook_array['before_save'][] = Array(3, 'Check weather to auto classify email or not', 'custom/modules/Cases/data_sync.php', 'DataSync', 'classify'); //added
-
-$hook_array['before_save'][] = Array(4, 'Asign data attened', 'custom/modules/Cases/data_sync.php', 'DataSync', 'assignDateAction'); //added
+$hook_array['before_save'][] = Array(4, 'Assign date attained', 'custom/modules/Cases/data_sync.php', 'DataSync', 'assignDateAction'); //added
 
 $hook_array['before_save'][] = Array(10, 'Save case updates', 'modules/AOP_Case_Updates/CaseUpdatesHook.php','CaseUpdatesHook', 'saveUpdate'); 
 $hook_array['before_save'][] = Array(11, 'Save case events', 'modules/AOP_Case_Events/CaseEventsHook.php','CaseEventsHook', 'saveUpdate'); 
