@@ -291,6 +291,11 @@ if (!empty($_REQUEST['messageType']) && !empty($_REQUEST['Message'])) {
             }
             ]
         } );
+        $(document).ready(function() {
+            $('.myTable').DataTable( {
+            
+            } );
+        });
     });
     </script>
 <?php

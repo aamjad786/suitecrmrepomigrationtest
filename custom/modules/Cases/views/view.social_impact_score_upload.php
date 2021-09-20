@@ -102,7 +102,7 @@ HTMLFORM;
         <script type="text/javascript" src="custom/include/js/moment.min.js"></script>
         <script type="text/javascript" src="custom/include/js/daterangepicker.min.js"></script>
         <script type="text/javascript" src="custom/include/js/jquery-3.3.1.js"></script>
-        <script type="text/javascript" src=custom/include/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="custom/include/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="custom/include/js/dataTables.buttons.min.js"></script>
         <script type="text/javascript" src="custom/include/js/buttons.flash.min.js"></script>
         <script type="text/javascript" src="custom/include/js/jszip.min.js"></script>
