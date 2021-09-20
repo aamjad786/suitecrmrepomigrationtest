@@ -104,7 +104,7 @@ if ($apiName == 'getApplicationDataFromLMM') {
         $timestamp = date("Y-m-d H:i:s", $timestamp);
         $auditid=create_guid();
         // Approved
-        $update_case = 'UPDATE cases SET case_category_approval_c =1, case_category_counts_c = case_category_counts_c + 1, assigned_user_id ="'.$assigned_user.'",deleted=0,checker_comment_c="'.$_REQUEST['checker_comments'].'" ,checker_c="'.$_REQUEST['user_id'].'", date_of_changes_c = "'.$datetime.'" WHERE id = "'.$_REQUEST['id'].'"';
+        $update_case = 'UPDATE cases s join cases_cstm c on s.id=c.id_c SET c.case_category_approval_c =1, c.case_category_counts_c = case_category_counts_c + 1, s.assigned_user_id ="'.$assigned_user.'",deleted=0,c.checker_comment_c="'.$_REQUEST['checker_comments'].'" ,c.checker_c="'.$_REQUEST['user_id'].'", c.date_of_changes_c = "'.$datetime.'" WHERE id = "'.$_REQUEST['id'].'"';
 
         $audit_query1 ="insert into cases_audit values ('$auditid','$case->id','$timestamp','1','case_subcategory_c,'relate','$oldSubCategory','$case->case_subcategory_c',null,null)";
 
@@ -121,7 +121,7 @@ if ($apiName == 'getApplicationDataFromLMM') {
     
     if(!empty($_REQUEST['reject'])){
         // Rejected
-        $update_case = 'UPDATE cases SET case_category_approval_c =2,assigned_user_id ="'.$assigned_user.'",deleted=0,checker_comment_c="'.$_REQUEST['checker_comments'].'", date_of_changes_c = "'.$datetime.'",,checker_c="'.$_REQUEST['user_id'].'" WHERE id = "'.$_REQUEST['id'].'"';
+        $update_case = 'UPDATE cases s join cases_cstm c on s.id=c.id_c SET c.case_category_approval_c =2,assigned_user_id ="'.$assigned_user.'",deleted=0,c.checker_comment_c="'.$_REQUEST['checker_comments'].'", c.date_of_changes_c = "'.$datetime.'",c.checker_c="'.$_REQUEST['user_id'].'" WHERE id = "'.$_REQUEST['id'].'"';
 
         $s = $db->query($update_case);
     }
@@ -202,13 +202,13 @@ if ($apiName == 'getApplicationDataFromLMM') {
     $auditid=create_guid();
 
     // Approved
-    $update_case = 'UPDATE cases SET case_category_approval_c =1, case_category_counts_c = case_category_counts_c + 1, assigned_user_id ="'.$assigned_user.'",deleted=0,checker_comment_c="'.$_REQUEST['checker_comments'].'" ,checker_c="'.$_REQUEST['user_id'].'", date_of_changes_c = "'.$datetime.'" WHERE id = "'.$case_id.'"';
+    $update_case = 'UPDATE cases s join cases_cstm c on s.id=c.id_c SET c.case_category_approval_c =1, c.case_category_counts_c = c.case_category_counts_c + 1, assigned_user_id ="'.$assigned_user.'",deleted=0,c.checker_comment_c="'.$_REQUEST['checker_comments'].'" ,c.checker_c="'.$_REQUEST['user_id'].'", date_of_changes_c = "'.$datetime.'" WHERE id = "'.$case_id.'"';
 
-    $audit_query1 ="insert into cases_audit values ('$auditid','$case->id','$timestamp','1','case_subcategory_c,'relate','$oldSubCategory','$case->case_subcategory_c',null,null)";
+    $audit_query1 ="insert into cases_audit values ('$auditid','$case->id','$timestamp','1','$case_subcategory_c','relate','$oldSubCategory','$case->case_subcategory_c',null,null)";
 
     $auditid=create_guid();
 
-    $audit_query2 ="insert into cases_audit values ('$auditid','$case->id','$timestamp','1','case_category_c,'relate','$oldCategory','$case->case_category_c',null,null)";
+    $audit_query2 ="insert into cases_audit values ('$auditid','$case->id','$timestamp','1','$case_category_c','relate','$oldCategory','$case->case_category_c',null,null)";
 
     $s = $db->query($update_case);
 
@@ -276,7 +276,7 @@ if ($apiName == 'getApplicationDataFromLMM') {
     
         $datetime=date("Y-m-d H:i:s");
     
-        $update_case = 'UPDATE cases SET case_category_approval_c =2,assigned_user_id ="'.$assigned_user.'",deleted=0,checker_comment_c="'.$_REQUEST['checker_comments'].'", ,checker_c="'.$_REQUEST['user_id'].'",date_of_changes_c = "'.$datetime.'"  WHERE id = "'.$case_id.'"';
+        $update_case = 'UPDATE cases s join cases_cstm c on s.id=c.id_c SET c.case_category_approval_c =2,assigned_user_id ="'.$assigned_user.'",deleted=0,c.checker_comment_c="'.$_REQUEST['checker_comments'].'", c.checker_c="'.$_REQUEST['user_id'].'",c.date_of_changes_c = "'.$datetime.'"  WHERE id = "'.$case_id.'"';
 
         $s = $db->query($update_case);
     

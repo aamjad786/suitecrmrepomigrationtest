@@ -562,7 +562,7 @@ class DataSync{
                 }
                 //echo $url." --  ".$json_response."  --";
                 echo json_encode($appid.' is unfunded app id- TDS refund cannot be raised for this App id');
-				sugar_die();
+				sugar_die($appid.' is unfunded app id- TDS refund cannot be raised for this App id');
             }
         }
         else{
@@ -716,7 +716,7 @@ $email->send_email_to_user($sub,$desc,$to,$cc,$bean);
         {
             $count=$bean->category_count_c+1;
             fwrite($file,"Old subcat: $old_subcategory  current subcat:$bean->case_subcategory_c \n Old cat: $old_category  current cat:$bean->case_category_c\n");
-            $query="update cases set category_count_c=$count where id='$bean->id'";
+            $query="update cases s join cases_cstm c on s.id=c.id_c set c.category_count_c=$count where id='$bean->id'";
             $db->query($query);
         }
     }
@@ -735,7 +735,7 @@ $email->send_email_to_user($sub,$desc,$to,$cc,$bean);
                 $new_case_sub_category = $_REQUEST['case_new_subcategory_c'];
                 $maker_remark = $_REQUEST['maker_comment_c'];
                 $date = date('Y-m-d H:i:s');
-                $query ="UPDATE cases SET case_category_old_c='$bean->case_category_c',case_subcategory_old_c='$bean->case_subcategory_c',case_category_c_new_c= '$new_case_category', case_subcategory_c_new_c='$new_case_sub_category',case_category_approval_c = 0 ,date_of_request_c='$date',maker_id_c = '$current_user->id' where id = '$case_id'";
+                $query ="UPDATE cases s join cases_cstm c on s.id=c.id_c SET c.case_category_old_c='$bean->case_category_c',c.case_subcategory_old_c='$bean->case_subcategory_c',c.case_category_c_new_c= '$new_case_category', c.case_subcategory_c_new_c='$new_case_sub_category',c.case_category_approval_c = 0 ,c.date_of_request_c='$date',c.maker_id_c = '$current_user->id' where id = '$case_id'";
               
                 $results = $db->query($query);
 

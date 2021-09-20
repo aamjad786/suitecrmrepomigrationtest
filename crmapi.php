@@ -703,7 +703,7 @@ if ($module == "Cases" && $action == 'Create') {
     $call_back_duration_c = get_var_value($rawData->call_back_duration_c);
     //dont delete or modify this field '$is_call_back_c', based on this in data_sync we are skipping assigned_user_id = null
     $is_call_back_c = get_var_value($rawData->is_call_back_c);
-    $call_back_30_min = get_var_value($rawData->call_back_30_min);
+    $call_back_30_min_c = get_var_value($rawData->call_back_30_min_c);
 
     $custom_case_type = get_var_value($rawData->custom_case_type);
     $custom_s3_url = get_var_value($rawData->custom_s3_url);
