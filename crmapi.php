@@ -862,7 +862,7 @@ if ($module == "Cases" && $action == 'Create') {
                 "value" => $digitally_signed_c
             ),
         );
-        $case = new aCase();
+        $case = new CustomCase();
         foreach($name_value_list as $array){
                 $case->{$array['name']} = $array['value'];
          }
