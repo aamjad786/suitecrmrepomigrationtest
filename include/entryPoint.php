@@ -199,14 +199,3 @@ if (empty($GLOBALS['installing'])) {
 
     LogicHook::initialize()->call_custom_logic('', 'after_entry_point');
 }
-
-// CAS related code made available
-require_once('custom/modules/Users/authentication/CASAuthenticate/lib/phpCAS/CAS.php');//
-global $sugar_config;
-
-phpCAS::setDebug();
-phpCAS::setVerbose(true);
-phpCAS::client(CAS_VERSION_3_0, $sugar_config['CAS_host'], (int)$sugar_config['CAS_port'], $sugar_config['CAS_context']);
-phpCAS::setNoCasServerValidation();
-////	END SETTING DEFAULT VAR VALUES
-///////////////////////////////////////////////////////////////////////////////

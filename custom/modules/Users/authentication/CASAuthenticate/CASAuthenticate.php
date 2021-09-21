@@ -50,13 +50,13 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
 
 require_once('modules/Users/authentication/SugarAuthenticate/SugarAuthenticate.php');
-// require_once('modules/Users/authentication/CASAuthenticate/lib/phpCAS/CAS.php');
+require_once('custom/modules/Users/authentication/CASAuthenticate/lib/phpCAS/CAS.php');//
+global $sugar_config;
 
-// global $sugar_config;
-// phpCAS::setDebug();
-// phpCAS::setVerbose(true);
-// phpCAS::client(CAS_VERSION_3_0, $sugar_config['CAS_host'], (int)$sugar_config['CAS_port'], $sugar_config['CAS_context']);
-// phpCAS::setNoCasServerValidation();
+phpCAS::setDebug();
+phpCAS::setVerbose(true);
+phpCAS::client(CAS_VERSION_3_0, $sugar_config['CAS_host'], (int)$sugar_config['CAS_port'], $sugar_config['CAS_context']);
+phpCAS::setNoCasServerValidation();
 
 
 
