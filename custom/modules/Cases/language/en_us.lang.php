@@ -1,5 +1,5 @@
 <?php
-// created: 2019-07-16 17:20:12
+// created: 2021-09-21 05:47:06
 $mod_strings = array (
   'LBL_CATEGORY' => 'Category',
   'LBL_SUB_CATEOGRY' => 'Sub Cateogry',
@@ -47,4 +47,5 @@ $mod_strings = array (
   'LBL_BOT_REJECT_REASON' => 'Bot Reject Reason',
   'LBL_PROCESSOR_NAME' => 'Processor Name',
   'LBL_SUMMARY' => 'Summary:',
+  'LBL_RESOLUTION' => 'Resolution:',
 );

@@ -2706,7 +2706,7 @@ class InboundEmail extends SugarBean {
 	}
 
 	function handleCaseAssignment($email) {
-		$c = new aCase();
+		$c = BeanFactory::newBean('Cases');
 		if($caseId = $this->getCaseIdFromCaseNumber($email->name,$email->from_addr, $c)) {
 			echo "pal:" . $caseId;
 			$c->retrieve($caseId);
@@ -2794,14 +2794,14 @@ class InboundEmail extends SugarBean {
 		global $current_user, $mod_strings, $current_language;
 		$mod_strings = return_module_language($current_language, "Emails");
 		$GLOBALS['log']->debug('In handleCreateCase');
-		$c = new aCase();
+		$c = BeanFactory::newBean('Cases');
 		$this->getCaseIdFromCaseNumber($email->name,$email->from_addr, $c);
 
 		if (!$this->handleCaseAssignment($email) && $this->isMailBoxTypeCreateCase()) {
 			// create a case
 			$GLOBALS['log']->debug('retrieveing email');
 			$email->retrieve($email->id);
-			$c = new aCase();
+			$c = BeanFactory::newBean('Cases');
 			$c->description = $email->description;
 			$c->assigned_user_id = $userId;
 			$c->name = $email->name;
@@ -2826,7 +2826,7 @@ class InboundEmail extends SugarBean {
 			} // if
 			$c->save(true);
 			$caseId = $c->id;
-			$c = new aCase();
+			$c = BeanFactory::newBean('Cases');
 			$c->retrieve($caseId);
 			if($c->load_relationship('emails')) {
 				$c->emails->add($email->id);
@@ -4466,7 +4466,7 @@ class InboundEmail extends SugarBean {
 		global $app_list_strings;
 
 		////	Case Macro
-		$c = new aCase();
+		$c = BeanFactory::newBean('Cases');
 
 		$macro = $c->getEmailSubjectMacro();
 

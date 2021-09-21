@@ -1044,7 +1044,7 @@ EOQ1;
                     if(env =='prod'){
                         maker =['ng478','ng866','ng887','sudhir.manwada','saajan.simon', 'ng2029','ng2054','Gaurav.Bavkar'];
                     } else {
-                        maker = ['ng1273','ng1274'];
+                        maker = ['ng1273','ng1274', 'nucsoft1'];
                     }
                   
                     var username = $('#current_user_name').val().toLowerCase();
@@ -1090,7 +1090,7 @@ EOQ1;
                     if(env =='prod'){
                         maker =['ng478','ng866','ng887', 'saajan.simon','sudhir.manwada','ng2029','ng2054','Gaurav.Bavkar'];
                     } else {
-                        maker = ['ng1273','ng1274'];
+                        maker = ['ng1273','ng1274','nucsoft1'];
                     }
                     var cat="<?php echo $this->bean->case_category_c?>";
                     var sub_cat="<?php echo $this->bean->case_subcategory_c?>";
@@ -1126,7 +1126,7 @@ EOQ1;
                     if(env =='prod'){
                         maker =['ng478','ng866','ng887','sudhir.manwada', 'saajan.simon','ng2029','ng2054','Gaurav.Bavkar'];
                     } else {
-                        maker = ['ng1273','ng1274'];
+                        maker = ['ng1273','ng1274', 'nucsoft1'];
                     }
                     var username = $('#current_user_name').val().toLowerCase();
                     if(jQuery.inArray(username, maker) != -1) {

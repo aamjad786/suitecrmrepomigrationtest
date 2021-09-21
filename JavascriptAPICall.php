@@ -26,7 +26,7 @@ if ($apiName == 'getApplicationDataFromLMM') {
 
     $case_id = $_REQUEST['case_id'];
     
-    $bean = new aCase();
+    $bean = BeanFactory::newBean('Cases');
 
     $case=$bean->retrieve($case_id);
 
@@ -87,7 +87,7 @@ if ($apiName == 'getApplicationDataFromLMM') {
     
     print_r($r);
 } else if($apiName == 'approveCategory'){
-    $bean = new aCase();
+    $bean = BeanFactory::newBean('Cases');
     $case=$bean->retrieve($_REQUEST['id']);
     $assigned_user = $case->assigned_user_id;
     $datetime=date("Y-m-d H:i:s");
@@ -175,7 +175,7 @@ if ($apiName == 'getApplicationDataFromLMM') {
    //var_dump($_REQUEST['user_id']);exit;
    foreach($_REQUEST['category'] as $case_id){
        
-    $bean = new aCase();
+    $bean = BeanFactory::newBean('Cases');
 
     $case=$bean->retrieve($case_id);
 
@@ -268,7 +268,7 @@ if ($apiName == 'getApplicationDataFromLMM') {
     // var_dump($_REQUEST['category']);exit;
     foreach($_REQUEST['category'] as $case_id){
         
-        $bean = new aCase();
+        $bean = BeanFactory::newBean('Cases');
     
         $case=$bean->retrieve($case_id);
     

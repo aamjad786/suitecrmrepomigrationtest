@@ -109,7 +109,7 @@ class AOPInboundEmail extends InboundEmail {
         global $current_user, $mod_strings, $current_language;
         
         $GLOBALS['log']->debug("In handleCreateCase in AOPInboundEmail $email->date_sent");
-        $c = new aCase();
+        $c = BeanFactory::newBean('Cases');
 
         // $this->getCaseIdFromCaseNumber($email->name, $c);
         if(empty($email))return;
@@ -161,7 +161,7 @@ class AOPInboundEmail extends InboundEmail {
             $GLOBALS['log']->debug('retrieving email');
             $email->retrieve($email->id);
         
-            $c = new aCase();
+            $c = BeanFactory::newBean('Cases');
             $notes = $email->get_linked_beans('notes','Notes');
             $noteIds = array();
             foreach($notes as $note){
@@ -254,7 +254,7 @@ class AOPInboundEmail extends InboundEmail {
             $case_num = $c->case_num;
             echo "<br/> case num : $case_num";
             $caseId = $c->id;
-            $c = new aCase();
+            $c = BeanFactory::newBean('Cases');
             $c->retrieve($caseId);
             if($c->load_relationship('emails')) {
                 $c->emails->add($email->id);

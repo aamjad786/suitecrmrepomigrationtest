@@ -862,7 +862,7 @@ if ($module == "Cases" && $action == 'Create') {
                 "value" => $digitally_signed_c
             ),
         );
-        $case = new CustomCase();
+        $case = BeanFactory::newBean('Cases');
         foreach($name_value_list as $array){
                 $case->{$array['name']} = $array['value'];
          }
