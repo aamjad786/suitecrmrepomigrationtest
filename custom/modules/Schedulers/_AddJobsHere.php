@@ -437,7 +437,8 @@ function tele_sales_disposition(){
 return true;
 }
 
-function pollMonitoredInboxesAOP()
+array_push($job_strings, 'custompollMonitoredInboxesAOP');
+function custompollMonitoredInboxesAOP()
 {
     require_once 'custom/modules/InboundEmail/AOPInboundEmail.php';
     $GLOBALS['log']->info('----->Custom Scheduler fired job of type pollMonitoredInboxesAOP()');

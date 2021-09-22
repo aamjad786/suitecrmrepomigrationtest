@@ -155,6 +155,9 @@ $mod_strings = array(
     'LBL_AODOPTIMISEINDEX' => 'Optimise Advanced OpenDiscovery Index',
     'LBL_AODINDEXUNINDEXED' => 'Index unindexed documents',
     'LBL_POLLMONITOREDINBOXESAOP' => 'AOP Poll Monitored Inboxes',
+    'LBL_CUSTOMPOLLMONITOREDINBOXESAOP' => 'Custom AOP Poll Monitored Inboxes',
+    'LBL_ASSIGNEDOPPORTUNITYCOUNTEMAIL' => 'Assign Opportunity Count Email',
+    'LBL_SENDSMSTOELIGIBLECUSTOMERS' => 'Send SMS To Eligible Customers',
     'LBL_AORRUNSCHEDULEDREPORTS' => 'Run scheduled reports',
     'LBL_PROCESSAOW_WORKFLOW' => 'Process AOW Workflow',
 
