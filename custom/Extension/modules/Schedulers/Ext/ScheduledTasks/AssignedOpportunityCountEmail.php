@@ -18,7 +18,7 @@ function assignedOpportunityCountEmail() {
     $email = new SendEmail();
     $bean = BeanFactory::getBean('Users');
 
-    $query = "users.deleted=0 and (users.designation like '%Customer Acquisition%' or users.designation like '%Cluster Manager%') and users.status='Active'";
+    $query = "users.deleted=0 and (users_cstm.designation_c like '%Customer Acquisition%' or users_cstm.designation_c like '%Cluster Manager%') and users.status='Active'";
     $date = date('Y-m-d');
 
     $items = $bean->get_full_list('', $query);
@@ -52,11 +52,14 @@ function assignedOpportunityCountEmail() {
                         Team NeoGrowth";
             }
 
-            $logger->log('debug', 'Sending email to '.$name.' with email id '.$to.' and body '.$body);
+            $logger->log('debug', 'Sending email to '.$name.' with email id '.$user->email1.' and body '.$body);
             
             $email->send_email_to_user($subject, $body, $to, $cc);
         }
+    } else {
+        $logger->log('debug', 'assignedOpportunityCountEmail No user found ');
     }
+
     return true;
 }
 ?>
