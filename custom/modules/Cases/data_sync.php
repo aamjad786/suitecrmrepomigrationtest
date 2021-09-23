@@ -329,7 +329,7 @@ class DataSync{
             // CallBackFlow.php. Merchant email is sent from there. 
             return; 
         }
-        $c = new aCase;
+        $c = new aCase();
         $c->retrieve($bean->id);
 
         if(empty($bean->fetched_row) && $bean->in_save){

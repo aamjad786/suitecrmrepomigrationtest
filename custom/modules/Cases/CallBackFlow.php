@@ -134,7 +134,7 @@ class CallBackFlow {
 	 */
 	function sendMailsToMerchant($case_bean, $call_bean){
 		$email = new SendEmail();
-        $c = new aCase;
+        $c = new aCase();
         $c->retrieve($case_bean->id);
         require_once('custom/modules/Cases/data_sync.php');
         $datasync = new DataSync();
