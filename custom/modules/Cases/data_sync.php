@@ -15,11 +15,17 @@ class DataSync{
         $timestamp = date("Y-m-d H:i:s", $timestamp);
         $url = ('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']."?module=Cases&action=DetailView&record=".$bean->id);
         global $current_user;
-        $myfile = fopen("Logs/data_sync.log",'a');
+
+        require_once 'custom/CustomLogger/CustomLogger.php';
+        $customLogget=new CustomLogger('data_sync.log');
+        //$customLogget->log('debug', '$retrieved_data =====>'.print_r($retrieved_data));
+
+        //$myfile = fopen("Logs/data_sync.log",'a');
         require_once 'modules/ACLRoles/ACLRole.php';
         date_default_timezone_set('Asia/Kolkata');
 
-        fwrite($myfile,"\nInside data sync\n");
+        $customLogget->log('debug', 'Inside data sync');
+        //fwrite($myfile,"\nInside data sync\n");
         if(empty($bean->name)){
             if(!empty($bean->description)){
                 $bean->name = substr($bean->description,0, 50);
@@ -27,7 +33,8 @@ class DataSync{
                 $bean->name = "Blank Subject";
             }
         }
-        fwrite($myfile,"Saving case $bean->id\n");
+        $customLogget->log('debug', "Saving case $bean->id");
+        //fwrite($myfile,"Saving case $bean->id\n");
        
         $userDepartment = $this->getUserDepartment($bean->assigned_user_id);
         if($bean->current_user_department_c != $userDepartment){
@@ -35,7 +42,8 @@ class DataSync{
         }
         
         $attended_by_c = $bean->attended_by_c;
-        fwrite($myfile,"start attended_by_c  $attended_by_c\n");
+        $customLogget->log('debug', "start attended_by_c  $attended_by_c");
+        //fwrite($myfile,"start attended_by_c  $attended_by_c\n");
 
         if($bean->case_subcategory_c == "financial_live_restructure"){
             $bean->type = "request";
@@ -57,8 +65,8 @@ class DataSync{
         
         if(!(empty($bean->fetched_row) && $bean->in_save)){
 
-
-            fwrite($myfile,"Editing case $bean->id\n");
+            $customLogget->log('debug', "Editing case $bean->id");
+            //fwrite($myfile,"Editing case $bean->id\n");
             if (empty($bean->date_attended_c) && strtotime($bean->date_entered)!=strtotime($bean->date_modified)) {
                 //$bean->date_attended_c = $bean->date_modified;
                 if($bean->state!="Closed")
@@ -214,7 +222,8 @@ class DataSync{
             }
 
         }else{
-            fwrite($myfile,"New case $bean->id\n");
+            $customLogget->log('debug', "New case $bean->id");
+            //fwrite($myfile,"New case $bean->id\n");
             $bean->age_c = 0;
 
             //Get the current user's role
@@ -233,8 +242,8 @@ class DataSync{
             if(!empty($bean->update_text)){
                 $bean->update_text = htmlentities(htmlspecialchars($bean->update_text));
             }
-            
-            fwrite($myfile,"Assigned user id before save $bean->assigned_user_id\n");
+            $customLogget->log('debug', "Assigned user id before save $bean->assigned_user_id");
+            //fwrite($myfile,"Assigned user id before save $bean->assigned_user_id\n");
 
             if(empty($bean->assigned_user_id)){
                 if($current_user->user_name=='ng171')
@@ -245,10 +254,12 @@ class DataSync{
                     $bean->assigned_user_id = $bean->getUserToAssign();
                 }
                 $bean->attended_by_c = $this->getUserName($bean->assigned_user_id);
-                fwrite($myfile,"Assigned user id after $bean->assigned_user_id\n");
+                $customLogget->log('debug', "Assigned user id after $bean->assigned_user_id");
+                //fwrite($myfile,"Assigned user id after $bean->assigned_user_id\n");
                 $auditid=create_guid();
                 $created_by=$current_user->id;
-                fwrite($myfile,"Auditid: $auditid  created_by: $created_by Date: $date\n");
+                $customLogget->log('debug', "Auditid: $auditid  created_by: $created_by Date: $date");
+                //fwrite($myfile,"Auditid: $auditid  created_by: $created_by Date: $date\n");
                 $query="insert into cases_audit values ('$auditid','$bean->id','$timestamp','$created_by','assigned_user_id','relate',null,'$bean->assigned_user_id',null,null)";
                 $result=$db->query($query);
                 
@@ -271,7 +282,8 @@ class DataSync{
         } else if($p2=='Resolved'){
             $bean->date_attended_c =  $bean->date_modified;
         }
-        fwrite($myfile,"end attended_by_c  $attended_by_c\n");
+        $customLogget->log('debug', "end attended_by_c  $attended_by_c");
+        //fwrite($myfile,"end attended_by_c  $attended_by_c\n");
     }
     //$bean->call_sns();
     }
