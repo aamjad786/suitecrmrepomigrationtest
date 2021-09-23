@@ -16,6 +16,8 @@ $hook_array['after_relationship_add'][] = Array(77, 'addRelationship', 'modules/
 $hook_array['after_relationship_delete'] = Array(); 
 $hook_array['after_relationship_delete'][] = Array(77, 'deleteRelationship', 'modules/Accounts/AccountsJjwg_MapsLogicHook.php','AccountsJjwg_MapsLogicHook', 'deleteRelationship'); 
 
+//custom logic hooks
 
+$hook_array['after_save'][] = Array(1, 'change merchant name in leads and opportunities', 'custom/modules/Accounts/AfterSaveLogicHook.php','AfterSaveLogicHook', 'UpdateMerchantName'); 
 
 ?>
