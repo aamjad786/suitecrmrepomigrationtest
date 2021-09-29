@@ -103,12 +103,12 @@ array (
           0 => 
           array (
             'name' => 'mobile1_c',
-            'label' => 'LBL_MOBILE1',
+            'label' => 'LBL_MOBILE1_C',
           ),
           1 => 
           array (
             'name' => 'mobile2_c',
-            'label' => 'LBL_MOBILE2',
+            'label' => 'LBL_MOBILE2_C',
           ),
         ),
         4 => 
@@ -116,7 +116,7 @@ array (
           0 => 
           array (
             'name' => 'pan_no_c',
-            'label' => 'LBL_PAN_NO',
+            'label' => 'LBL_PAN_NO_C',
           ),
           1 => 
           array (

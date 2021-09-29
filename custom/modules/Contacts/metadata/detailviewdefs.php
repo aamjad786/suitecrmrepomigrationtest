@@ -156,12 +156,12 @@ array (
           array (
             'name' => 'gender_c',
             'studio' => 'visible',
-            'label' => 'LBL_GENDER',
+            'label' => 'LBL_GENDER_C',
           ),
           1 => 
           array (
             'name' => 'designation_c',
-            'label' => 'LBL_DESIGNATION',
+            'label' => 'LBL_DESIGNATION_C',
           ),
         ),
         2 => 
@@ -169,12 +169,12 @@ array (
           0 => 
           array (
             'name' => 'age_c',
-            'label' => 'LBL_AGE',
+            'label' => 'LBL_AGE_C',
           ),
           1 => 
           array (
             'name' => 'birth_date_c',
-            'label' => 'LBL_BIRTH_DATE',
+            'label' => 'LBL_BIRTH_DATE_C',
           ),
         ),
         3 => 
