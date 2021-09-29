@@ -6040,7 +6040,7 @@ class InboundEmail extends SugarBean
      *
      * @return string|boolean   Case ID or FALSE if not found
      */
-    public function getCaseIdFromCaseNumber($emailName, $aCase)
+    public function getCaseIdFromCaseNumber($emailName, $fromaddr, $aCase)
     {
         //$emailSubjectMacro
         $exMacro = explode('%1', $aCase->getEmailSubjectMacro());
