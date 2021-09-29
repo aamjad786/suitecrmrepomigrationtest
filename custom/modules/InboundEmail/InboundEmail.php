@@ -44,11 +44,11 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 use ZBateson\MailMimeParser\MailMimeParser;
 
-require_once __DIR__ . '/../../include/Imap/ImapHandlerFactory.php';
+require_once  'include/Imap/ImapHandlerFactory.php';
 
-require_once __DIR__ . '/../../include/OutboundEmail/OutboundEmail.php';
-require_once __DIR__ . '/../../modules/InboundEmail/Overview.php';
-require_once __DIR__ . '/../../modules/InboundEmail/temp.php';
+require_once 'include/OutboundEmail/OutboundEmail.php';
+require_once 'modules/InboundEmail/Overview.php';
+require_once 'modules/InboundEmail/temp.php';
 
 class InboundEmail extends SugarBean
 {
@@ -3547,7 +3547,7 @@ class InboundEmail extends SugarBean
 
     public function handleCaseAssignment($email)
     {
-        $c = BeanFactory::newBean('Cases');
+        $c = new aCase();
         if ($caseId = $this->getCaseIdFromCaseNumber($email->name, $email->from_addr, $c)) {
             $c->retrieve($caseId);
             $email->retrieve($email->id);
@@ -3639,14 +3639,14 @@ class InboundEmail extends SugarBean
         global $current_user, $mod_strings, $current_language;
         $mod_strings = return_module_language($current_language, "Emails");
         $GLOBALS['log']->debug('In handleCreateCase');
-        $c = BeanFactory::newBean('Cases');
+        $c = new aCase();
         $this->getCaseIdFromCaseNumber($email->name, $email->from_addr, $c);
 
         if (!$this->handleCaseAssignment($email) && $this->isMailBoxTypeCreateCase()) {
             // create a case
             $GLOBALS['log']->debug('retrieveing email');
             $email->retrieve($email->id);
-            $c = BeanFactory::newBean('Cases');
+            $c = new aCase();
             $c->description = $email->description;
             $c->assigned_user_id = $userId;
             $c->name = $email->name;
@@ -6023,7 +6023,7 @@ class InboundEmail extends SugarBean
         global $app_strings;
         global $app_list_strings;
 
-        $c = BeanFactory::newBean('Cases');
+        $c = new aCase();
         $template = new Sugar_Smarty();
         $template->assign('APP', $app_strings);
         $template->assign('MOD', $mod_strings);
@@ -6235,7 +6235,7 @@ class InboundEmail extends SugarBean
             }
             $ret = $this->getImap()->search('UNDELETED');
         }
-
+        var_dump($ret);
         LoggerManager::getLogger()->debug('-----> getNewMessageIds() got ' . count($ret) . ' new Messages');
 
         return $ret;
