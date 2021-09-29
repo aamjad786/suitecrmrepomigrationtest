@@ -6221,7 +6221,8 @@ class InboundEmail extends SugarBean
             } else {
                 $date = $storedOptions['only_since_last'];
             }
-            $ret = $this->getImap()->search('SINCE "' . $date . '" UNDELETED');
+            //$ret = $this->getImap()->search('SINCE "' . $date . '" UNDELETED'); //Pallavi temp commented since date
+            $ret = $this->getImap()->search('UNDELETED');
             $check = $this->getImap()->check();
             $storedOptions['only_since_last'] = $check->Date;
 			$storedOptions['only_since'] = 1;
@@ -6235,7 +6236,6 @@ class InboundEmail extends SugarBean
             }
             $ret = $this->getImap()->search('UNDELETED');
         }
-        var_dump($ret);
         LoggerManager::getLogger()->debug('-----> getNewMessageIds() got ' . count($ret) . ' new Messages');
 
         return $ret;
