@@ -10,19 +10,19 @@ $hook_array['before_save'][] = Array(77, 'updateGeocodeInfo', 'modules/Leads/Lea
 $hook_array['after_save'] = Array(); 
 $hook_array['after_save'][] = Array(77, 'updateRelatedMeetingsGeocodeInfo', 'modules/Leads/LeadsJjwg_MapsLogicHook.php','LeadsJjwg_MapsLogicHook', 'updateRelatedMeetingsGeocodeInfo'); 
 
-// Custome Login Hooks
+// Custom Login Hooks
 
-$hook_array['before_save'][] = Array(1, 'check 10 digit mobile', 'custom/modules/Leads/BeforeSaveLead.php','BeforeSaveLead', 'check_digits');
-$hook_array['before_save'][] = Array(2, 'check mobile number exists', 'custom/modules/Leads/BeforeSaveLead.php','BeforeSaveLead', 'check_duplicate_lead'); 
-$hook_array['before_save'][] = Array(3, 'Change Lead Status based on disposition', 'custom/modules/Leads/BeforeSaveLead.php','BeforeSaveLead', 'change_lead_status');
+$hook_array['before_save'][] = Array(1, 'Check 10 Digit Mobile', 'custom/modules/Leads/BeforeSaveLead.php','BeforeSaveLead', 'checkMobileNumber');
+$hook_array['before_save'][] = Array(2, 'Dedup Check For Lead', 'custom/modules/Leads/BeforeSaveLead.php','BeforeSaveLead', 'checkDuplicateLead'); 
+$hook_array['before_save'][] = Array(3, 'Sanity For Filed Values', 'custom/modules/Leads/BeforeSaveLead.php','BeforeSaveLead', 'fieldSanity');
 
 
-$hook_array['after_save'][] = Array(2, 'addToCallDisposition', 'custom/modules/Leads/add_call_disposition.php','Class_Disposition_Add', 'fun_Disposition_Save'); 
-$hook_array['after_save'][] = Array(3, 'Convert Lead to Account, Opportunities and Contacts when lead status changed to Verified', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'convert_lead_acc_con_opp');
-$hook_array['after_save'][] = Array(5, 'Business vintage years calculations', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'business_vintage_years');
-$hook_array['after_save'][] = Array(6, '', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'save_on_acc_con_opp');
-$hook_array['after_save'][] = Array(7, 'update opportunity when lead is created through crmapi', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'update_opp');
-$hook_array['after_save'][] = Array(200, 'adding first assigned user to change log', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'audit_first_assigned');
+$hook_array['after_save'][] = Array(2, 'addToCallDisposition', 'custom/modules/Leads/AddCallDisposition.php','Disposition', 'saveDisposition'); 
+$hook_array['after_save'][] = Array(3, 'Auto Convert Lead to Account, Opportunities and Contacts', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'autoConvertionOfLead');
+// $hook_array['after_save'][] = Array(5, 'Business vintage years calculations', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'business_vintage_years');
+// $hook_array['after_save'][] = Array(6, '', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'save_on_acc_con_opp');
+// $hook_array['after_save'][] = Array(7, 'update opportunity when lead is created through crmapi', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'update_opp');
+// $hook_array['after_save'][] = Array(200, 'adding first assigned user to change log', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'audit_first_assigned');
 
 
 

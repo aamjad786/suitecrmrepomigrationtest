@@ -14,50 +14,41 @@ function PushInstaLeads()
 	$bean = BeanFactory::getBean('Opportunities');
 
 	$DayDate = date('Y-m-d H:i:s', strtotime('-360 minutes'));
-	$lead_list = $bean->get_full_list("", "opportunities.date_entered>'2021-04-15' and
-										   opportunities.date_entered<'$DayDate' and 
-										   opportunities_cstm.control_program_c='NeoCash Insta' and 
-										   opportunities.deleted=0 and 
-										   (opportunities_cstm.push_count_c<=5 or opportunities_cstm.push_count_c is null) and
-										   (opportunities_cstm._c<=2 or opportunities_cstm.sent_count_c is null)");
+	$lead_list = $bean->get_full_list("", "leads.deleted=0 and 
+										   leads.date_entered>'2021-04-15' and
+										   leads.date_entered<'$DayDate' and 
+										   leads_cstm.control_program_c='NeoCash Insta' and 
+										   (leads_cstm.push_count_c<=5 or leads_cstm.push_count_c is null) and
+										   (leads_cstm.sent_count_c<=2 or leads_cstm.sent_count_c is null)");
 
 	$logger->log('debug', 'Total Insta leads fetched to process ' . count($lead_list));
 	
 	foreach ($lead_list as $lead) {
-		
-		$id = $lead->id;
-		$lead_bean = BeanFactory::getBean('Leads');
-		$list = $lead_bean->get_full_list("", "leads.opportunity_id='$id'");
-	
-		if (empty($list[0]->id)) {
-			$logger->log('debug', 'Skipping as lead is missing for opportunity ' . $id);
-			$lead->push_count_c = 100;
-			$lead->save();
-			continue;
-		}
-		
-		if ((($lead->sales_stage != "Open" && !empty($lead->sales_stage)) || !empty($lead->application_id_c)) && $lead->sent_count == 0) {
 
-			$logger->log('debug', 'Skipping as sales stage is ' . $lead->sales_stage . 'and application is ' . $lead->application_id_c . 'and sent_count is ' . $lead->sent_count);
-			$lead->push_count_c = 50;
+		
+		if(trim($lead->dsa_code_c)=='Nine Group' || trim($lead->lead_source)=='Self Generated'){
+			$logger->log('debug', 'Skipping as lead source is ' . $lead->lead_source . ' or DSA Code is '.$lead->dsa_code_c);
+			$lead->push_count = 100;
 			$lead->save();
 			continue;
 		}
 
-		if ((($lead->sales_stage == "Open" || empty($lead->sales_stage)) || empty($lead->application_id_c)) && $lead->sent_count == 1) {
-			$logger->log('debug', 'Skipping as sales stage is' . $lead->sales_stage . ' and application is' . $lead->application_id_c . ' and sent_count is ' . $lead->sent_count);
+		if (!empty($lead->remarks) || ($lead->remarks != "" && $lead->remarks != " ")) {
+			$logger->log('debug', 'Skipping as lead source is ' . $lead->lead_source . ' and remarks is not empty!');
+			$lead->push_count = 100;
+			$lead->save();
 			continue;
 		}
 
 
 		$arr = array();
 		$arr['Lead_Source'] = $lead->lead_source;
-		$arr['Sub_Source'] = $list[0]->sub_source_c;
+		$arr['Sub_Source'] = $lead->sub_source_c;
 		$arr['DSA_code'] = $lead->dsa_code_c;
 		$arr['First_Name'] = $lead->name;
 		$arr['Last_Name'] = "";
 		$arr['Mobile_Number'] = $lead->pickup_appointment_contact_c;
-		$arr['EmailID'] = $list[0]->email1;
+		$arr['EmailID'] = $lead->email1;
 		$arr['Business_Trading_Name'] = $lead->merchant_name_c;
 		$arr['Lead_ID'] = $lead->id;
 		$arr['City'] = $lead->pickup_appointment_city_c;
@@ -65,8 +56,8 @@ function PushInstaLeads()
 		$arr['remarks'] = $lead->remarks;
 		$arr['Loan_amount'] = $lead->loan_amount_c;
 		$arr['stage_drop_off'] = $lead->stage_drop_off;
-		$arr['Address_Street'] = $list[0]->primary_address_street;
-		$arr['Address_pin'] = $list[0]->primary_address_postalcode;
+		$arr['Address_Street'] = $lead->primary_address_street;
+		$arr['Address_pin'] = $lead->primary_address_postalcode;
 		$arr['stage_drop_off'] = $lead->sales_stage == "Sanctioned" ? 'Customer Deal Generated' : '';
 		$arr['app_form_link'] = $lead->app_form_link;
 		$arr['product_type'] = "NeoCash Insta";

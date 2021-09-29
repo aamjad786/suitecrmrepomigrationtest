@@ -71,7 +71,7 @@ array (
           0 => 
           array (
             'name' => 'pan_no_c',
-            'label' => 'LBL_PAN_NO',
+            'label' => 'LBL_PAN_NO_C',
           ),
           1 => 
           array (
@@ -92,19 +92,6 @@ array (
         array (
           0 => 
           array (
-            'name' => 'personal_email_c',
-            'label' => 'LBL_PERSONAL_EMAIL',
-          ),
-          1 => 
-          array (
-            'name' => 'official_email_c',
-            'label' => 'LBL_OFFICIAL_EMAIL',
-          ),
-        ),
-        4 => 
-        array (
-          0 => 
-          array (
             'name' => 'phone_office',
             'label' => 'LBL_PHONE_OFFICE',
           ),
@@ -115,20 +102,20 @@ array (
             'label' => 'LBL_PHONE_ALT',
           ),
         ),
-        5 => 
+        4 => 
         array (
           0 => 
           array (
             'name' => 'mobile1_c',
-            'label' => 'LBL_MOBILE1',
+            'label' => 'LBL_MOBILE1_C',
           ),
           1 => 
           array (
             'name' => 'mobile2_c',
-            'label' => 'LBL_MOBILE2',
+            'label' => 'LBL_MOBILE2_C',
           ),
         ),
-        6 => 
+        5 => 
         array (
           0 => 
           array (
@@ -158,7 +145,7 @@ array (
             ),
           ),
         ),
-        7 => 
+        6 => 
         array (
           0 => 
           array (
@@ -166,7 +153,7 @@ array (
             'label' => 'LBL_DESCRIPTION',
           ),
         ),
-        8 => 
+        7 => 
         array (
           0 => 
           array (
@@ -194,4 +181,5 @@ array (
     ),
   ),
 );
+;
 ?>

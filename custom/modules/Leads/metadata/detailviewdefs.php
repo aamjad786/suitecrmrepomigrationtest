@@ -83,6 +83,11 @@ array (
           'newTab' => false,
           'panelDefault' => 'expanded',
         ),
+        'LBL_EOS_PANEL' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
       ),
       'syncDetailEditViews' => true,
     ),
@@ -756,6 +761,49 @@ array (
           array (
             'name' => 'has_shop_c',
             'label' => 'Do you own a house/shop?',
+          ),
+          1 => '',
+        ),
+      ),
+      'LBL_EOS_PANEL' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            'name' => 'eos_disposition_c',
+            'studio' => 'visible',
+            'label' => 'EOS DISPOSITION',
+          ),
+          1 => 
+          array (
+            'name' => 'eos_sub_disposition_c',
+            'studio' => 'visible',
+            'label' => 'EOS SUB-DISPOSITION',
+          ),
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            'name' => 'eos_opportunity_status_c',
+            'studio' => 'visible',
+            'label' => 'EOS OPPORTUNITY STATUS',
+          ),
+          1 => 
+          array (
+            'name' => 'eos_sub_status_c',
+            'studio' => 'visible',
+            'label' => 'EOS OPPORTUNITY SUB-STATUS',
+          ),
+        ),
+        2 => 
+        array (
+          0 => 
+          array (
+            'name' => 'eos_remark_c',
+            'studio' => 'visible',
+            'label' => 'LBL_EOS_REMARK_C',
           ),
           1 => '',
         ),
