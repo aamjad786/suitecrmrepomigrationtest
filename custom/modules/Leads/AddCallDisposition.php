@@ -4,12 +4,12 @@ if (!defined('sugarEntry') || !sugarEntry)
     die('Not A Valid Entry Point');
 require_once('include/entryPoint.php');
 
-class Class_Disposition_Add
+class Disposition
 {
 
     static $run = false;
 
-    function fun_Disposition_Save($bean, $event, $arguments)
+    function saveDisposition($bean, $event, $arguments)
     {
         global $db;
         global $current_user;
