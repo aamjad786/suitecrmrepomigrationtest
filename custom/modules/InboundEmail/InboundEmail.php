@@ -6066,7 +6066,7 @@ class InboundEmail extends SugarBean
 
                 if (!empty($a['id'])) {
 
-					$query_email = 'select parent_id from emails  LEFT JOIN emails_text ON  emails.id = emails_text.email_id where parent_id=' .$a['id']. " and from_addr=".$fromaddr." and emails.deleted = 0  order by date_entered desc limit 1";
+					$query_email = "select parent_id from emails  LEFT JOIN emails_text ON  emails.id = emails_text.email_id where parent_id='" .$a['id']. "' and from_addr='".$fromaddr."' and emails.deleted = 0  order by date_entered desc limit 1";
 
 					$r_email = $this->db->query($query_email, true);
 
@@ -6092,7 +6092,7 @@ class InboundEmail extends SugarBean
                 $row = $this->db->fetchByAssoc($results);
                 if (!empty($row['id'])) {	
 
-					$query_email = 'select parent_id from emails  LEFT JOIN emails_text ON  emails.id = emails_text.email_id where parent_id=' .$a['id']. " and from_addr=".$fromaddr." and emails.deleted = 0  order by date_entered desc limit 1";
+					$query_email = "select parent_id from emails  LEFT JOIN emails_text ON  emails.id = emails_text.email_id where parent_id='" .$a['id']. "' and from_addr='".$fromaddr."' and emails.deleted = 0  order by date_entered desc limit 1";
 
 					$r_email = $this->db->query($query_email, true);
 
