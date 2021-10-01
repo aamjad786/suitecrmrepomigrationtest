@@ -3,7 +3,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 	define('sugarEntry', true);
 }
 require_once("include/SugarPHPMailer.php");
-require_once('modules/Emails/Email.php');
+require_once('custom/modules/Emails/Email.php');
 require_once('include/entryPoint.php');
 require_once 'custom/CustomLogger/CustomLogger.php';
 
