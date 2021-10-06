@@ -1294,7 +1294,7 @@ $GLOBALS['app_list_strings']['calls_type_list']=array (
    'abundant_calls'=>'Abundant calls'
 );
 
-$GLOBALS['app_list_strings']['calls_final_status_list']=array (
+$GLOBALS['app_list_strings']['calls_final_status_list_c']=array (
   '' => '',
   'voice_mail_not_contactable' => 'Not Contactable',
   'voice_mail_already_addressed' => 'Contacted issue already addressed',
@@ -1829,7 +1829,7 @@ $GLOBALS['app_list_strings']['call_attempt_status'] = array(
 
 $GLOBALS['app_list_strings']['onboarding_list'] = array(
     '' => '',
-    'establishment_name'  => 'Establishment Name',
+    'establishment_name_c'  => 'Establishment Name',
     'phone_number' => 'Customer Contact Number',
     'onboarding_email_id' => 'Email ID',
     'business_address' => 'Business Address',

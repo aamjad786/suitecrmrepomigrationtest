@@ -35,7 +35,7 @@ if(!empty($uui)){
         $campaignName = "Outbound_Social";
     }else if($moduleNm == "Calls"){
         $callBean = BeanFactory::getBean('Calls',$pid);
-        $callType = $callBean->calls_type;
+        $callType = $callBean->calls_type_c;
         if($callType=="voice_mail"){
             $campaignName = "Outbound_Voice_Mails";
         }else{

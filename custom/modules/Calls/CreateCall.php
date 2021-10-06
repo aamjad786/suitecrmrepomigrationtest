@@ -20,10 +20,10 @@ class CreateCall {
             $json_response = json_decode($getmerchantDetailsApiResponse, true);
 
             if (!empty($json_response) && count($json_response) > 0) {
-                $call->contact_number = $json_response[0]['Applicant Number'];
-                $call->email_id = $json_response[0]['Applicant Email Id'];
-                $call->branch = $json_response[0]['Branch Name'];
-                $call->establishment_name = $json_response[0]['Company Name'];
+                $call->contact_number_c = $json_response[0]['Applicant Number'];
+                $call->email_id_c= $json_response[0]['Applicant Email Id'];
+                $call->branch_c = $json_response[0]['Branch Name'];
+                $call->establishment_name_c = $json_response[0]['Company Name'];
             }
         }
         //Getting  Applocation Repayment Details
@@ -31,7 +31,7 @@ class CreateCall {
         if ($getApplicationRepaymentDetailsApiResponse) {
             $json_response_repayment = json_decode($getApplicationRepaymentDetailsApiResponse, true);
             if (!empty($json_response_repayment) && count($json_response_repayment) > 0) {
-                $call->repayment_mode = $json_response_repayment[0]['Repayment Mode'];
+                $call->repayment_mode_c = $json_response_repayment[0]['Repayment Mode'];
             }
         }
 
@@ -40,7 +40,7 @@ class CreateCall {
         if ($getApplicationFundingDetailsApiResponse) {
             $json_response_funding = json_decode($getApplicationFundingDetailsApiResponse, true);
             if (!empty($json_response_funding) && count($json_response_funding) > 0) {
-                $call->funded_date = $json_response_funding[0]['Funded Date'];
+                $call->funded_date_c = $json_response_funding[0]['Funded Date'];
             }
         }
 
@@ -49,16 +49,16 @@ class CreateCall {
         if ($getApplicationStatusApiResponse) {
             $json_response_status = json_decode($getApplicationStatusApiResponse, true);
             if (!empty($json_response_status) && count($json_response_status) > 0) {
-                $call->loan_status = ($json_response_status['app_status'] == 'Y' ? 'Closed' : 'Active');
+                $call->loan_status_c = ($json_response_status['app_status'] == 'Y' ? 'Closed' : 'Active');
             }
         }
         $callType = '';
         if(!empty($type)){
             $callType =  $GLOBALS['app_list_strings']['calls_type_list'][$type];
         }
-        $call->name = "$applicationId - $call->contact_number - $callType";
-        $call->calls_type = $type;
-        $call->app_id = $applicationId;
+        $call->name = "$applicationId - $call->contact_number_c - $callType";
+        $call->calls_type_c = $type;
+        $call->app_id_c = $applicationId;
         $call->direction = 'Outbound';
         $call->status = "Planned";
 

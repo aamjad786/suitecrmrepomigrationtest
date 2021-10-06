@@ -1,25 +1,25 @@
 <?php
-// created: 2021-09-04 15:09:03
-$dictionary["scrm_disposition_history_leads_1"] = array (
+// created: 2019-04-29 16:10:47
+$dictionary["cases_calls_1"] = array (
   'true_relationship_type' => 'one-to-many',
   'from_studio' => true,
   'relationships' => 
   array (
-    'scrm_disposition_history_leads_1' => 
+    'cases_calls_1' => 
     array (
-      'lhs_module' => 'scrm_Disposition_History',
-      'lhs_table' => 'scrm_disposition_history',
+      'lhs_module' => 'Cases',
+      'lhs_table' => 'cases',
       'lhs_key' => 'id',
-      'rhs_module' => 'Leads',
-      'rhs_table' => 'leads',
+      'rhs_module' => 'Calls',
+      'rhs_table' => 'calls',
       'rhs_key' => 'id',
       'relationship_type' => 'many-to-many',
-      'join_table' => 'scrm_disposition_history_leads_1_c',
-      'join_key_lhs' => 'scrm_disposition_history_leads_1scrm_disposition_history_ida',
-      'join_key_rhs' => 'scrm_disposition_history_leads_1leads_idb',
+      'join_table' => 'cases_calls_1_c',
+      'join_key_lhs' => 'cases_calls_1cases_ida',
+      'join_key_rhs' => 'cases_calls_1calls_idb',
     ),
   ),
-  'table' => 'scrm_disposition_history_leads_1_c',
+  'table' => 'cases_calls_1_c',
   'fields' => 
   array (
     0 => 
@@ -43,13 +43,13 @@ $dictionary["scrm_disposition_history_leads_1"] = array (
     ),
     3 => 
     array (
-      'name' => 'scrm_disposition_history_leads_1scrm_disposition_history_ida',
+      'name' => 'cases_calls_1cases_ida',
       'type' => 'varchar',
       'len' => 36,
     ),
     4 => 
     array (
-      'name' => 'scrm_disposition_history_leads_1leads_idb',
+      'name' => 'cases_calls_1calls_idb',
       'type' => 'varchar',
       'len' => 36,
     ),
@@ -58,7 +58,7 @@ $dictionary["scrm_disposition_history_leads_1"] = array (
   array (
     0 => 
     array (
-      'name' => 'scrm_disposition_history_leads_1spk',
+      'name' => 'cases_calls_1spk',
       'type' => 'primary',
       'fields' => 
       array (
@@ -67,20 +67,20 @@ $dictionary["scrm_disposition_history_leads_1"] = array (
     ),
     1 => 
     array (
-      'name' => 'scrm_disposition_history_leads_1_ida1',
+      'name' => 'cases_calls_1_ida1',
       'type' => 'index',
       'fields' => 
       array (
-        0 => 'scrm_disposition_history_leads_1scrm_disposition_history_ida',
+        0 => 'cases_calls_1cases_ida',
       ),
     ),
     2 => 
     array (
-      'name' => 'scrm_disposition_history_leads_1_alt',
+      'name' => 'cases_calls_1_alt',
       'type' => 'alternate_key',
       'fields' => 
       array (
-        0 => 'scrm_disposition_history_leads_1leads_idb',
+        0 => 'cases_calls_1calls_idb',
       ),
     ),
   ),

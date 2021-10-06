@@ -78,7 +78,7 @@ array (
     'label' => 'LBL_DATE_ENTERED',
     'default' => true,
   ),
-  'DATE_REQUESTED' => 
+  'DATE_REQUESTED_c' => 
   array (
     'type' => 'datetimecombo',
     'label' => 'Requested Date',

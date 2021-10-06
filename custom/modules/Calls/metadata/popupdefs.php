@@ -21,7 +21,7 @@ $popupMeta = array (
     'default' => true,
     'name' => 'name',
   ),
-  'CONTACT_NUMBER' => 
+  'CONTACT_NUMBER_C' => 
   array (
     'type' => 'varchar',
     'label' => 'Contact Number',

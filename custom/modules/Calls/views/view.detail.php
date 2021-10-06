@@ -28,7 +28,7 @@ class CallsViewDetail extends SugarView {
         $this->dv->process();
         echo $this->dv->display();
         $beanId = $this->bean->id;
-        $phoneNumber = $this->bean->contact_number;
+        $phoneNumber = $this->bean->contact_number_c;
         ?>
         <script>          
             var phoneNumber =  "<?php echo $phoneNumber; ?>";

@@ -180,7 +180,7 @@ $searchFields['Calls'] = array (
       0 => 'id',
     ),
   ),
-  'app_id' => 
+  'app_id_c' => 
   array (
     'query_type' => 'default',
   ),

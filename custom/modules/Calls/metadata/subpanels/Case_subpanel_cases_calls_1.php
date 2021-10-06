@@ -1,7 +1,7 @@
 <?php
 // created: 2019-04-29 16:14:25
 $subpanel_layout['list_fields'] = array (
-  'contact_number' => 
+  'contact_number_c' => 
   array (
     'type' => 'varchar',
     'vname' => 'Contact Number',

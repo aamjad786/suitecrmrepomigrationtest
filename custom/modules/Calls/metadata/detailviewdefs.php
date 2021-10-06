@@ -149,7 +149,7 @@ array (
         array (
           0 => 
           array (
-            'name' => 'date_requested',
+            'name' => 'date_requested_c',
             'comment' => 'Date Requested',
             'label' => 'Requested Date',
           ),
@@ -188,7 +188,7 @@ array (
           ),
           1 => 
           array (
-            'name' => 'contact_number',
+            'name' => 'contact_number_c',
             'label' => 'Contact Number',
           ),
         ),
@@ -200,7 +200,7 @@ array (
           ),
           1 => 
           array (
-            'name' => 'calls_action',
+            'name' => 'calls_action_c',
             'studio' => 'visible',
             'label' => 'Action',
           ),
@@ -212,13 +212,13 @@ array (
         array (
           0 => 
           array (
-            'name' => 'app_id',
+            'name' => 'app_id_c',
             'comment' => 'Application ID',
             'label' => 'LBL_APP_ID',
           ),
           1 => 
           array (
-            'name' => 'email_id',
+            'name' => 'email_id_c',
             'label' => 'Email id',
           ),
         ),
@@ -226,12 +226,12 @@ array (
         array (
           0 => 
           array (
-            'name' => 'establishment_name',
+            'name' => 'establishment_name_c',
             'label' => 'Establishment name',
           ),
           1 => 
           array (
-            'name' => 'branch',
+            'name' => 'branch_c',
             'label' => 'Branch',
           ),
         ),
@@ -239,12 +239,12 @@ array (
         array (
           0 => 
           array (
-            'name' => 'funded_date',
+            'name' => 'funded_date_c',
             'label' => 'Funded Date',
           ),
           1 => 
           array (
-            'name' => 'loan_status',
+            'name' => 'loan_status_c',
             'label' => 'Loan Status',
           ),
         ),
@@ -252,12 +252,12 @@ array (
         array (
           0 => 
           array (
-            'name' => 'repayment_mode',
+            'name' => 'repayment_mode_c',
             'label' => 'Repayment mode',
           ),
           1 => 
           array (
-            'name' => 'account_number',
+            'name' => 'account_number_c',
             'label' => 'Account Number',
           ),
         ),
@@ -265,12 +265,12 @@ array (
         array (
           0 => 
           array (
-            'name' => 'ifsc_code',
+            'name' => 'ifsc_code_c',
             'label' => 'IFSC code',
           ),
           1 => 
           array (
-            'name' => 'refund_amount',
+            'name' => 'refund_amount_c',
             'label' => 'Refund amount',
           ),
         ),
@@ -278,13 +278,13 @@ array (
         array (
           0 => 
           array (
-            'name' => 'calls_type',
+            'name' => 'calls_type_c',
             'studio' => 'visible',
             'label' => 'Calls Type',
           ),
           1 => 
           array (
-            'name' => 'calls_final_status',
+            'name' => 'calls_final_status_c',
             'studio' => 'visible',
             'label' => 'Final Status',
           ),
