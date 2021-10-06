@@ -16,14 +16,14 @@ $hook_array['before_save'][] = Array(3, 'Fetch Processor Name from AS API', 'cus
 $hook_array['before_save'][] = Array(3, 'Check weather to auto classify email or not', 'custom/modules/Cases/data_sync.php', 'DataSync', 'classify'); //added
 $hook_array['before_save'][] = Array(4, 'Assign date attained', 'custom/modules/Cases/data_sync.php', 'DataSync', 'assignDateAction'); //added
 
-$hook_array['before_save'][] = Array(10, 'Save case updates', 'custom/modules/AOP_Case_Updates/CaseUpdatesHook.php','CaseUpdatesHook', 'saveUpdate'); 
+$hook_array['before_save'][] = Array(10, 'Save case updates', 'custom/modules/AOP_Case_Updates/CustomCaseUpdatesHook.php','CustomCaseUpdatesHook', 'saveUpdate'); 
 $hook_array['before_save'][] = Array(11, 'Save case events', 'modules/AOP_Case_Events/CaseEventsHook.php','CaseEventsHook', 'saveUpdate'); 
-$hook_array['before_save'][] = Array(12, 'Case closure prep', 'custom/modules/AOP_Case_Updates/CaseUpdatesHook.php','CaseUpdatesHook', 'closureNotifyPrep'); 
+$hook_array['before_save'][] = Array(12, 'Case closure prep', 'custom/modules/AOP_Case_Updates/CustomCaseUpdatesHook.php','CustomCaseUpdatesHook', 'closureNotifyPrep'); 
 $hook_array['before_save'][] = Array(77, 'updateGeocodeInfo', 'modules/Cases/CasesJjwg_MapsLogicHook.php','CasesJjwg_MapsLogicHook', 'updateGeocodeInfo'); 
 
 $hook_array['after_save'] = Array(); 
 
-$hook_array['after_save'][] = Array(10, 'Send contact case closure email', 'custom/modules/AOP_Case_Updates/CaseUpdatesHook.php','CaseUpdatesHook', 'closureNotify'); 
+$hook_array['after_save'][] = Array(10, 'Send contact case closure email', 'custom/modules/AOP_Case_Updates/CustomCaseUpdatesHook.php','CustomCaseUpdatesHook', 'closureNotify'); 
 $hook_array['after_save'][] = Array(12, 'send email on insert', 'custom/modules/Cases/data_sync.php', 'DataSync', 'checkInsertedFields'); //added
 $hook_array['after_save'][] = Array(12, 'send email CCO suspicious trans', 'custom/modules/Cases/data_sync.php', 'DataSync', 'suspicioustrans'); //added
 $hook_array['after_save'][] = Array(15, 'count no. of edits for category and subcategory', 'custom/modules/Cases/data_sync.php', 'DataSync', 'edit_count'); //added
@@ -32,11 +32,11 @@ $hook_array['after_save'][] = Array(100, 'Save CS Team updated category and sub 
 //$hook_array['after_save'][] = Array(130, 'SNS function to call email tagging lambda', 'custom/modules/Cases/EmailAutomation.php', 'EmailAutomation', 'call_sns'); //added
 
 $hook_array['after_relationship_add'] = Array(); 
-$hook_array['after_relationship_add'][] = Array(9, 'Assign account', 'custom/modules/AOP_Case_Updates/CaseUpdatesHook.php','CaseUpdatesHook', 'assignAccount'); 
-$hook_array['after_relationship_add'][] = Array(10, 'Send contact case email', 'custom/modules/AOP_Case_Updates/CaseUpdatesHook.php','CaseUpdatesHook', 'creationNotify'); 
+$hook_array['after_relationship_add'][] = Array(9, 'Assign account', 'custom/modules/AOP_Case_Updates/CustomCaseUpdatesHook.php','CustomCaseUpdatesHook', 'assignAccount'); 
+$hook_array['after_relationship_add'][] = Array(10, 'Send contact case email', 'custom/modules/AOP_Case_Updates/CustomCaseUpdatesHook.php','CustomCaseUpdatesHook', 'creationNotify'); 
 $hook_array['after_relationship_add'][] = Array(77, 'addRelationship', 'modules/Cases/CasesJjwg_MapsLogicHook.php','CasesJjwg_MapsLogicHook', 'addRelationship'); 
 $hook_array['after_retrieve'] = Array(); 
-$hook_array['after_retrieve'][] = Array(10, 'Filter HTML', 'custom/modules/AOP_Case_Updates/CaseUpdatesHook.php','CaseUpdatesHook', 'filterHTML'); 
+$hook_array['after_retrieve'][] = Array(10, 'Filter HTML', 'custom/modules/AOP_Case_Updates/CustomCaseUpdatesHook.php','CustomCaseUpdatesHook', 'filterHTML'); 
 $hook_array['after_relationship_delete'] = Array(); 
 $hook_array['after_relationship_delete'][] = Array(77, 'deleteRelationship', 'modules/Cases/CasesJjwg_MapsLogicHook.php','CasesJjwg_MapsLogicHook', 'deleteRelationship'); 
 
