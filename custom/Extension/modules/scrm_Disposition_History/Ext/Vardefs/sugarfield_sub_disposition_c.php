@@ -1,5 +1,5 @@
 <?php
- // created: 2021-09-04 15:51:22
+ // created: 2016-09-16 11:42:43
 $dictionary['scrm_Disposition_History']['fields']['sub_disposition_c']['inline_edit']='1';
 $dictionary['scrm_Disposition_History']['fields']['sub_disposition_c']['labelValue']='Sub Disposition';
 

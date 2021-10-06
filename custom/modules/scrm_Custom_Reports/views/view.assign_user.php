@@ -8,6 +8,10 @@ include_once('include/SugarPHPMailer.php');
 include_once('modules/Administration/Administration.php');
 require_once 'custom/include/SendEmail.php';
 require_once('modules/EmailTemplates/EmailTemplate.php');
+require_once 'custom/CustomLogger/CustomLogger.php';
+global $logger;
+$logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+
 
 class scrm_Custom_ReportsViewassign_user extends SugarView {
 	
@@ -224,9 +228,11 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
     }
 
     function pullUser($ngid){
+        global $logger;
         require_once('PullUser.php');
         $pullUser = new PullUser();
         if(!empty($pullUser->insertUser($ngid))){
+            $logger->log('debug', 'Successfully pulled User'. $ngid);
             echo "<p>Successfully pulled User $ngid</p>";
             return true;           
         }
@@ -263,6 +269,7 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
     }
 
 	function updateManager($usr_ng_id, $mgr_ng_id){
+        global $logger;
         $usr = $this->getUserBean($usr_ng_id);
         $mgr = $this->getUserBean($mgr_ng_id);
 
@@ -278,8 +285,12 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
             $updated_count++;
 			$usr->reports_to_id=$mgr->id;
             $usr->save();
+            
+        $logger->log('debug', 'Updated'. $mgr_ng_id .'as manager of'. $usr_ng_id);
+        
             echo "<p style='color:green'>Updated $mgr_ng_id as manager of $usr_ng_id</p>";
 		}else{
+            $logger->log('error', 'Failed to create relationship for'. $usr_ng_id); 
             echo "<p style='color:red'>Failed to create relationship for $usr_ng_id</p>";
         }
     }
@@ -602,14 +613,27 @@ DEPARTMENTFORM1;
 			<td>
 				<select name='sg' id='sg' value='$_REQUEST[sg]'>
 					<option value="">Select a Security Group</option>
-                    <option value="Sales Team">Sales Team</option>
-					<option value="case agent">Case Agent</option>
-					<option value="case manager">Case Manager</option>
-					<option value="Call Center-Tata BSS">Call Center-Tata BSS</option>
-					<option value="Call Center-Kenkei2">Call Center-Kenkei</option>
-					<option value="Call Center-KServe">Call Center-KServe</option>
-					<option value="Marketing">Marketing</option>
-					<option value="Marketing Team">Marketing Team</option>
+                    <option value="Loc - Vijayawada">Loc - Vijayawada</option>
+                    <option value="Loc - Coimbatore">Loc - Coimbatore</option>
+                    <option value="Loc - Madurai">Loc - Madurai</option>
+                    <option value="Loc - Mysore">Loc - Mysore</option>
+                    <option value="Loc - Agra">Loc - Agra</option>
+                    <option value="Loc - Punjab">Loc - Punjab</option>
+                    <option value="Loc - Indore">Loc - Indore</option>
+                    <option value="Loc - Rajkot">Loc - Rajkot</option>
+					<option value="Loc - Surat">Loc - Surat</option>
+                    <option value="Loc - Chandigarh">Loc - Chandigarh</option>
+                    <option value="Loc - Ahmedabad">Loc - Ahmedabad</option>
+                    <option value="Loc -Ludhiana">Loc -Ludhiana</option>
+                    <option value="Loc - Jaipur">Loc - Jaipur</option>
+                    <option value="Loc - Hyderabad">Loc - Hyderabad</option>
+                    <option value="Loc - Chennai">Loc - Chennai</option>
+                    <option value="Loc - Bengaluru">Loc - Bengaluru</option>
+                    <option value="Loc - Delhi">Loc - Delhi</option>
+                    <option value="Loc - Nashik">Loc - Nashik</option>
+                    <option value="Loc -Pune">Loc -Pune</option>
+                    <option value="Loc - Mumbai">Loc - Mumbai</option>
+                    <option value="Loc - Gurgaon">Loc - Gurgaon</option>
 					<option value="No Access Group">No Access Group</option>
 				</select>
 			</td>
@@ -700,6 +724,7 @@ JS;
                         echo "<br>";
                     }
                 }
+                echo "Successfully uploaded";
 			}
 			else{
                 echo "<p style='color:red'>Employee ID cannot be empty</p>";
@@ -819,11 +844,13 @@ HTMLFORM2;
     }
 }
 function getDataFromAS($ngId) {
+    global $logger;
+    $logger->log('debug', 'fetchUserInfoFromAD Called....!');
     try {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_PORT => "3009",
-            CURLOPT_URL => getenv("SCRM_AD_UTILITY_HOST")."/json2ldap",
+            CURLOPT_PORT => "",
+            CURLOPT_URL => "http://localhost:3003/json2ldap",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -844,12 +871,16 @@ function getDataFromAS($ngId) {
             echo "cURL Error #:" . $err;
             die();
         }
+
+        $logger->log('debug', 'AD API Response--------: ' . $results);
         $results = (json_decode($results, true));
         $results = $results['matches'];
         foreach ($results as $result) {
             try {
+               
                 return $result;
             } catch (Exception $e) {
+                $logger->log('error', 'Exception in saving'. $ngId . $e->getMessage());
                 echo "Exception in saving $ngId" . $e->getMessage();
             }
         }

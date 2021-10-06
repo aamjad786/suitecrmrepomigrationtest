@@ -132,14 +132,6 @@ array (
             'name' => 'neo_customers_scrm_disposition_history_1_name',
           ),
         ),
-        8 => 
-        array (
-          0 => 
-          array (
-            'name' => 'leads_scrm_disposition_history_1_name',
-            'label' => 'LBL_LEADS_SCRM_DISPOSITION_HISTORY_1_FROM_LEADS_TITLE',
-          ),
-        ),
       ),
     ),
   ),
