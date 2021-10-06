@@ -1,4 +1,6 @@
 <?php
+use SuiteCRM\Utility\SuiteValidator;
+
 if (!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
 array_push($job_strings, 'tele_sales_reports');

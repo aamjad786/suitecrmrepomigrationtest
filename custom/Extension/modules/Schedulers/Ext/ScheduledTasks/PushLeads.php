@@ -8,56 +8,29 @@ $job_strings[] = 'PushLeads';
 function PushLeads()
 {
 
-	$logger = new CustomLogger('PushLeadsToEOS');
+	$logger = new CustomLogger('PushLeadsToEOS-'.date('Y-M-d'));
+
 	$logger->log('debug', 'PushLeadsToEOS Started at ' . date('Y-M-d H:i:s'));
 
-	$bean = BeanFactory::getBean('Opportunities');
-	$lead_list = $bean->get_full_list("", "opportunities.date_entered>'2021-02-15' and 
-										   opportunities.deleted=0 and 
-										   (opportunities_cstm.control_program_c!='NeoCash Insta' or opportunities_cstm.control_program_c is null) and 
-										   (opportunities_cstm.pushed_lead_c=0 or opportunities_cstm.pushed_lead_c is null) and 
-										   (opportunities_cstm.push_count_c<=5 or opportunities_cstm.push_count_c is null)");
-	// $lead_list = $bean->get_full_list("", "opportunities.date_entered>'2021-02-15'");
+	$bean = BeanFactory::getBean('Leads');
+
+	$lead_list = $bean->get_full_list("", "leads.deleted=0 and 
+										   leads.opportunity_id is null and
+										   (leads_cstm.control_program_c!='NeoCash Insta' or leads_cstm.control_program_c is null) and 
+										   (leads_cstm.pushed_lead_c=0 or leads_cstm.pushed_lead_c is null) and 
+										   (leads_cstm.push_count_c<=5 or leads_cstm.push_count_c is null)");
+	
+	// $lead_list = $bean->get_full_list("", "leads.date_entered>'2021-02-15'");
 
 	// $logger->log('debug', '');
-	$logger->log('debug', 'Total leads fetched to process ' . count($lead_list));
+	$logger->log('debug', 'Total Leads Fetched To Process: ' . count($lead_list));
 
 	foreach ($lead_list as $lead) {
 
-		//  Skipping Lead if some fields are already present
+		//  Skipping Lead if 
 
-		$lead_id = $lead->id;
-		$lead_bean = BeanFactory::getBean('Leads');
-		$list = $lead_bean->get_full_list("", "leads.opportunity_id='$lead_id'");
-
-		if (empty($list[0]->id)) {
-			$logger->log('debug', 'Skipping as lead is missing for opportunity ' . $lead_id);
-			$lead->push_count = 100;
-			$lead->save();
-			continue;
-		}
-
-		if (($lead->lead_source != 'Marketing') && ($lead->lead_source != 'Alliances')) {
-			$lead->push_count = 100;
-			$lead->save();
-			$logger->log('debug', 'Skipping as lead source is ' . $lead->lead_source);
-			continue;
-		}
-
-		if (!empty($lead->opportunity_status_c) || ($lead->opportunity_status_c != "" && $lead->opportunity_status_c != " ")) {
-			$logger->log('debug', 'Skipping as lead source is ' . $lead->lead_source . ' and Status is not empty!');
-			$lead->push_count = 100;
-			$lead->save();
-			continue;
-		}
-		if (!empty($lead->application_id_c) || ($lead->application_id_c != "" && $lead->application_id_c != " ")) {
-			$logger->log('debug', 'Skipping as lead source is ' . $lead->lead_source . ' and Application id is not empty!');
-			$lead->push_count = 100;
-			$lead->save();
-			continue;
-		}
-		if (!empty($lead->sub_status) || ($lead->sub_status != "" && $lead->sub_status != " ")) {
-			$logger->log('debug', 'Skipping as lead source is ' . $lead->lead_source . ' and Sub-Status is not empty!');
+		if(trim($lead->dsa_code_c)=='Nine Group' || trim($lead->lead_source)=='Self Generated'){
+			$logger->log('debug', 'Skipping as lead source is ' . $lead->lead_source . ' or DSA Code is '.$lead->dsa_code_c);
 			$lead->push_count = 100;
 			$lead->save();
 			continue;
@@ -69,12 +42,7 @@ function PushLeads()
 			$lead->save();
 			continue;
 		}
-		if ($lead->sales_stage != "Open" && !empty($lead->sales_stage) && $lead->sales_stage != " ") {
-			$logger->log('debug', 'Skipping as lead source is ' . $lead->lead_source . ' and Sales Stage is not empty!');
-			$lead->push_count = 100;
-			$lead->save();
-			continue;
-		}
+		
 
 		//  Skipping END;
 
@@ -83,29 +51,28 @@ function PushLeads()
 
 		$payload = array();
 		$payload['Lead_Source'] = $lead->lead_source;
-		$payload['Sub_Source'] = $list[0]->sub_source_c;
+		$payload['Sub_Source'] = $lead->sub_source_c;
 		$payload['DSA_code'] = $lead->dsa_code_c;
 		$payload['First_Name'] = $lead->name;
 		$payload['Last_Name'] = "";
 		$payload['Mobile_Number'] = $lead->pickup_appointment_contact_c;
-		$payload['EmailID'] = $list[0]->email1;
+		$payload['EmailID'] = $lead->email1;
 		$payload['Business_Trading_Name'] = $lead->merchant_name_c;
 		$payload['Lead_ID'] = $lead->id;
 		$payload['City'] = $lead->pickup_appointment_city_c;
 		$payload['product'] = $lead->product_type;
 		$payload['remarks'] = $lead->remarks;
 		$payload['Loan_amount'] = $lead->loan_amount_c;
-		$payload['stage_drop_off'] = $lead->stage_drop_off;
-		$payload['Address_Street'] = $list[0]->primary_address_street;
-		$payload['Address_pin'] = $list[0]->primary_address_postalcode;
-		$payload['stage_drop_off'] = $lead->sales_stage == "Sanctioned" ? 'Customer Deal Generated' : '';
+		$payload['Address_Street'] = $lead->primary_address_street;
+		$payload['Address_pin'] = $lead->primary_address_postalcode;
+		$payload['stage_drop_off'] = $lead->sales_stage == "Sanctioned" ? 'Customer Deal Generated' : $lead->stage_drop_off;
 		$payload['app_form_link'] = $lead->app_form_link;
 		$payload['product_type'] = $lead->product_type;
 		$payload['loan_amount_c'] = $lead->loan_amount_c;
 
-		$logger->log('debug', 'Payload: ' . print_r($payload, true));
-
 		$json_body = json_encode($payload);
+		
+		$logger->log('debug', 'Payload: ' . print_r($json_body, true));
 
 		// Payload Creation END;
 
@@ -142,10 +109,12 @@ function PushLeads()
 		}
 
 		if (preg_match("/Success/", $jsonResponse->{'Message'})) {
+			$logger->log('debug', 'Lead Is Sent To EOS: '.$lead->id);
+			
 			$lead->pushed_lead_c = explode("_", $jsonResponse->{'Message'})[1];
 			$time = date("Y-m-d H:i:s");
 			$time = strtotime($time) - (330 * 60);
-			$lead->date_sent_to_EOS_c = date("Y-m-d H:i:s", $time);
+			$lead->date_sent_to_eos_c = date("Y-m-d H:i:s", $time);
 			$lead->save();
 		}
 		if ($jsonResponse->{'Message'} == "Mobile Number already Exist.") {
@@ -167,3 +136,4 @@ function PushLeads()
 	return true;
 }
 
+// PushLeads();

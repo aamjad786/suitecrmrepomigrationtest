@@ -1,5 +1,5 @@
 <?php
-// created: 2021-09-14 17:59:08
+// created: 2021-09-23 18:23:08
 $searchFields['Leads'] = array (
   'first_name' => 
   array (
@@ -453,5 +453,22 @@ $searchFields['Leads'] = array (
     'query_type' => 'default',
     'enable_range_search' => true,
   ),
-  
+  'range_date_sent_to_eos_c' => 
+  array (
+    'query_type' => 'default',
+    'enable_range_search' => true,
+    'is_date_field' => true,
+  ),
+  'start_range_date_sent_to_eos_c' => 
+  array (
+    'query_type' => 'default',
+    'enable_range_search' => true,
+    'is_date_field' => true,
+  ),
+  'end_range_date_sent_to_eos_c' => 
+  array (
+    'query_type' => 'default',
+    'enable_range_search' => true,
+    'is_date_field' => true,
+  ),
 );
