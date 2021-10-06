@@ -1,5 +1,5 @@
 <?php
-// created: 2021-09-28 16:11:09
+// created: 2021-10-06 15:06:54
 $mod_strings = array (
   'LBL_EDITVIEW_PANEL5' => 'New Panel 5',
   'LBL_EDITVIEW_PANEL6' => 'New Panel 6',
@@ -17,4 +17,8 @@ $mod_strings = array (
   'LBL_REMARKS' => 'EOS Remarks',
   'LBL_DETAILVIEW_PANEL5' => 'EOS Details',
   'LBL_EOS_REMARK_C' => 'EOS Remark',
+  'LBL_SENT_COUNT_C' => 'No. of times Lead successfully pushed to EOS',
+  'LBL_EOS_PANEL' => 'EOS Details',
+  'LBL_FIRST_NAME' => 'First Name',
+  'LBL_LAST_NAME' => 'Last Name',
 );
