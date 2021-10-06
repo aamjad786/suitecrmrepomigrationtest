@@ -21,7 +21,7 @@ $(document).ready(function() {
                 $(this).append('&nbsp;&nbsp;<img style="border:none;cursor:pointer;" id="' + idForMobileIcon + '" title="Click to make a call. You should be logged in to cloudagent, in the bottom link." src="custom/themes/default/images/cellphone.gif" onclick="openPopupAjax(\'' + phoneNumber + '\',\'' + moduleNm + '\', \'' + leadId + '\', \'0\');">&nbsp;');
             }
 
-            $(this).append('&nbsp;&nbsp;<img style="border:none;cursor:pointer;" title="Click to make a call. You should be logged in to cloudagent, in the bottom link." src="custom/themes/default/images/cellphone.gif" onclick="openPopupAjax(\'' + phoneNumber + '\',\'' + moduleNm + '\', \'' + leadId + '\', \'0\');">&nbsp;');
+            // $(this).append('&nbsp;&nbsp;<img style="border:none;cursor:pointer;" title="Click to make a call. You should be logged in to cloudagent, in the bottom link." src="custom/themes/default/images/cellphone.gif" onclick="openPopupAjax(\'' + phoneNumber + '\',\'' + moduleNm + '\', \'' + leadId + '\', \'0\');">&nbsp;');
             tmp_call = false;
         }
     });
