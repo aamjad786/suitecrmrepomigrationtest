@@ -149,6 +149,7 @@ class LeadsViewDetail extends SugarView
 				$('#pickup_appointment_city_c').after('<span>$city</span>');
 				$('#pickup_contact_number_c').text('$contant_no');
 				$('#pickup_appointment_date_time_c').text('$opp->pickup_appointment_date_c');
+				$('#pickup_appointment_pincode_c').text('$opp->pickup_appointment_pincode_c');
 
 
 				if('$opp_id' != ''){
@@ -167,7 +168,7 @@ class LeadsViewDetail extends SugarView
         </script>
 onload;
         
-       $js = <<<EOD
+      echo $js = <<<EOD
 	<script>
 	$(document).ready(function(){
 			

@@ -145,7 +145,7 @@ array (
           ),
           1 => 
           array (
-            'name' => 'calls_action',
+            'name' => 'calls_action_c',
             'studio' => 'visible',
             'label' => 'Action',
           ),

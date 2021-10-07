@@ -11,7 +11,7 @@ function PushInstaLeads()
 	$logger->log('debug', 'PushInstaLeadsToEOS Started at ' . date('Y-M-d H:i:s'));
 
 
-	$bean = BeanFactory::getBean('Opportunities');
+	$bean = BeanFactory::getBean('Leads');
 
 	$DayDate = date('Y-m-d H:i:s', strtotime('-360 minutes'));
 	$lead_list = $bean->get_full_list("", "leads.deleted=0 and 
@@ -87,6 +87,7 @@ function PushInstaLeads()
 			$message = json_decode($output);
 		}
 		if (preg_match("/Success/", $message->{'Message'})) {
+			$logger->log('debug', 'Lead Is Sent To EOS: '.$lead->id);
 			$lead->pushed_lead_c = explode("_", $message->{'Message'})[1];
 			$time = date("Y-m-d H:i:s");
 			$time = strtotime($time) - (330 * 60);
@@ -109,3 +110,5 @@ function PushInstaLeads()
 	//return true for completed
 	return true;
 }
+
+// PushInstaLeads();

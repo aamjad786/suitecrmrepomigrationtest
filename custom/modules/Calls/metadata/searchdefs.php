@@ -64,14 +64,14 @@ array (
         'default' => true,
         'name' => 'date_entered',
       ),
-      'calls_type' => 
+      'calls_type_c' => 
       array (
         'type' => 'enum',
         'studio' => 'visible',
         'label' => 'Calls Type',
         'width' => '10%',
         'default' => true,
-        'name' => 'calls_type',
+        'name' => 'calls_type_c',
       ),
       'assigned_user_id' => 
       array (

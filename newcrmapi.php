@@ -716,7 +716,7 @@ function checkDuplicateLead( $mobile,$scheme_c) {
     $query  = "select id,scheme_c from leads l join leads_cstm lcstm where deleted = 0 and phone_mobile = '$mobile' and lcstm.scheme_c='$scheme_c'and date_entered> CURDATE() - INTERVAL 30 DAY order by date_entered desc limit 1";
     $result = $db->query($query);
     while (($row = $db->fetchByAssoc($result)) != null) {
-        $logger=new CustomLogger('crmapi-2.0.log');
+        $logger=new CustomLogger('crmapi-2.0');
         $logger->log('debug', 'Dedup Query Result: '.print_r($row,true));
         $lead_id = $row['id'];
     }

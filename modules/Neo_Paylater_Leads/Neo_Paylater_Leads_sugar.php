@@ -46,15 +46,96 @@
 require_once('include/SugarObjects/templates/person/Person.php');
 
 class Neo_Paylater_Leads_sugar extends Person {
-	
-	
+	var $new_schema = true;
+	var $module_dir = 'Neo_Paylater_Leads';
+	var $object_name = 'Neo_Paylater_Leads';
+	var $table_name = 'neo_paylater_leads';
+	var $importable = true;
+	var $disable_row_level_security = true ; // to ensure that modules created and deployed under CE will continue to function under team security if the instance is upgraded to PRO
 
+	var $id;
+	var $name;
+	var $date_entered;
+	var $date_modified;
+	var $modified_user_id;
+	var $modified_by_name;
+	var $created_by;
+	var $created_by_name;
+	var $description;
+	var $deleted;
+	var $created_by_link;
+	var $modified_user_link;
+	var $assigned_user_id;
+	var $assigned_user_name;
+	var $assigned_user_link;
+	var $SecurityGroups;
+	var $salutation;
+	var $first_name;
+	var $last_name;
+	var $full_name;
+	var $title;
+	var $photo;
+	var $department;
+	var $do_not_call;
+	var $phone_home;
+	var $email;
+	var $phone_mobile;
+	var $phone_work;
+	var $phone_other;
+	var $phone_fax;
+	var $email1;
+	var $email2;
+	var $invalid_email;
+	var $email_opt_out;
+	var $primary_address_street;
+	var $primary_address_street_2;
+	var $primary_address_street_3;
+	var $primary_address_city;
+	var $primary_address_state;
+	var $primary_address_postalcode;
+	var $primary_address_country;
+	var $alt_address_street;
+	var $alt_address_street_2;
+	var $alt_address_street_3;
+	var $alt_address_city;
+	var $alt_address_state;
+	var $alt_address_postalcode;
+	var $alt_address_country;
+	var $assistant;
+	var $assistant_phone;
+	var $email_addresses_primary;
+	var $email_addresses;
+	var $email_addresses_non_primary;
+	var $campaign;
+	var $pre_approved_limit;
+	var $lead_source;
+	var $disposition;
+	var $subdisposition;
+	var $check_disposition;
+	var $converted_time;
+	var $merchant_type;
+	var $fe_name;
+	var $lead_type;
+	var $callback;
+	var $meeting;
+	var $customer_id;
+	var $missing_documents;
+	var $business_name;
+	var $partner_fse_name;
+	var $partner_fse_number;
+	var $attempts_done;
+	var $partner_name;
 	
 	function __construct(){
 		parent::__construct();
 	}
 	
-
+	function bean_implements($interface){
+		switch($interface){
+			case 'ACL': return true;
+		}
+		return false;
+	}
 		
 }
 ?>

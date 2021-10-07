@@ -14,13 +14,13 @@ function PushLeads()
 
 	$bean = BeanFactory::getBean('Leads');
 
-	// $lead_list = $bean->get_full_list("", "leads.deleted=0 and 
-	// 									   leads.opportunity_id is null and
-	// 									   (leads_cstm.control_program_c!='NeoCash Insta' or leads_cstm.control_program_c is null) and 
-	// 									   (leads_cstm.pushed_lead_c=0 or leads_cstm.pushed_lead_c is null) and 
-	// 									   (leads_cstm.push_count_c<=5 or leads_cstm.push_count_c is null)");
+	$lead_list = $bean->get_full_list("", "leads.deleted=0 and 
+										   leads.opportunity_id is null and
+										   (leads_cstm.control_program_c!='NeoCash Insta' or leads_cstm.control_program_c is null) and 
+										   (leads_cstm.pushed_lead_c=0 or leads_cstm.pushed_lead_c is null) and 
+										   (leads_cstm.push_count_c<=5 or leads_cstm.push_count_c is null)");
 	
-	$lead_list = $bean->get_full_list("", "leads.date_entered>'2021-02-15'");
+	// $lead_list = $bean->get_full_list("", "leads.date_entered>'2021-02-15'");
 
 	// $logger->log('debug', '');
 	$logger->log('debug', 'Total Leads Fetched To Process: ' . count($lead_list));
@@ -109,7 +109,8 @@ function PushLeads()
 		}
 
 		if (preg_match("/Success/", $jsonResponse->{'Message'})) {
-			$logger->log('debug', 'Lead Is Sent To EOS: ' . $response);
+			$logger->log('debug', 'Lead Is Sent To EOS: '.$lead->id);
+			
 			$lead->pushed_lead_c = explode("_", $jsonResponse->{'Message'})[1];
 			$time = date("Y-m-d H:i:s");
 			$time = strtotime($time) - (330 * 60);
@@ -135,4 +136,4 @@ function PushLeads()
 	return true;
 }
 
-PushLeads();
+// PushLeads();

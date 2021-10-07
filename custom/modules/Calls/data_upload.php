@@ -108,7 +108,10 @@ if (isset($_POST["submit"])) {
 
                 if(!empty($contactNumber) || !empty($app_id)){
 
-                    $queryCalls = 'SELECT id from calls where contact_number ="'.$contactNumber.'" and date(date_entered) ="'.date('Y-m-d',strtotime($callDate)).'" and deleted =0';
+                    $queryCalls = 'SELECT id from calls 
+                    left join calls_cstm on calls.parent_id = calls.id
+                
+                    where calls_cstm.contact_number_c ="'.$contactNumber.'" and date(date_entered) ="'.date('Y-m-d',strtotime($callDate)).'" and deleted =0';
                    
                     $callResult = $db->query($queryCalls);
 
@@ -123,18 +126,18 @@ if (isset($_POST["submit"])) {
 
                         fwrite($myfile, "ContactNumber = $contactNumber, app_id=$app_id\n");
 
-                        $call->name = "$app_id $contactNumber - $typeOfCall";
-                        $call->contact_number = $contactNumber;
+                        $call->name = "$app_id_c $contactNumber - $typeOfCall";
+                        $call->contact_number_c = $contactNumber;
                         $call->assigned_user_id = "$userId";
-                        $call->calls_type = "$callType";
+                        $call->calls_type_c = "$callType";
                         $call->date_entered = $callDate;
                         $call->date_start = date('Y-m-d H:i:s');
-                        $call->app_id = "$app_id";
-                        $call->refund_amount = "$refundAmount";
-                        $call->ifsc_code = "$ifscCode";
+                        $call->app_id_c = "$app_id";
+                        $call->refund_amount_c = "$refundAmount";
+                        $call->ifsc_code_c = "$ifscCode";
                         $call->repeat_type = "unprocessed";
-                        $call->account_number = "$bankAccountNumber";
-                        $call->date_requested =$requestedDate;
+                        $call->account_number_c = "$bankAccountNumber";
+                        $call->date_requested_c =$requestedDate;
                         $call->status = "Planned";
                         $call->save();
                     }
