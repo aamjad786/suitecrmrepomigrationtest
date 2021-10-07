@@ -6,7 +6,7 @@ $sugar_config['CAS_host'] = 'uat.advancesuite.in';
 $sugar_config['CAS_port'] = '3053';
 $sugar_config['authenticationClass'] = 'CASAuthenticate';
 $sugar_config['developerMode'] = true;
-$sugar_config['logger']['level'] = 'fatal';
+$sugar_config['logger']['level'] = 'debug';
 $sugar_config['default_module_favicon'] = false;
 $sugar_config['dashlet_auto_refresh_min'] = '30';
 $sugar_config['stack_trace_errors'] = false;
@@ -25,3 +25,8 @@ $sugar_config['email_allow_send_as_user'] = false;
 $sugar_config['email_xss'] = 'YToxMzp7czo2OiJhcHBsZXQiO3M6NjoiYXBwbGV0IjtzOjQ6ImJhc2UiO3M6NDoiYmFzZSI7czo1OiJlbWJlZCI7czo1OiJlbWJlZCI7czo0OiJmb3JtIjtzOjQ6ImZvcm0iO3M6NToiZnJhbWUiO3M6NToiZnJhbWUiO3M6ODoiZnJhbWVzZXQiO3M6ODoiZnJhbWVzZXQiO3M6NjoiaWZyYW1lIjtzOjY6ImlmcmFtZSI7czo2OiJpbXBvcnQiO3M6ODoiXD9pbXBvcnQiO3M6NToibGF5ZXIiO3M6NToibGF5ZXIiO3M6NDoibGluayI7czo0OiJsaW5rIjtzOjY6Im9iamVjdCI7czo2OiJvYmplY3QiO3M6MzoieG1wIjtzOjM6InhtcCI7czo2OiJzY3JpcHQiO3M6Njoic2NyaXB0Ijt9';
 $sugar_config['verify_client_ip'] = false;
 /***CONFIGURATOR***/
+
+// Hardcoded data
+$sugar_config['assigned_user_id_MineField'] = '1B866D74-0D07-4B27-80A2-688347ECF864';
+$sugar_config['skip_handleCreateCase_from_addrs'] = array('communications@neogrowth.in','mis@neogrowth.in','info@cibil.com','bpo-dipika.vala@neogrowth.in');
+$sugar_config['skip_handleCreateCase_from_domain'] = '@neogrowth.onmicrosoft.com';

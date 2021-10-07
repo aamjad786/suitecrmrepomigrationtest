@@ -25,6 +25,7 @@
 
 require_once 'custom/modules/InboundEmail/InboundEmail.php';
 require_once 'include/clean.php';
+require_once 'custom/CustomLogger/CustomLogger.php';
 class AOPInboundEmail extends InboundEmail
 {
     public $job_name = 'function::custompollMonitoredInboxesAOP';
@@ -105,100 +106,80 @@ class AOPInboundEmail extends InboundEmail
         return $output;
      }
 
-     function handleCreateCase($email, $userId) {
-        $myfile = fopen("Logs/InboundEmail.log",'a');
-        fwrite($myfile, "\n *****Inside create case $email->date_sent ******".date('Y-m-d H:i:s')."\n");
-        global $current_user, $mod_strings, $current_language;
+    function handleCreateCase($email, $userId) {
+        if(empty($email))
+            return;
+
+        global $sugar_config, $mod_strings, $current_language;
+
+        $logger = new CustomLogger('custompollMonitoredInboxesAOP');
+        $logger->log('debug', "In handleCreateCase in AOPInboundEmail $email->date_sent for $email->name");
         
-        $GLOBALS['log']->debug("In handleCreateCase in AOPInboundEmail $email->date_sent");
-        $c = new aCase();
-
-        // $this->getCaseIdFromCaseNumber($email->name, $c);
-        if(empty($email))return;
-        $name = $email->name;
         if(substr(trim($email->name), 0, 14) === 'Undeliverable:' || substr(trim($email->name), 0, 11) === 'Undelivered'){
-            fwrite($myfile,"\nSkipping the case creation for [$name] as its undeliverable mail");
+            $logger->log('info', "Skipping the case creation for [$email->name] as its undeliverable mail");
             return;
         }
-        if (strpos($email->from_addr, '@neogrowth.onmicrosoft.com') !== false) {
-            echo "Undelivered mail notification";
-            fwrite($myfile,"\nSkipping the case creation for [$name] as its undeliverable mail");
+        if (strpos($email->from_addr, $sugar_config['skip_handleCreateCase_from_domain']) !== false) {
+            $logger->log('info', "Skipping the case creation for [$email->name] as its from '@neogrowth.onmicrosoft.com domain");
             return;
         }
 
-        $from_addrs = array('communications@neogrowth.in','mis@neogrowth.in','info@cibil.com','bpo-dipika.vala@neogrowth.in');
+        $from_addrs = $sugar_config['skip_handleCreateCase_from_addrs'];
         foreach($from_addrs as $email1){
             if(strcasecmp($email->from_addr, $email1)==0){
-                fwrite($myfile,"\nSkipping the case creation for [$name] as its mail from $email1");
+                $logger->log('info', "Skipping the case creation for [$email->name] as its mail from $email1");
                 return;
             }
         }
         if ($email->name == "Detractor Response") {
             require_once('ApplicationApi.php');
+            require_once('custom/modules/Calls/CreateCall.php');
 
             $applicationApis = new ApplicationApi();
-            require_once('custom/modules/Calls/CreateCall.php');
             $createCall = new CreateCall();
             $mod_strings = return_module_language($current_language, "Emails");
+            $phoneNumber = $this->extractPhoneNumberFromEmail($email->description_html);
 
-                $phoneNumber = $this->extractPhoneNumberFromEmail($email->description_html);
-
+            $logger->log('info', "Its detractor response, creating call for $applicationId");
             if (!empty($phoneNumber)) {
                 $applicationId = $applicationApis->getApplicationByPhoneNumber($phoneNumber);
                 if(!empty($applicationId)){
                     $createCall->customCreateCall($applicationId, "nps_detractor");
                     return; // Just create call and exit
-                } else {
-                    return;
-                }
-
+                } 
+               return;
             }
-
-            fwrite($myfile, "\nIts detractor response, creating call for $applicationId");
         }
        
         if (!$this->handleCaseAssignment($email) && $this->isMailBoxTypeCreateCase()) {
-        // if ( $this->isMailBoxTypeCreateCase() ) {
-            // create a case
-            $GLOBALS['log']->debug('retrieving email');
-            $email->retrieve($email->id);
-        
-            $c = new aCase();
-            $notes = $email->get_linked_beans('notes','Notes');
+            // create a new case
+            $logger->log('info', "Creating case for Email:$email->id from $email->from_addr, Subject:[$email->name]");
+
+            $app_id = null;
             $noteIds = array();
+            $base_url = getenv("SCRM_AS_API_BASE_URL");
+            $email->retrieve($email->id);
+            $c = new aCase();
+            $c->priority = 'P3';
+            $c->case_sub_source_c = 'email';
+            $c->merchant_email_id_c = $email->from_addr;
+            $c->case_source_c = 'internal';
+            $c->assigned_user_id = $userId;
+            $c->name = $email->name;
+            $c->description = $email->description;
+
+            $notes = $email->get_linked_beans('notes','Notes');
             foreach($notes as $note){
                 $noteIds[] = $note->id;
             }
+
             if($email->description_html) {
                 $c->description = $this->processImageLinks(SugarCleaner::cleanHtml($email->description_html),$noteIds);
+            }
 
-                // $c->description = ($c->description);
-
-            }else{
-                $c->description = $email->description;
-            }
-            $base_url = getenv("SCRM_AS_API_BASE_URL");
-            //Custom code internal to neogrowth
-            $c->merchant_email_id_c = $email->from_addr;
-            $app_id = $this->getAPPID($email->name);
-            
-            if(empty($app_id)){
-                $app_id=$this->getAPPID($c->description);
-            }
-            if(empty($app_id)){
-                $url = "$base_url/get_applications_by_email?email=$email->from_addr";
-                $response = $this->curl_req($url);
-                $json_response = json_decode($response);
-                rsort($json_response);
-                $app_id = $json_response[0];
-            }
-           
-            $c->priority = 'P3';
             if($this->isMineField($email->name) || $this->isMineField($c->description) || $this->isMineField($email->to_addrs) || $this->isMineField($email->cc_addrs)) {
-                echo "is Minefield";
+                $logger->log('info', "is Minefield");
                 $c->priority = 'P4';
-            }else{
-                echo "Not minefield";
             }
 
             if (strpos($email->name, 'Suspicious Transactions') !== false) {
@@ -211,14 +192,16 @@ class AOPInboundEmail extends InboundEmail
             if (strpos($email->from_addr, 'neogrowth.in') == false) {
                 $c->case_source_c = 'merchant';
                 $c->status="merchant_email";
-            }else{
-                $c->case_source_c = 'internal';
             }
-            fwrite($myfile,"\nCreating case for Email:$email->id from $email->from_addr, Subject:[$email->name]");
-            $c->case_sub_source_c = 'email';
-            $complaintaint_c = "";
+            
+            if(empty($c->complaintaint_c)) {
+                $c->complaintaint_c = !empty($email->from_addr_name) ? $email->from_addr_name : $email->from_addr;
+            }
+
+            // Custom code internal to neogrowth
+            $app_id = $this->getAppidFromEmailCase($email->name, $c->description, $email->from_addr);
+            
             if(!empty($app_id)){
-                
                 $url = "$base_url/get_merchant_details?ApplicationID=$app_id";
                 $c->merchant_app_id_c = $app_id;
                 $response = $this->curl_req($url);
@@ -232,33 +215,23 @@ class AOPInboundEmail extends InboundEmail
                     $c->case_location_c = strtolower($json_response->{'Branch Name'});
                     $c->complaintaint_c = $json_response->{'Applicant Person'};
                 }
-
-            }else{
+            } 
+            else {
                 $c->merchant_app_id_c = 'N/A';
                 $c->merchant_contact_number_c = 'N/A';
                 $c->merchant_name_c = '';
                 $c->merchant_establisment_c = 'N/A';
             }
-            if(empty($c->complaintaint_c))
-                $c->complaintaint_c = !empty($email->from_addr_name) ? $email->from_addr_name : $email->from_addr;
-            $c->assigned_user_id = $userId;
-            $c->name = $email->name;
-            // $c->status = 'New';
-            if(!empty($email->reply_to_email)) {
-                $contactAddr = $email->reply_to_email;
-            } else {
-                $contactAddr = $email->from_addr;
-            }
-            
+
             $c->save(true);
-            $case_num = $c->case_num;
             $caseId = $c->id;
             $c = new aCase();
             $c->retrieve($caseId);
             if($c->load_relationship('emails')) {
                 $c->emails->add($email->id);
-            } // if
+            } 
            
+            //Attachments
             // foreach($notes as $note){
             //     //Link notes to case also
             //     $newNote = BeanFactory::newBean('Notes');
@@ -271,133 +244,152 @@ class AOPInboundEmail extends InboundEmail
             //     $srcFile = "upload://{$note->id}";
             //     $destFile = "upload://{$newNote->id}";
             //     copy($srcFile,$destFile);
-
             // }
 
-            $c->email_id = $email->id;
+            // assign name with CaseID, parent type, parent_id and the email to the case owner
             $email->parent_type = "Cases";
-            $email->parent_id = $caseId;
-            // assign the email to the case owner
+            $email->parent_id = $c->id;
             $email->assigned_user_id = $c->assigned_user_id;
             $email->name = str_replace('%1', $c->case_number, $c->getEmailSubjectMacro()) . " ". $email->name;
             $email->save();
-            $GLOBALS['log']->debug('InboundEmail created one case with number: '.$c->case_number);
-            $createCaseTemplateId = $this->get_stored_options('create_case_email_template', "");
-            if(!empty($this->stored_options)) {
-                $storedOptions = unserialize(base64_decode($this->stored_options));
+
+            $logger->log('info', 'AOPInboundEmail created one case with number: '.$c->case_number);
+
+            if ($c->case_source_c == 'merchant') {
+                $this->sendReplyToMerchant($email,$c);
+                $logger->log('debug', 'Saved and sent auto-reply email');
             }
-            if ( $c->case_source_c == 'merchant') {
-                $fromName = "";
-                $fromAddress = "";
-                try{
-                    if (!empty($this->stored_options)) {
-                        $fromAddress = $storedOptions['from_addr'];
-                        // isValidEmailAddress($fromAddress);
-                        $fromName = from_html($storedOptions['from_name']);
-                        $replyToName = (!empty($storedOptions['reply_to_name']))? from_html($storedOptions['reply_to_name']) :$fromName ;
-                        $replyToAddr = (!empty($storedOptions['reply_to_addr'])) ? $storedOptions['reply_to_addr'] : $fromAddress;
-                    } // if
-                    $defaults = $current_user->getPreferredEmail();
-                    $fromAddress = (!empty($fromAddress)) ? $fromAddress : $defaults['email'];
-                    // isValidEmailAddress($fromAddress);
-                    $fromName = (!empty($fromName)) ? $fromName : $defaults['name'];
-                    $to[0]['email'] = $contactAddr;
-                }catch(Exception $e){
-                    fwrite($myfile,"Exception occured ".$e->getMessage());
-                }
-                // handle to name: address, prefer reply-to
-                if (!empty($email->reply_to_name)) {
-                    $to[0]['display'] = $email->reply_to_name;
-                } elseif (!empty($email->from_name)) {
-                    $to[0]['display'] = $email->from_name;
-                }
-
-                $et = new EmailTemplate();
-                $et->retrieve_by_string_fields(array('name' => 'Case Creation Template'));
-                if(empty($app_id))
-                {
-                    $et->retrieve_by_string_fields(array('name' => 'Unregistered Mail Id Case'));
-                }
-                if (empty($et->subject)) {
-                    $et->subject = '';
-                }
-                if (empty($et->body)) {
-                    $et->body = '';
-                }
-                if (empty($et->body_html)) {
-                    $et->body_html = '';
-                }
-                $et->subject = "Re:" . " " . str_replace('%1', $c->case_number, $c->getEmailSubjectMacro() . " ". $c->name);
-
-                $html = trim($email->description_html);
-                $plain = trim($email->description);
-                $merchant_name = $c->merchant_name_c;
-                if(empty($merchant_name))
-                    $merchant_name = $to[0]['email'];
-                $body_html = $et->body_html;
-                $body_html = str_replace('$merchant_name', $merchant_name, $body_html);
-                $body_html = str_replace('$case_number', $c->case_number,  $body_html);
-                
-
-                
-                    
-                // fwrite($myfile, "\nhtml content:$body_html");
-                $email->email2init();
-                $email->from_addr = $email->from_addr_name;
-                // isValidEmailAddress($email->from_addr);
-                $email->to_addrs = $email->to_addrs_names;
-                $email->cc_addrs = $email->cc_addrs_names;
-                $email->bcc_addrs = $email->bcc_addrs_names;
-                $email->from_name = $email->from_addr;
-
-                $email = $email->et->handleReplyType($email, "reply");
-                $ret = $email->et->displayComposeEmail($email);
-                $ret['description'] = empty($email->description_html) ?  str_replace("\n", "\n<BR/>", $email->description) : $email->description_html;
-                // fwrite($myfile, "*****Inside create case14******");
-                if(!empty($c->status)){
-                    $reply = new Email();
-                    $reply->type                = 'out';
-                    $reply->to_addrs            = $to[0]['email'];
-                    $reply->to_addrs_arr        = $to;
-                    $reply->cc_addrs_arr        = array();
-                    $reply->bcc_addrs_arr       = array();
-                    $reply->from_name           = $fromName;
-                    $reply->from_addr           = $fromAddress;
-                    $reply->reply_to_name       = $replyToName;
-                    $reply->reply_to_addr       = $replyToAddr;
-                    $reply->name                = $et->subject;
-                    $reply->description         = $et->body . "<div><hr /></div>" .  $email->description;
-                    if (!$et->text_only) {
-                        $reply->description_html    = $body_html .  "<div><hr /></div>" . $email->description;
-                    }
-                    // fwrite($myfile, "\nhtml content: $reply->description_html");
-                    // fwrite($myfile, print_r($reply, true));
-                    $GLOBALS['log']->debug('saving and sending auto-reply email');
-                    //$reply->save(); // don't save the actual email.
-                    $reply->send();
-                    $reply->parent_type = 'Cases';
-                    $reply->parent_id = $caseId;
-                    $reply->date_sent = TimeDate::getInstance()->nowDb();
-                    $reply->modified_user_id = '1';
-                    $reply->created_by = '1';
-                    $reply->status = 'sent';
-                    $reply->save();
-                }
-                
-            }
-        } else {
+        } 
+        else {
             echo "First if not matching\n";
+            $contactAddr = $email->from_addr;
             if(!empty($email->reply_to_email)) {
                 $contactAddr = $email->reply_to_email;
-            } else {
-                $contactAddr = $email->from_addr;
-            }
+            } 
             $this->handleAutoresponse($email, $contactAddr);
-        }
+        }   
         echo "End of handle create case\n";
-
-
     } // fn
+
+    function getAppidFromEmailCase($email_name, $case_description, $email_from_addr) {
+        $app_id = $this->getAPPID($email_name);
+            
+        if(empty($app_id)){
+            $app_id=$this->getAPPID($case_description);
+        }
+
+        if(empty($app_id)){
+            $base_url = getenv("SCRM_AS_API_BASE_URL");
+            $url = "$base_url/get_applications_by_email?email=$email_from_addr";
+            $response = $this->curl_req($url);
+            $json_response = json_decode($response);
+            rsort($json_response);
+            $app_id = $json_response[0];
+        }
+        return $app_id;
+    }
+
+    function sendReplyToMerchant($email,$c) {
+        global $current_user;
+        $logger = new CustomLogger('custompollMonitoredInboxesAOP');
+
+        if(!empty($this->stored_options)) {
+            $storedOptions = unserialize(base64_decode($this->stored_options));
+        }
+        $fromName = "";
+        $fromAddress = "";
+        try{
+            if (!empty($this->stored_options)) {
+                $fromAddress = $storedOptions['from_addr'];
+                // isValidEmailAddress($fromAddress);
+                $fromName = from_html($storedOptions['from_name']);
+                $replyToName = (!empty($storedOptions['reply_to_name']))? from_html($storedOptions['reply_to_name']) :$fromName ;
+                $replyToAddr = (!empty($storedOptions['reply_to_addr'])) ? $storedOptions['reply_to_addr'] : $fromAddress;
+            } // if
+            $defaults = $current_user->getPreferredEmail();
+            $fromAddress = (!empty($fromAddress)) ? $fromAddress : $defaults['email'];
+            // isValidEmailAddress($fromAddress);
+            $fromName = (!empty($fromName)) ? $fromName : $defaults['name'];
+            $to[0]['email'] = $email->from_addr;
+            if(!empty($email->reply_to_email)) {
+                $to[0]['email'] = $email->reply_to_email;
+            } 
+        }catch(Exception $e){
+            $logger->log('info', "Exception occured in sendReplyToMerchant ".$e->getMessage());
+        }
+        // handle to name: address, prefer reply-to
+        if (!empty($email->reply_to_name)) {
+            $to[0]['display'] = $email->reply_to_name;
+        } elseif (!empty($email->from_name)) {
+            $to[0]['display'] = $email->from_name;
+        }
+
+        $createCaseTemplateId = $this->get_stored_options('create_case_email_template', "");
+        $et = new EmailTemplate();
+        if (!empty($createCaseTemplateId)) 
+            $et->retrieve($createCaseTemplateId);
+        else 
+            $et->retrieve_by_string_fields(array('name' => 'Case Creation Template')); // Template name hardcoded here
+
+        if(empty($app_id))
+            $et->retrieve_by_string_fields(array('name' => 'Unregistered Mail Id Case'));
+        if (empty($et->subject)) 
+            $et->subject = '';
+        if (empty($et->body)) 
+            $et->body = '';
+        if (empty($et->body_html)) 
+            $et->body_html = '';
+
+        $et->subject = "Re:" . " " . str_replace('%1', $c->case_number, $c->getEmailSubjectMacro() . " ". $c->name);
+
+        $html_description = trim($email->description_html);
+        $plain_description = trim($email->description);
+        $merchant_name = $c->merchant_name_c;
+        if(empty($merchant_name))
+            $merchant_name = $to[0]['email'];
+        $body_html = $et->body_html;
+        $body_html = str_replace('$merchant_name', $merchant_name, $body_html);
+        $body_html = str_replace('$case_number', $c->case_number,  $body_html);
+        $email->email2init();
+        $email->from_addr = $email->from_addr_name;
+        // isValidEmailAddress($email->from_addr);
+        $email->to_addrs = $email->to_addrs_names;
+        $email->cc_addrs = $email->cc_addrs_names;
+        $email->bcc_addrs = $email->bcc_addrs_names;
+        $email->from_name = $email->from_addr;
+
+        $email = $email->et->handleReplyType($email, "reply");
+        $ret = $email->et->displayComposeEmail($email);
+        $ret['description'] = empty($html_description) ?  str_replace("\n", "\n<BR/>", $plain_description) : $html_description;
+
+        if(!empty($c->status)){
+            $reply = new Email();
+            $reply->type                = 'out';
+            $reply->to_addrs            = $to[0]['email'];
+            $reply->to_addrs_arr        = $to;
+            $reply->cc_addrs_arr        = array();
+            $reply->bcc_addrs_arr       = array();
+            $reply->from_name           = $fromName;
+            $reply->from_addr           = $fromAddress;
+            $reply->reply_to_name       = $replyToName;
+            $reply->reply_to_addr       = $replyToAddr;
+            $reply->name                = $et->subject;
+            $reply->description         = $et->body . "<div><hr /></div>" .  $plain_description;
+            if (!$et->text_only) {
+                $reply->description_html    = $body_html .  "<div><hr /></div>" . $plain_description;
+            }
+            
+            $reply->send();
+            $reply->parent_type = 'Cases';
+            $reply->parent_id = $c->id;
+            $reply->date_sent = TimeDate::getInstance()->nowDb();
+            $reply->modified_user_id = '1';
+            $reply->created_by = '1';
+            $reply->status = 'sent';
+            $reply->save(); // don't save the actual email.
+            
+        }
+    }
     
     function extractPhoneNumberFromEmail($emailDescription) {
         //This may not be the best practice, Needs rework on this

@@ -49,6 +49,7 @@ require_once  'include/Imap/ImapHandlerFactory.php';
 require_once 'include/OutboundEmail/OutboundEmail.php';
 require_once 'modules/InboundEmail/Overview.php';
 require_once 'modules/InboundEmail/temp.php';
+require_once 'custom/CustomLogger/CustomLogger.php';
 
 class InboundEmail extends SugarBean
 {
@@ -3545,10 +3546,24 @@ class InboundEmail extends SugarBean
         }
     }
 
+    //Custom function by Neogrowth for identification of minefield cases
+	function isMineField($str){
+        echo $str;
+        $arr = array('CXO','Legal','Media','Newspaper','Press','Court','lawyers','Grievance Redressal Officer','Ombudsman');
+        foreach($arr as $a) {
+            if (preg_match("/\b$a\b/i", $str)) return true;
+        }
+        return false;
+    }
+
     public function handleCaseAssignment($email)
     {
+        $logger = new CustomLogger('custompollMonitoredInboxesAOP');
+        $logger->log('debug', "In handleCaseAssignment in customInboundEmail for $email->name");
+        
         $c = new aCase();
         if ($caseId = $this->getCaseIdFromCaseNumber($email->name, $email->from_addr, $c)) {
+            $logger->log('debug', "CaseID is $caseId for $email->name");
             $c->retrieve($caseId);
             $email->retrieve($email->id);
             //assign the case info to parent id and parent type so that the case can be linked to the email on Email Save
@@ -3562,7 +3577,9 @@ class InboundEmail extends SugarBean
             if($this->isMineField($email->name) || $this->isMineField($description)) {
                 echo "is Minefield";
                 $c->priority = 'P4';
-                $c->assigned_user_id = '1B866D74-0D07-4B27-80A2-688347ECF864';
+                global $sugar_config;
+                $c->assigned_user_id = $sugar_config['assigned_user_id_MineField'];
+                $c->save();
             }else{
                 echo "Not minefield..";
             }
@@ -3571,24 +3588,25 @@ class InboundEmail extends SugarBean
             $email->parent_id = $caseId;
             // assign the email to the case owner
             $email->assigned_user_id = $c->assigned_user_id;
-			$num = $c->case_number;
             $email->save();
-			$c->save();
-            $GLOBALS['log']->debug('InboundEmail found exactly 1 match for a case: ' . $c->name);
+			
+            $logger->log('debug', "customInboundEmail found exactly 1 match for a case: $c->name  CaseID is $caseId");
 
 			$bean = BeanFactory::newBean('Alerts');
             $bean->name = 'Case update';
-            $bean->description = "Received reply for case #$num";
+            $bean->description = "Received reply for case #$c->case_number";
             $bean->url_redirect = "index.php?module=Cases&action=DetailView&record=".$c->id;
             $bean->target_module = 'Cases';
             $bean->is_read = 0;
             $bean->assigned_user_id = $c->assigned_user_id;
-            $bean->type = $type;
+            $bean->type = @$type;
             $bean->save();
+
+            $logger->log('debug', "Alert saved for Case update - Received reply for case #$c->case_number");
 
             return true;
         } // if
-
+        $logger->log('debug', "No case found for for $email->name");
         return false;
     } // fn
 
@@ -3643,7 +3661,7 @@ class InboundEmail extends SugarBean
         $this->getCaseIdFromCaseNumber($email->name, $email->from_addr, $c);
 
         if (!$this->handleCaseAssignment($email) && $this->isMailBoxTypeCreateCase()) {
-            // create a case
+            // create a new case
             $GLOBALS['log']->debug('retrieveing email');
             $email->retrieve($email->id);
             $c = new aCase();
@@ -3663,12 +3681,11 @@ class InboundEmail extends SugarBean
             if ($accountIds = $this->getRelatedId($contactAddr, 'accounts')) {
                 if (count($accountIds) == 1) {
                     $c->account_id = $accountIds[0];
-
                     $acct = BeanFactory::newBean('Accounts');
                     $acct->retrieve($c->account_id);
                     $c->account_name = $acct->name;
-                } // if
-            } // if
+                }
+            } 
             $c->save(true);
             $c->retrieve($c->id);
             if ($c->load_relationship('emails')) {
@@ -3695,7 +3712,7 @@ class InboundEmail extends SugarBean
             $email->assigned_user_id = $c->assigned_user_id;
             $email->name = str_replace('%1', $c->case_number, $c->getEmailSubjectMacro()) . " " . $email->name;
             $email->save();
-            $GLOBALS['log']->debug('InboundEmail created one case with number: ' . $c->case_number);
+            $GLOBALS['log']->debug('custom InboundEmail created one case with number: ' . $c->case_number);
             $createCaseTemplateId = $this->get_stored_options('create_case_email_template', "");
             if (!empty($this->stored_options)) {
                 $storedOptions = sugar_unserialize(base64_decode($this->stored_options));
@@ -6205,27 +6222,29 @@ class InboundEmail extends SugarBean
      *
      * @return array Array of messageNumbers (mail server's internal keys)
      */
-    public function getNewMessageIds()
-    {
+    public function getNewMessageIds() {
+        $logger = new CustomLogger('custompollMonitoredInboxesAOP');
+        $logger->log('debug', "In getNewMessageIds in customInboundEmail");
+
         $storedOptions = sugar_unserialize(base64_decode($this->stored_options));
 
         //TODO figure out if the since date is UDT
-        if ((true) || !is_bool($storedOptions) && $storedOptions['only_since']) {// POP3 does not support Unseen flags
+        if (!is_bool($storedOptions) && $storedOptions['only_since']) {// POP3 does not support Unseen flags
             if (!isset($storedOptions['only_since_last']) && !empty($storedOptions['only_since_last'])) {
                 $q = "SELECT last_run FROM schedulers WHERE job = '{$this->job_name}'";
                 $r = $this->db->query($q, true);
                 $a = $this->db->fetchByAssoc($r);
 
                 $date = date('r', strtotime($a['last_run']));
-                LoggerManager::getLogger()->debug("-----> getNewMessageIds() executed query: {$q}");
+                $logger->log('debug', "-----> getNewMessageIds() executed query: {$q}");
             } else {
                 $date = $storedOptions['only_since_last'];
             }
-            //$ret = $this->getImap()->search('SINCE "' . $date . '" UNDELETED'); //Pallavi temp commented since date
-            $ret = $this->getImap()->search('UNDELETED');
+            $ret = $this->getImap()->search('SINCE "' . $date . '" UNDELETED');
+            // $ret = $this->getImap()->search('UNDELETED'); // Pallavi temp commented since date
             $check = $this->getImap()->check();
             $storedOptions['only_since_last'] = $check->Date;
-			$storedOptions['only_since'] = 1;
+            $storedOptions['only_since'] = 1;
             $this->stored_options = base64_encode(serialize($storedOptions));
             $this->save();
         } else {
@@ -6234,9 +6253,10 @@ class InboundEmail extends SugarBean
 
                 return false;
             }
-            $ret = $this->getImap()->search('UNDELETED');
+            $ret = $this->getImap()->search('UNDELETED UNSEEN');
         }
-        LoggerManager::getLogger()->debug('-----> getNewMessageIds() got ' . count($ret) . ' new Messages');
+
+        $logger->log('debug', '-----> getNewMessageIds() got ' . count($ret) . ' new Messages');
 
         return $ret;
     }
@@ -6296,7 +6316,8 @@ class InboundEmail extends SugarBean
         if (!isset($_REQUEST['ssl'])) {
             LoggerManager::getLogger()->warn('Request ssl value not found.');
             $requestSsl = null;
-        } else {
+        } 
+        else {
             $requestSsl = $_REQUEST['ssl'];
         }
 

@@ -37,7 +37,7 @@
  * reasonably feasible for technical reasons, the Appropriate Legal Notices must
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
-require_once 'include/utils.php';
+require_once 'modules/AOP_Case_Updates/util.php';
 
 /**
  * Class CaseUpdatesHook
