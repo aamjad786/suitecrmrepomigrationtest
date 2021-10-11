@@ -30,6 +30,11 @@ class AOPInboundEmail extends InboundEmail
 {
     public $job_name = 'function::custompollMonitoredInboxesAOP';
 
+    public function __construct() {
+        parent::__construct();
+		$this->logger =new CustomLogger('custompollMonitoredInboxesAOP');
+	}
+
     /**
      * Replaces embedded image links with links to the appropriate note in the CRM.
      * @param $string
@@ -112,22 +117,21 @@ class AOPInboundEmail extends InboundEmail
 
         global $sugar_config, $mod_strings, $current_language;
 
-        $logger = new CustomLogger('custompollMonitoredInboxesAOP');
-        $logger->log('debug', "In handleCreateCase in AOPInboundEmail $email->date_sent for $email->name");
+        $this->logger->log('debug', "In handleCreateCase in AOPInboundEmail for $email->name");
         
         if(substr(trim($email->name), 0, 14) === 'Undeliverable:' || substr(trim($email->name), 0, 11) === 'Undelivered'){
-            $logger->log('info', "Skipping the case creation for [$email->name] as its undeliverable mail");
+            $this->logger->log('info', "Skipping the case creation for [$email->name] as its undeliverable mail");
             return;
         }
         if (strpos($email->from_addr, $sugar_config['skip_handleCreateCase_from_domain']) !== false) {
-            $logger->log('info', "Skipping the case creation for [$email->name] as its from '@neogrowth.onmicrosoft.com domain");
+            $this->logger->log('info', "Skipping the case creation for [$email->name] as its from '@neogrowth.onmicrosoft.com domain");
             return;
         }
 
         $from_addrs = $sugar_config['skip_handleCreateCase_from_addrs'];
         foreach($from_addrs as $email1){
             if(strcasecmp($email->from_addr, $email1)==0){
-                $logger->log('info', "Skipping the case creation for [$email->name] as its mail from $email1");
+                $this->logger->log('info', "Skipping the case creation for [$email->name] as its mail from $email1");
                 return;
             }
         }
@@ -140,7 +144,7 @@ class AOPInboundEmail extends InboundEmail
             $mod_strings = return_module_language($current_language, "Emails");
             $phoneNumber = $this->extractPhoneNumberFromEmail($email->description_html);
 
-            $logger->log('info', "Its detractor response, creating call for $applicationId");
+            $this->logger->log('info', "Its detractor response, creating call for $applicationId");
             if (!empty($phoneNumber)) {
                 $applicationId = $applicationApis->getApplicationByPhoneNumber($phoneNumber);
                 if(!empty($applicationId)){
@@ -153,7 +157,7 @@ class AOPInboundEmail extends InboundEmail
        
         if (!$this->handleCaseAssignment($email) && $this->isMailBoxTypeCreateCase()) {
             // create a new case
-            $logger->log('info', "Creating case for Email:$email->id from $email->from_addr, Subject:[$email->name]");
+            $this->logger->log('info', "Creating case for Email:$email->id from $email->from_addr, Subject:[$email->name]");
 
             $app_id = null;
             $noteIds = array();
@@ -178,7 +182,7 @@ class AOPInboundEmail extends InboundEmail
             }
 
             if($this->isMineField($email->name) || $this->isMineField($c->description) || $this->isMineField($email->to_addrs) || $this->isMineField($email->cc_addrs)) {
-                $logger->log('info', "is Minefield");
+                $this->logger->log('info', "is Minefield");
                 $c->priority = 'P4';
             }
 
@@ -253,11 +257,11 @@ class AOPInboundEmail extends InboundEmail
             $email->name = str_replace('%1', $c->case_number, $c->getEmailSubjectMacro()) . " ". $email->name;
             $email->save();
 
-            $logger->log('info', 'AOPInboundEmail created one case with number: '.$c->case_number);
+            $this->logger->log('info', 'AOPInboundEmail created one case with number: '.$c->case_number);
 
             if ($c->case_source_c == 'merchant') {
                 $this->sendReplyToMerchant($email,$c);
-                $logger->log('debug', 'Saved and sent auto-reply email');
+                $this->logger->log('debug', 'Saved and sent auto-reply email');
             }
         } 
         else {
@@ -291,8 +295,7 @@ class AOPInboundEmail extends InboundEmail
 
     function sendReplyToMerchant($email,$c) {
         global $current_user;
-        $logger = new CustomLogger('custompollMonitoredInboxesAOP');
-
+        
         if(!empty($this->stored_options)) {
             $storedOptions = unserialize(base64_decode($this->stored_options));
         }
@@ -315,7 +318,7 @@ class AOPInboundEmail extends InboundEmail
                 $to[0]['email'] = $email->reply_to_email;
             } 
         }catch(Exception $e){
-            $logger->log('info', "Exception occured in sendReplyToMerchant ".$e->getMessage());
+            $this->logger->log('info', "Exception occured in sendReplyToMerchant ".$e->getMessage());
         }
         // handle to name: address, prefer reply-to
         if (!empty($email->reply_to_name)) {

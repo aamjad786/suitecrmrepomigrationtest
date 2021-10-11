@@ -228,6 +228,9 @@ class InboundEmail extends SugarBean
         if (isset($sugar_config['site_url'])) {
             $this->imagePrefix = $sugar_config['site_url'] . '/cache/images/';
         }
+
+        $this->logger = new CustomLogger('custompollMonitoredInboxesAOP');
+        
     }
 
     /**
@@ -3558,12 +3561,11 @@ class InboundEmail extends SugarBean
 
     public function handleCaseAssignment($email)
     {
-        $logger = new CustomLogger('custompollMonitoredInboxesAOP');
-        $logger->log('debug', "In handleCaseAssignment in customInboundEmail for $email->name");
+        $this->logger->log('debug', "In handleCaseAssignment in customInboundEmail for $email->name");
         
         $c = new aCase();
         if ($caseId = $this->getCaseIdFromCaseNumber($email->name, $email->from_addr, $c)) {
-            $logger->log('debug', "CaseID is $caseId for $email->name");
+            $this->logger->log('debug', "CaseID is $caseId for $email->name");
             $c->retrieve($caseId);
             $email->retrieve($email->id);
             //assign the case info to parent id and parent type so that the case can be linked to the email on Email Save
@@ -3590,7 +3592,7 @@ class InboundEmail extends SugarBean
             $email->assigned_user_id = $c->assigned_user_id;
             $email->save();
 			
-            $logger->log('debug', "customInboundEmail found exactly 1 match for a case: $c->name  CaseID is $caseId");
+            $this->logger->log('debug', "customInboundEmail found exactly 1 match for a case: $c->name  CaseID is $caseId");
 
 			$bean = BeanFactory::newBean('Alerts');
             $bean->name = 'Case update';
@@ -3602,11 +3604,11 @@ class InboundEmail extends SugarBean
             $bean->type = @$type;
             $bean->save();
 
-            $logger->log('debug', "Alert saved for Case update - Received reply for case #$c->case_number");
+            $this->logger->log('debug', "Alert saved for Case update - Received reply for case #$c->case_number");
 
             return true;
         } // if
-        $logger->log('debug', "No case found for for $email->name");
+        $this->logger->log('debug', "No case found for for $email->name");
         return false;
     } // fn
 
@@ -5401,7 +5403,7 @@ class InboundEmail extends SugarBean
             $email->from_name = $this->handleMimeHeaderDecode($header->fromaddress);
             $email->from_addr_name = $email->from_name;
             $email->from_addr = $this->convertImapToSugarEmailAddress($header->from);
-            isValidEmailAddress($email->from_addr);
+            //isValidEmailAddress($email->from_addr);
             if (!empty($header->cc)) {
                 $email->cc_addrs = $this->convertImapToSugarEmailAddress($header->cc);
             }
@@ -6059,6 +6061,7 @@ class InboundEmail extends SugarBean
      */
     public function getCaseIdFromCaseNumber($emailName, $fromaddr, $aCase)
     {
+        $this->logger->log('debug', "in customInboundEmail getCaseIdFromCaseNumber for $emailName ");
         //$emailSubjectMacro
         $exMacro = explode('%1', $aCase->getEmailSubjectMacro());
         $open = $exMacro[0];
@@ -6081,6 +6084,8 @@ class InboundEmail extends SugarBean
                 $r = $this->db->query($query, true);
                 $a = $this->db->fetchByAssoc($r);
 
+                $this->logger->log('debug', "Query to check email is not related to deleted one, to create new case $query ");
+
                 if (!empty($a['id'])) {
 
 					$query_email = "select parent_id from emails  LEFT JOIN emails_text ON  emails.id = emails_text.email_id where parent_id='" .$a['id']. "' and from_addr='".$fromaddr."' and emails.deleted = 0  order by date_entered desc limit 1";
@@ -6089,8 +6094,9 @@ class InboundEmail extends SugarBean
 
 					$a = $this->db->fetchByAssoc($r_email);
 
+                    $this->logger->log('debug', "Query to check email is not related to deleted one, to create new case $query_email ");
 					if (!empty($a['parent_id'])) {
-
+                        $this->logger->log('debug', "getCaseIdFromCaseNumber returned case id  ".$a['id']);
 						return $a['id'];
 					}
                 }
@@ -6099,11 +6105,11 @@ class InboundEmail extends SugarBean
         $prefixes = array("RE:","FWD:","FW:");
         foreach($prefixes as $prefix){
         	if (substr(strtolower($emailName), 0, strlen($prefix)) == strtolower($prefix)) {
+                $this->logger->log('debug', "$prefix found in $emailName");
 			    $str = trim(substr($emailName, strlen($prefix)));
-			    $GLOBALS['log']->debug('Cases string:'.$query);
 			    $query = "SELECT id FROM cases WHERE name = ".$this->db->quoted($str)."
                      and deleted = 0 and state NOT IN ('Closed','Resolved') order by date_entered desc limit 1";
-                $GLOBALS['log']->debug('Cases Query:'.$query);
+                $this->logger->log('debug', "Cases Query: $query");
 
                 $results = $this->db->query($query, true);
                 $row = $this->db->fetchByAssoc($results);
@@ -6114,7 +6120,9 @@ class InboundEmail extends SugarBean
 					$r_email = $this->db->query($query_email, true);
 
 					$a = $this->db->fetchByAssoc($r_email);
+                    $this->logger->log('debug', "Email Query: $query_email ");
 					if (!empty($a['parent_id'])) {
+                        $this->logger->log('debug', "getCaseIdFromCaseNumber returned case id  ".$row['id']);
                     	return $row['id'];
 					}
                 }
@@ -6223,8 +6231,7 @@ class InboundEmail extends SugarBean
      * @return array Array of messageNumbers (mail server's internal keys)
      */
     public function getNewMessageIds() {
-        $logger = new CustomLogger('custompollMonitoredInboxesAOP');
-        $logger->log('debug', "In getNewMessageIds in customInboundEmail");
+        $this->logger->log('debug', "In getNewMessageIds in customInboundEmail");
 
         $storedOptions = sugar_unserialize(base64_decode($this->stored_options));
 
@@ -6236,7 +6243,7 @@ class InboundEmail extends SugarBean
                 $a = $this->db->fetchByAssoc($r);
 
                 $date = date('r', strtotime($a['last_run']));
-                $logger->log('debug', "-----> getNewMessageIds() executed query: {$q}");
+                $this->logger->log('debug', "-----> getNewMessageIds() executed query: {$q}");
             } else {
                 $date = $storedOptions['only_since_last'];
             }
@@ -6256,7 +6263,7 @@ class InboundEmail extends SugarBean
             $ret = $this->getImap()->search('UNDELETED UNSEEN');
         }
 
-        $logger->log('debug', '-----> getNewMessageIds() got ' . count($ret) . ' new Messages');
+        $this->logger->log('debug', '-----> getNewMessageIds() got ' . count($ret) . ' new Messages');
 
         return $ret;
     }
