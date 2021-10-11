@@ -3564,7 +3564,7 @@ class InboundEmail extends SugarBean
         $this->logger->log('debug', "In handleCaseAssignment in customInboundEmail for $email->name");
         
         $c = new aCase();
-        if ($caseId = $this->getCaseIdFromCaseNumber($email->name, $email->from_addr, $c)) {
+        if ($caseId = $this->getCaseIdFromCaseNumber($email->name, $email->from_addr_name, $c)) {
             $this->logger->log('debug', "CaseID is $caseId for $email->name");
             $c->retrieve($caseId);
             $email->retrieve($email->id);
@@ -6059,20 +6059,18 @@ class InboundEmail extends SugarBean
      *
      * @return string|boolean   Case ID or FALSE if not found
      */
-    public function getCaseIdFromCaseNumber($emailName, $fromaddr, $aCase)
-    {
+    function getCaseIdFromCaseNumber($emailName, $fromaddr,$aCase) {
         $this->logger->log('debug', "in customInboundEmail getCaseIdFromCaseNumber for $emailName ");
-        //$emailSubjectMacro
-        $exMacro = explode('%1', $aCase->getEmailSubjectMacro());
-        $open = $exMacro[0];
-        $close = $exMacro[1];
+		//$emailSubjectMacro
+		$exMacro = explode('%1', $aCase->getEmailSubjectMacro());
+		$open = $exMacro[0];
+		$close = $exMacro[1];
 
-        if ($sub = stristr($emailName, $open)) {
-            // eliminate everything up to the beginning of the macro and return the rest
-            // $sub is [CASE:XX] xxxxxxxxxxxxxxxxxxxxxx
-            $sub2 = str_replace($open, '', $sub);
-            // $sub2 is XX] xxxxxxxxxxxxxx
-            $sub3 = substr($sub2, 0, strpos($sub2, $close));
+		if($sub = stristr($emailName, $open)) { // eliminate everything up to the beginning of the macro and return the rest
+			// $sub is [CASE:XX] xxxxxxxxxxxxxxxxxxxxxx
+			$sub2 = str_replace($open, '', $sub);
+			// $sub2 is XX] xxxxxxxxxxxxxx
+			$sub3 = substr($sub2, 0, strpos($sub2, $close));
 
             // case number is supposed to be numeric
             if (ctype_digit($sub3)) {
@@ -6081,23 +6079,24 @@ class InboundEmail extends SugarBean
                 $query = 'SELECT id FROM cases WHERE case_number = '
                     . $this->db->quoted($sub3)
                     . " and deleted = 0 and state NOT IN ('Closed','Resolved')";
+				
                 $r = $this->db->query($query, true);
-                $a = $this->db->fetchByAssoc($r);
+                $a_case = $this->db->fetchByAssoc($r);
 
-                $this->logger->log('debug', "Query to check email is not related to deleted one, to create new case $query ");
-
-                if (!empty($a['id'])) {
-
-					$query_email = "select parent_id from emails  LEFT JOIN emails_text ON  emails.id = emails_text.email_id where parent_id='" .$a['id']. "' and from_addr='".$fromaddr."' and emails.deleted = 0  order by date_entered desc limit 1";
-
+                $this->logger->log('debug', "Cases Query : $query ");
+				
+                if (!empty($a_case['id'])) {
+					$query_email = "select parent_id from emails  LEFT JOIN emails_text ON  emails.id = emails_text.email_id where parent_id='".$a_case['id']."' and from_addr='".$fromaddr."' and emails.deleted = 0 and status !='sent' order by date_entered desc limit 1";
 					$r_email = $this->db->query($query_email, true);
+					$a_email = $this->db->fetchByAssoc($r_email);
+                    $this->logger->log('debug', "Email Query : $query_email ");
 
-					$a = $this->db->fetchByAssoc($r_email);
-
-                    $this->logger->log('debug', "Query to check email is not related to deleted one, to create new case $query_email ");
-					if (!empty($a['parent_id'])) {
-                        $this->logger->log('debug', "getCaseIdFromCaseNumber returned case id  ".$a['id']);
-						return $a['id'];
+					if (!empty($a_email['parent_id'])) {
+						$this->logger->log('debug', "getCaseIdFromCaseNumber returned case id 1 : ".$a_email['parent_id']);
+						return $a_email['parent_id'];
+					} else {
+                        $this->logger->log('debug', "getCaseIdFromCaseNumber returned case id 2 : ".$a_case['id']);
+						return $a_case['id'];
 					}
                 }
             }
@@ -6105,32 +6104,111 @@ class InboundEmail extends SugarBean
         $prefixes = array("RE:","FWD:","FW:");
         foreach($prefixes as $prefix){
         	if (substr(strtolower($emailName), 0, strlen($prefix)) == strtolower($prefix)) {
-                $this->logger->log('debug', "$prefix found in $emailName");
 			    $str = trim(substr($emailName, strlen($prefix)));
+
 			    $query = "SELECT id FROM cases WHERE name = ".$this->db->quoted($str)."
                      and deleted = 0 and state NOT IN ('Closed','Resolved') order by date_entered desc limit 1";
-                $this->logger->log('debug', "Cases Query: $query");
+					 
+                $r = $this->db->query($query, true);
+                $a_case = $this->db->fetchByAssoc($r);
 
-                $results = $this->db->query($query, true);
-                $row = $this->db->fetchByAssoc($results);
-                if (!empty($row['id'])) {	
-
-					$query_email = "select parent_id from emails  LEFT JOIN emails_text ON  emails.id = emails_text.email_id where parent_id='" .$a['id']. "' and from_addr='".$fromaddr."' and emails.deleted = 0  order by date_entered desc limit 1";
-
+                $this->logger->log('debug', "prefixes Cases Query : $query ");
+                
+                if (!empty($a_case['id'])) {
+					$query_email = "select parent_id from emails  LEFT JOIN emails_text ON  emails.id = emails_text.email_id where parent_id='".$a_case['id']."' and from_addr='".$fromaddr."' and status !='sent' and emails.deleted = 0  order by date_entered desc limit 1";
 					$r_email = $this->db->query($query_email, true);
+					$a_email = $this->db->fetchByAssoc($r_email);
+                    $this->logger->log('debug', "prefixes Email Query : $query_email ");
 
-					$a = $this->db->fetchByAssoc($r_email);
-                    $this->logger->log('debug', "Email Query: $query_email ");
-					if (!empty($a['parent_id'])) {
-                        $this->logger->log('debug', "getCaseIdFromCaseNumber returned case id  ".$row['id']);
-                    	return $row['id'];
+					if (!empty($a_email['parent_id'])) {
+						$this->logger->log('debug', "getCaseIdFromCaseNumber returned case id 3 : ".$a_email['parent_id']);
+						return $a_email['parent_id'];
+					} else {
+                        $this->logger->log('debug', "getCaseIdFromCaseNumber returned case id 4 :".$a_case['id']);
+						return $a_case['id'];
 					}
+                   
                 }
-            }
+			} 
         }
-
+		
         return false;
     }
+    // public function getCaseIdFromCaseNumber($emailName, $fromaddr, $aCase)
+    // {
+        
+    //     //$emailSubjectMacro
+    //     $exMacro = explode('%1', $aCase->getEmailSubjectMacro());
+    //     $open = $exMacro[0];
+    //     $close = $exMacro[1];
+
+    //     if ($sub = stristr($emailName, $open)) {
+    //         // eliminate everything up to the beginning of the macro and return the rest
+    //         // $sub is [CASE:XX] xxxxxxxxxxxxxxxxxxxxxx
+    //         $sub2 = str_replace($open, '', $sub);
+    //         // $sub2 is XX] xxxxxxxxxxxxxx
+    //         $sub3 = substr($sub2, 0, strpos($sub2, $close));
+
+    //         // case number is supposed to be numeric
+    //         if (ctype_digit($sub3)) {
+    //             // filter out deleted records in order to create a new case
+    //             // if email is related to deleted one (bug #49840)
+    //             $query = 'SELECT id FROM cases WHERE case_number = '
+    //                 . $this->db->quoted($sub3)
+    //                 . " and deleted = 0 and state NOT IN ('Closed','Resolved')";
+    //             $r = $this->db->query($query, true);
+    //             $a = $this->db->fetchByAssoc($r);
+
+    //             $this->logger->log('debug', "Query to check email is not related to deleted one, to create new case $query ");
+
+    //             if (!empty($a['id'])) {
+
+	// 				$query_email = "select parent_id from emails  LEFT JOIN emails_text ON  emails.id = emails_text.email_id where parent_id='" .$a['id']. "' and from_addr='".$fromaddr."' and emails.deleted = 0  order by date_entered desc limit 1";
+
+	// 				$r_email = $this->db->query($query_email, true);
+
+	// 				$a = $this->db->fetchByAssoc($r_email);
+
+    //                 $this->logger->log('debug', "Query to check email is not related to deleted one, to create new case $query_email ");
+	// 				if (!empty($a['parent_id'])) {
+    //                     echo '<br/> rcord is : <br/>';
+    //                     var_dump($a);
+    //                     $this->logger->log('debug', "getCaseIdFromCaseNumber returned case id  ".$a['id']);
+    //                     die;
+	// 					return $a['id'];
+	// 				}
+    //             }
+    //         }
+    //     }
+    //     $prefixes = array("RE:","FWD:","FW:");
+    //     foreach($prefixes as $prefix){
+    //     	if (substr(strtolower($emailName), 0, strlen($prefix)) == strtolower($prefix)) {
+    //             $this->logger->log('debug', "$prefix found in $emailName");
+	// 		    $str = trim(substr($emailName, strlen($prefix)));
+	// 		    $query = "SELECT id FROM cases WHERE name = ".$this->db->quoted($str)."
+    //                  and deleted = 0 and state NOT IN ('Closed','Resolved') order by date_entered desc limit 1";
+    //             $this->logger->log('debug', "Cases Query: $query");
+
+    //             $results = $this->db->query($query, true);
+    //             $row = $this->db->fetchByAssoc($results);
+    //             if (!empty($row['id'])) {	
+
+	// 				$query_email = "select parent_id from emails  LEFT JOIN emails_text ON  emails.id = emails_text.email_id where parent_id='" .$a['id']. "' and from_addr='".$fromaddr."' and emails.deleted = 0  order by date_entered desc limit 1";
+
+	// 				$r_email = $this->db->query($query_email, true);
+
+	// 				$a = $this->db->fetchByAssoc($r_email);
+    //                 $this->logger->log('debug', "Email Query: $query_email ");
+	// 				if (!empty($a['parent_id'])) {
+    //                     $this->logger->log('debug', "getCaseIdFromCaseNumber returned case id  ".$row['id']);
+    //                 	return $row['id'];
+	// 				}
+    //             }
+    //         }
+    //     }
+
+    //     return false;
+    // }
 
     /**
      * @param $option_name
