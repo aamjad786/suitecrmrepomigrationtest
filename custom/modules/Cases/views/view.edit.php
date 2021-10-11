@@ -1063,8 +1063,8 @@ EOQ1;
 
                     if(jQuery.inArray(username, maker) != -1) {
                         $('#maker_comment_label , #maker_comment_c').show();
-                        $('#case_subcategory_c').attr('name', 'case_new_subcategory_c');
-                        $('#case_category_c').attr('name', 'case_new_category_c');
+                        $('#case_subcategory_c').attr('name', 'case_subcategory_c_new_c');
+                        $('#case_category_c').attr('name', 'case_category_c_new_c');
                         enable();
                         
                     }else if(isAdmin == 1 ){
