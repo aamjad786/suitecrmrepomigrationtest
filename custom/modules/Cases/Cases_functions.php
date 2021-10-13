@@ -7,7 +7,8 @@ class Cases_functions{
     private $log;
     function __construct() {
         $this->log = fopen("Logs/Cases_functions.log", "a");
-        $this->logger_case_assign_role = new CustomLogger('updateCaseAssignmentExcecutiveRole');
+        $this->logger_case_assign_role = new CustomLogger('CaseAssignmentExcecutiveRole');
+        $this->logger_case_assigned_to_admin = new CustomLogger('CasesAssignedToAdmin');
     }
     function __destruct() {
         fclose($this->log);
@@ -338,7 +339,6 @@ class Cases_functions{
             array_push($to_email, "mangal.sarang@neogrowth.in");
             array_push($to_email, "dipali.londhe@neogrowth.in");
             // array_push($to_email, "balayeswanth.b@neogrowth.in");
-            // Mangal Sarang <mangal.sarang@neogrowth.in>; Dipali Londhe <dipali.londhe@neogrowth.in>
         }
         require_once('custom/include/SendEmail.php');
         $email = new SendEmail();
@@ -348,7 +348,14 @@ class Cases_functions{
         $body = "Hi Team, <br> No. of cases assigned to Admin at $now is $count <br>
         <br/>You may review this at:<br/><a href='".$url."'>".$url."</a>
         <hr>";
-        $email_response = $email->send_email_to_user($sub,$body,$to_email,null,null,null,1);
+        $email_response = $email->send_email_to_user(   $sub,
+                                                        $body,
+                                                        $to_email,
+                                                        null,
+                                                        null,
+                                                        null,
+                                                        1
+                                                    );
         if(empty($email_response)){
             $response = false;
         }

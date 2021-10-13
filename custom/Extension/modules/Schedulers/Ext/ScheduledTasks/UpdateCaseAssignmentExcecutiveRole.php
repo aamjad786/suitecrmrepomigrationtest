@@ -6,7 +6,7 @@ $job_strings[] = 'UpdateCaseAssignmentExcecutiveRole';
 date_default_timezone_set('Asia/Kolkata');
 
 function UpdateCaseAssignmentExcecutiveRole(){
-    $logger = new CustomLogger('UpdateCaseAssignmentExcecutiveRole');
+    $logger = new CustomLogger('CaseAssignmentExcecutiveRole');
     $logger->log('debug', "--- START In UpdateCaseAssignmentExcecutiveRole in  ScheduledTasks---");
 
     $cases_functions = new Cases_functions();
