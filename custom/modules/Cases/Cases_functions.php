@@ -1,11 +1,13 @@
 <?php
 
 require_once('include/entryPoint.php');
+require_once 'custom/CustomLogger/CustomLogger.php';
 
 class Cases_functions{
     private $log;
     function __construct() {
         $this->log = fopen("Logs/Cases_functions.log", "a");
+        $this->logger_case_assign_role = new CustomLogger('updateCaseAssignmentExcecutiveRole');
     }
     function __destruct() {
         fclose($this->log);
@@ -80,15 +82,15 @@ class Cases_functions{
             AND u.deleted = 0
     	";
     	$results = $db->query($query);
-    	fwrite($this->log, "\n" . "Role name : " . $role_name);
-        fwrite($this->log, "\n" . "Fetched Results from DB : " . print_r($results,true));
+        $this->logger_case_assign_role->log('debug', "Role name : " . $role_name);
+        $this->logger_case_assign_role->log('debug', "Fetched Results from DB : " . print_r($results,true));
     	$user_id_list = array();
     	while ($row = $db->fetchByAssoc($results)) {
     		if(!empty($row['id'])){
     			array_push($user_id_list, $row['id']);
     		}
     	}
-    	fwrite($this->log, "\n" . "Fetched Users - Array Count : " . sizeof($user_id_list));
+    	$this->logger_case_assign_role->log('debug', "Fetched Users - Array Count : " . sizeof($user_id_list));
     	return $user_id_list;
     }
 
@@ -106,32 +108,35 @@ class Cases_functions{
     *		If no abscense is found, Update the role with all users found in Default 'Customer support executive Assignment'
     */
     function updateCaseAssignmentExcecutiveRole(){
-        fwrite($this->log, "\n-------------Scheduler starts---------------\n");
-        fwrite($this->log, "\n-------------updateCaseAssignmentExcecutiveRole::handleFormUpload start ".date('Y-m-d H:i:s')."---------------\n");
-        global $db;
+        
+        $this->logger_case_assign_role->log('debug', "--- START In UpdateCaseAssignmentExcecutiveRole in  ScheduledTasks at". date('Y-m-d H:i:s')."------");
+
+        global $db, $sugar_config;
         $return_status = true;
     	$default_user_id_list = array();
-    	$default_user_id_list = $this->getUserIdForThisRole('Customer support executive Assignment');
+    	$default_user_id_list = $this->getUserIdForThisRole($sugar_config['Customer_support_executive_Assignment']);
     	$default_user_id_list_str = $this->getQueryList($default_user_id_list);
 
     	if(empty($default_user_id_list_str)){
-    		fwrite($this->log, "\n" . "Fetched Users count is zero. Ending the job. ");
-            fwrite($this->log, "\n-------------Scheduler ends---------------\n");
+    		$this->logger_case_assign_role->log('debug', "Fetched Users count is zero. Ending the job. ");
+            $this->logger_case_assign_role->log('debug', "-------------Scheduler ends---------------");
     		return false;
     	}
     	$date = date('Y-m-d');
-        fwrite($this->log, "\n" . "check leave for date : " . $date);
-    	$query = "
+        $query = "
 	    	SELECT id, user_id, attendance_date, attendance_status, date_created, date_modified FROM cases_agents_attendance
 			WHERE attendance_date = '$date'
 			AND user_id in ($default_user_id_list_str)
-			ORDER BY date_modified DESC
-		";
-        fwrite($this->log, "\n" . "check users on leave query: " . $query);
+			ORDER BY date_modified DESC";
+
+        $this->logger_case_assign_role->log('debug', "check users on leave query: " . $query);
 		$results = $db->query($query);
+
 		//multiple values for a user on a same day can be found because of re upload. So to handle that we use visited array.
 		$visited_users_id = array();
 		$leave_users_id = array();
+
+        //remove users who are on leave that day.
 		while ($row = $db->fetchByAssoc($results)) {
 			if(!in_array($row['user_id'], $visited_users_id)){
 				array_push($visited_users_id, $row['user_id']);
@@ -140,50 +145,53 @@ class Cases_functions{
 				}
 			}
 		}
-		//remove users who are on leave that day.
-        fwrite($this->log, "\n" . "Default User ID list: ".print_r($default_user_id_list,true));
-        fwrite($this->log, "\n" . "On leave User ID list: ".print_r($leave_users_id,true));
+        
 		$cases_to_be_assigned_to = array_diff($default_user_id_list, $leave_users_id);
-        fwrite($this->log, "\n" . "User ID list for cases to be assigned : ".print_r($cases_to_be_assigned_to,true));
-        $role_id = $this->getRoleIdFromName("Customer support executive Assignment Dynamic");
+
+        $this->logger_case_assign_role->log('debug', "Default User ID list: ".print_r($default_user_id_list,true));
+        $this->logger_case_assign_role->log('debug', "On leave User ID list: ".print_r($leave_users_id,true));
+        $this->logger_case_assign_role->log('debug', "User ID list for cases to be assigned : ".print_r($cases_to_be_assigned_to,true));
+
+        $role_id = $this->getRoleIdFromName($sugar_config['Customer_support_executive_Assignment_Dynamic']);
         $return_status = $return_status and $this->removeUsersAssignedToRole($role_id);
         $return_status = $return_status and $this->addUsersToRole($cases_to_be_assigned_to, $role_id);
-        fwrite($this->log, "\n-------------Scheduler ends---------------\n");
+
+        $this->logger_case_assign_role->log('debug', "-------------Scheduler ends---------------");
         return $return_status;
     }
 
     function addUsersToRole($cases_to_be_assigned_to, $role_id){
         $return_status = true;
         foreach ($cases_to_be_assigned_to as $user_id) {
-            fwrite($this->log, "\n" . "User ID : " . $user_id);
+            $this->logger_case_assign_role->log('debug', "User ID : " . $user_id);
             $bean = BeanFactory::getBean('Users',$user_id);
-            fwrite($this->log, "\n" . "User Name : " . $bean->name);
+            $this->logger_case_assign_role->log('debug', "User Name : " . $bean->name);
             $bean->load_relationship('aclroles');
             $status = $bean->aclroles->add($role_id);    
-            fwrite($this->log, "\n" . "status after adding role : " . $status);   
+            $this->logger_case_assign_role->log('debug', "status after adding role : " . $status);   
             $return_status = $return_status and $status;
         }
-        fwrite($this->log, "\n" . "Final return status after adding role : " . $return_status); 
+        $this->logger_case_assign_role->log('debug', "Final return status after adding role : " . $return_status); 
         return $return_status;
     }
 
 
     function removeUsersAssignedToRole($role_id){
-        fwrite($this->log, "\n" . "Remove all users assigned to this Role id : " . $role_id);
+        $this->logger_case_assign_role->log('debug', "Remove all users assigned to this Role id : " . $role_id);
         require_once('modules/ACLRoles/ACLRole.php');
         $role = new ACLRole();
         $role->retrieve($role_id);
-        fwrite($this->log, "\n" . "Role Name : " . $role->name);
+        $this->logger_case_assign_role->log('debug', "Role Name : " . $role->name);
         $role_users = $role->get_linked_beans( 'users','User');
         $return_status = true;
         foreach ($role_users as $user) {
-            fwrite($this->log, "\n" . "User ID : " . $user->id);
+            $this->logger_case_assign_role->log('debug', "User ID : " . $user->id);
             $user->load_relationship('aclroles');
             $status = $user->aclroles->delete($user, $role_id);
-            fwrite($this->log, "\n" . "status after deleting role : " . $status);
+            $this->logger_case_assign_role->log('debug', "status after deleting role : " . $status);
             $return_status = $return_status and $status;
         }
-        fwrite($this->log, "\n" . "Final return status after deleting role : " . $return_status); 
+        $this->logger_case_assign_role->log('debug', "Final return status after deleting role : " . $return_status); 
         return $return_status;
     }
 
@@ -194,7 +202,7 @@ class Cases_functions{
             SELECT id FROM acl_roles
             WHERE name = '$role_name'
         ";
-        fwrite($this->log, "\n" . "Role ID fetch query : " . $query);
+        $this->logger_case_assign_role->log('debug', "Role ID fetch query : " . $query);
         $role_id = "";
         $results = $db->query($query);
         while ($row = $db->fetchByAssoc($results)) {
@@ -202,7 +210,7 @@ class Cases_functions{
                 $role_id = $row['id'];
             }
         }
-        fwrite($this->log, "\n" . "Fetched Role ID : " . $role_id);
+        $this->logger_case_assign_role->log('debug', "Fetched Role ID : " . $role_id);
         return $role_id;
     }
     /**
