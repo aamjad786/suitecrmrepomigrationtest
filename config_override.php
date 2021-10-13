@@ -31,4 +31,15 @@ $sugar_config['skip_handleCreateCase_from_addrs'][1] = 'mis@neogrowth.in';
 $sugar_config['skip_handleCreateCase_from_addrs'][2] = 'info@cibil.com';
 $sugar_config['skip_handleCreateCase_from_addrs'][3] = 'bpo-dipika.vala@neogrowth.in';
 $sugar_config['skip_handleCreateCase_from_domain'] = '@neogrowth.onmicrosoft.com';
+$sugar_config['not_prod_user_email'] = array('nikhil.kumar@neogrowth.in');
+$sugar_config['not_prod_netcore_number'] = '9743473424';
+$sugar_config['user_ng171'] = 'ng171';
+$sugar_config['helpdesk_email'] = 'Helpdesk@neogrowth.in';
+$sugar_config['helpdesk_email_arr'] = array('helpdesk@neogrowth.in');
+$sugar_config['neogrowth_in_domain'] = 'neogrowth.in';
+$sugar_config['Customer_support_executive_Assignment_Dynamic'] = 'Customer support executive Assignment Dynamic';
+$sugar_config['Customer_support_executive_Assignment'] = 'Customer support executive Assignment';
+$sugar_config['tdsrefund_email'] = array('tdsrefund@neogrowth.in');
+$sugar_config['category_change_notification_emails'] = array('manisha.agarwal@neogrowth.in','yogesh.nakhwa@neogrowth.in');
+$sugar_config['DEVs_emails'] = array('balayeswanth.b@neogrowth.in','nikhil.kumar@neogrowth.in','gowthami.gk@neogrowth.in');
 /***CONFIGURATOR***/
