@@ -283,7 +283,7 @@ class Cases_functions{
         }
         else{
             fwrite($log, "API call failed recieved failure message");   
-            fwrite($log, "\api_response : $api_response");
+            fwrite($log, "api_response : $api_response");
         }
         // echo "Response :: ";print_r($api_response);echo "<br>";
         // echo "Response array :: ";print_r($arr);echo "<br>";
@@ -311,33 +311,32 @@ class Cases_functions{
      */
     function notificationForCasesAssignedToAdmin(){
         $response = true;
-        global $timedate;
-        fwrite($this->log, "\n-------------notificationForCasesAssignedToAdmin() starts------------\n");
-        fwrite($this->log, "\n--------------" . $timedate->now() . "-----------\n");
-        global $db;
+        global $timedate, $db, $sugar_config;
+        $this->logger_case_assigned_to_admin->log('debug', "-----Start in notificationForCasesAssignedToAdmin starts at " . $timedate->now() . "-----");
+
         $query = "
             SELECT COUNT(*) as 'count'
             FROM cases c
             WHERE state != 'Closed'
-            AND assigned_user_id = '1'
-        ";
+            AND assigned_user_id = '1'";
+
         $results = $db->query($query);
         $count = 0;
         while ($row = $db->fetchByAssoc($results)) {
            $count = $row['count'];
         }
         if(empty($count)){
-            fwrite($this->log, "\nNo cases assigned to the admin right now");
+            $this->logger_case_assigned_to_admin->log('debug', "No cases assigned to the admin right now");
             return $response;
         }
-        fwrite($this->log, "\nNumber of cases assigned to the admin right now : $count");
+        $this->logger_case_assigned_to_admin->log('debug', "Number of cases assigned to the admin right now : $count");
         $to_email = array();
         $to_email_str = getenv("SCRM_CASE_EXCESS_ASSIGNMENT_NOTIFICATION");
         $to_email = explode(",", $to_email_str);
-        fwrite($this->log, "\nmail sent to " . print_r($to_email,true));
+        fwrite($this->log, "\n mail sent to " . print_r($to_email,true));
         if(empty($to_email_str) || empty($to_email)){
-            array_push($to_email, "mangal.sarang@neogrowth.in");
-            array_push($to_email, "dipali.londhe@neogrowth.in");
+            array_push($to_email, $sugar_config['ng_mangal_sarang']);
+            array_push($to_email, $sugar_config['ng_dipali_londhe']);
             // array_push($to_email, "balayeswanth.b@neogrowth.in");
         }
         require_once('custom/include/SendEmail.php');

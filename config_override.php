@@ -42,6 +42,8 @@ $sugar_config['Customer_support_executive_Assignment'] = 'Customer support execu
 $sugar_config['tdsrefund_email'] = array('tdsrefund@neogrowth.in');
 $sugar_config['category_change_notification_emails'] = array('manisha.agarwal@neogrowth.in','yogesh.nakhwa@neogrowth.in');
 $sugar_config['DEVs_emails'] = array('balayeswanth.b@neogrowth.in','nikhil.kumar@neogrowth.in','gowthami.gk@neogrowth.in');
+$sugar_config['ng_mangal_sarang'] = 'mangal.sarang@neogrowth.in';
+$sugar_config['ng_dipali_londhe'] = 'dipali.londhe@neogrowth.in';
 $sugar_config['case_types'] = array(
     array ( 'parent' => 'alteration_address' ,                     'qrc'=> 'request',     'ftr'=>'non_ftr' ),
     array ( 'parent' => 'alteration_bank_account' ,                'qrc'=> 'request',     'ftr'=>'non_ftr' ),
