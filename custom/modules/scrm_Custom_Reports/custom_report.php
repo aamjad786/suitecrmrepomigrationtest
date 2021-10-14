@@ -86,24 +86,17 @@
 									</td>
 								</tr>
 								<th><h2 style="color:black">Custom modules</h2></th>  
-								<tr class="oddListRowS1" height="20">
-									<td class="nowrap" width="1%">
-									<a target="_blank" style="text-decoration: none" href="?module=scrm_Custom_Reports&action=fileUpload"><span style ="font-family: Arial;font-size:14px;" ><b>1.Csv File Upload </b></span></a> 
+							
 									</td>
 								</tr>
 								<tr class="oddListRowS1" height="20">
 									<td class="nowrap" width="1%">
-									<a target="_blank" style="text-decoration: none" href="?module=scrm_Custom_Reports&action=file_proccessed_status"><span style ="font-family: Arial;font-size:14px;" ><b>2. File Processed status</b></span></a> 
+									<a target="_blank" style="text-decoration: none" href="?module=Cases&action=customer_application_profile"><span style ="font-family: Arial;font-size:14px;" ><b>1. Customer Application Profile View</b></span></a> 
 									</td>
 								</tr>
 								<tr class="oddListRowS1" height="20">
 									<td class="nowrap" width="1%">
-									<a target="_blank" style="text-decoration: none" href="?module=Cases&action=customer_application_profile"><span style ="font-family: Arial;font-size:14px;" ><b>3. Customer Application Profile View</b></span></a> 
-									</td>
-								</tr>
-								<tr class="oddListRowS1" height="20">
-									<td class="nowrap" width="1%">
-									<a target="_blank" style="text-decoration: none" href="?module=scrm_Custom_Reports&action=AssignUser"><span style ="font-family: Arial;font-size:14px;" ><b>4. User Management</b></span></a> 
+									<a target="_blank" style="text-decoration: none" href="?module=scrm_Custom_Reports&action=AssignUser"><span style ="font-family: Arial;font-size:14px;" ><b>2. User Management</b></span></a> 
 									</td>
 								</tr>
 								
@@ -134,27 +127,12 @@
 							<?php } 
 							if($is_admin || $is_renewal_user){
 							?>
-								<th><h2 style="color:black">Renewals Reports</h2></th>  
-								<tr class="oddListRowS1" height="20">
-									<td class="nowrap" width="1%">
-									<a target="_blank" style="text-decoration: none" href="?module=scrm_Custom_Reports&action=RenewalCustomerReport"><span style ="font-family: Arial;font-size:14px;" ><b>1. Renewals Customer Reports </b></span></a> 
-									</td>
-								</tr>
+								
 							<?php	
 							}
 							if($is_admin || (in_array('Customer support executive',$roles))) {
 								?>
-								<th><h2 style="color:black">Customer Support Reports</h2></th>  
-								<tr class="oddListRowS1" height="20">
-									<td class="nowrap" width="1%">
-									<a target="_blank" style="text-decoration: none" href="?module=scrm_Custom_Reports&action=CallsReport"><span style ="font-family: Arial;font-size:14px;" ><b>1. Calls Reports </b></span></a> 
-									</td>
-								</tr>
-								<tr class="oddListRowS1" height="20">
-									<td class="nowrap" width="1%">
-									<a target="_blank" style="text-decoration: none" href="?module=scrm_Custom_Reports&action=document_requests_report"><span style ="font-family: Arial;font-size:14px;" ><b>2. Document Request </b></span></a> 
-									</td>
-								</tr>
+								
 								<?php
 							}
 							?>
