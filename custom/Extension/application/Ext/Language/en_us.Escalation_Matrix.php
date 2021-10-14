@@ -38,7 +38,7 @@
  ********************************************************************************/
 
 
-$app_list_strings['moduleList']['scrm_Escalation_Matrix'] = NULL;
+
 $app_list_strings['moduleList']['scrm_Cases'] = 'Cases Escalation';
 $app_list_strings['email'][''] = '';
 $app_list_strings['Elastic_boost_options'][0] = 'Disabled';
