@@ -1,5 +1,5 @@
 <?php
- // created: 2021-09-22 06:36:33
+ // created: 2021-10-13 16:41:51
 $dictionary['Call']['fields']['branch_c']['inline_edit']=1;
 
  ?>
