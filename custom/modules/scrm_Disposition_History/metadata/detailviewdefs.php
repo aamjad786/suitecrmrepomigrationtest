@@ -134,11 +134,6 @@ array (
         array (
           0 => 
           array (
-            'name' => 'neo_paylater_leads_scrm_disposition_history_name',
-            'label' => 'LBL_NEO_PAYLATER_LEADS_SCRM_DISPOSITION_HISTORY_FROM_NEO_PAYLATER_LEADS_TITLE',
-          ),
-          1 => 
-          array (
             'name' => 'neo_customers_scrm_disposition_history_1_name',
           ),
         ),
