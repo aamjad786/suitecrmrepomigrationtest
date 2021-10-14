@@ -1,5 +1,6 @@
 <?php
 use SuiteCRM\Utility\SuiteValidator;
+require_once 'custom/CustomLogger/CustomLogger.php';
 
 if (!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
@@ -443,7 +444,9 @@ array_push($job_strings, 'custompollMonitoredInboxesAOP');
 function custompollMonitoredInboxesAOP()
 {
     require_once 'custom/modules/InboundEmail/AOPInboundEmail.php';
-    $GLOBALS['log']->info('----->Custom Scheduler fired job of type pollMonitoredInboxesAOP()');
+	$logger = new CustomLogger('custompollMonitoredInboxesAOP');
+    $logger->log('info', '----->Custom Scheduler fired job of type custompollMonitoredInboxesAOP() ' . date('Y-M-d H:i:s'));
+    $GLOBALS['log']->info('----->Custom Scheduler fired job of type custompollMonitoredInboxesAOP()');
     global $dictionary;
     global $app_strings;
     global $sugar_config;
@@ -456,10 +459,9 @@ function custompollMonitoredInboxesAOP()
         ' AND mailbox_type != \'bounce\''
     );
 
-    $GLOBALS['log']->debug('Just got Result from get all Inbounds of Inbound Emails');
+	// $logger->log('info', 'Result from get all Inbounds of Inbound Emails : ' .  json_encode($sqlQueryResult));
 
     while ($inboundEmailRow = $aopInboundEmail->db->fetchByAssoc($sqlQueryResult)) {
-        $GLOBALS['log']->debug('In while loop of Inbound Emails');
 
         $aopInboundEmailX = new AOPInboundEmail();
 
@@ -484,10 +486,9 @@ function custompollMonitoredInboxesAOP()
             if ($aopInboundEmailX->connectMailserver() == 'true') {
                 $connectToMailServer = true;
             } // if
-
-            $GLOBALS['log']->debug('Trying to connect to mailserver for [ ' . $inboundEmailRow['name'] . ' ]');
+			$logger->log('debug', 'Trying to connect to mailserver for [ ' . $inboundEmailRow['name'] . ' ]');
             if ($connectToMailServer) {
-                $GLOBALS['log']->debug('Connected to mailserver');
+                $logger->log('debug', 'Connected to mailserver');
 
                 if (!$aopInboundEmailX->isPop3Protocol()) {
                     $newMsgs = $aopInboundEmailX->getNewMessageIds();
@@ -496,6 +497,7 @@ function custompollMonitoredInboxesAOP()
                 if (is_array($newMsgs)) {
                     $current = 1;
                     $total = count($newMsgs);
+					$logger->log('debug', 'Total msgs : ' . $total ." for ID [ {$inboundEmailRow['id']} ]. mailbox [ {$inboundEmailRow['name']} ].");
                     require_once("include/SugarFolders/SugarFolders.php");
                     $sugarFolder = new SugarFolder();
                     $groupFolderId = $aopInboundEmailX->groupfolder_id;
@@ -531,7 +533,6 @@ function custompollMonitoredInboxesAOP()
                                 }
                                 if ($aopInboundEmailX->isMailBoxTypeCreateCase()) {
                                     $userId = $assignManager->getNextAssignedUser();
-                                    $GLOBALS['log']->debug('userId [ ' . $userId . ' ]');
                                     $validatior = new SuiteValidator();
                                     if ((!isset($aopInboundEmailX->email) || !$aopInboundEmailX->email ||
                                         !isset($aopInboundEmailX->email->id) || !$aopInboundEmailX->email->id) &&
@@ -542,7 +543,9 @@ function custompollMonitoredInboxesAOP()
                                             throw new Exception('Email retrieving error to handle case create, email id was: ' . $emailId);
                                         }
                                     }
+									$logger->log('debug', '-->Before handleCreateCase() & userId [ ' . $userId . ' ]');
                                     $aopInboundEmailX->handleCreateCase($aopInboundEmailX->email, $userId);
+									$logger->log('debug', '-->After handleCreateCase()');
                                 } // if
                             } // if
                         } else {
@@ -570,7 +573,7 @@ function custompollMonitoredInboxesAOP()
                                 $aopInboundEmailX->handleAutoresponse($email, $contactAddr);
                             } // else
                         } // else
-                        $GLOBALS['log']->debug('***** On message [ ' . $current . ' of ' . $total . ' ] *****');
+                        $logger->log('debug', '***** On message [ ' . $current . ' of ' . $total . ' ] *****');
                         $current++;
                     } // foreach
                     // update Inbound Account with last robin
@@ -587,6 +590,7 @@ function custompollMonitoredInboxesAOP()
                     }
                 }
             } else {
+				$logger->log('fatal', "SCHEDULERS: could not get an IMAP connection resource for ID [ {$inboundEmailRow['id']} ]. Skipping mailbox [ {$inboundEmailRow['name']} ].");
                 $GLOBALS['log']->fatal("SCHEDULERS: could not get an IMAP connection resource for ID [ {$inboundEmailRow['id']} ]. Skipping mailbox [ {$inboundEmailRow['name']} ].");
                 // cn: bug 9171 - continue while
             } // else

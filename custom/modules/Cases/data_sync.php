@@ -739,12 +739,12 @@ $email->send_email_to_user($sub,$desc,$to,$cc,$bean);
     {
         global $current_user,$db;
       
-        if($bean->case_category_c != $_REQUEST['case_new_category_c'] || $bean->case_subcategory_c != $_REQUEST['case_new_subcategory_c']){
-            if(!empty($_REQUEST['case_new_category_c']) && !empty($_REQUEST['case_new_subcategory_c'])){
-                #print_r($_REQUEST['case_new_category_c']);exit;
+        if($bean->case_category_c != $_REQUEST['case_category_c_new_c'] || $bean->case_subcategory_c != $_REQUEST['case_subcategory_c_new_c']){
+            if(!empty($_REQUEST['case_category_c_new_c']) && !empty($_REQUEST['case_subcategory_c_new_c'])){
+                #print_r($_REQUEST['case_category_c_new_c']);exit;
                 $case_id = $_REQUEST['record'];
-                $new_case_category = $_REQUEST['case_new_category_c'];
-                $new_case_sub_category = $_REQUEST['case_new_subcategory_c'];
+                $new_case_category = $_REQUEST['case_category_c_new_c'];
+                $new_case_sub_category = $_REQUEST['case_subcategory_c_new_c'];
                 $maker_remark = $_REQUEST['maker_comment_c'];
                 $date = date('Y-m-d H:i:s');
                 $query ="UPDATE cases s join cases_cstm c on s.id=c.id_c SET c.case_category_old_c='$bean->case_category_c',c.case_subcategory_old_c='$bean->case_subcategory_c',c.case_category_c_new_c= '$new_case_category', c.case_subcategory_c_new_c='$new_case_sub_category',c.case_category_approval_c = 0 ,c.date_of_request_c='$date',c.maker_id_c = '$current_user->id' where id = '$case_id'";

@@ -121,12 +121,12 @@ function CasesEscalationMail(){
                     $case_status = $GLOBALS['app_list_strings']['case_state_dom'][$item->state];
                     $query_comments = "
                         select (select count(*) from aop_case_updates 
-                        where case_id ='$item->id' and deleted = 0 and is_user_comment = 1) as 'total_comments',
+                        where case_id ='$item->id' and deleted = 0 and is_user_comment_c = 1) as 'total_comments',
                         name, description 
                         from aop_case_updates 
                         where case_id ='$item->id' 
                         and deleted = 0 
-                        and is_user_comment = 1
+                        and is_user_comment_c = 1
                         group by id
                         order by date_modified desc 
                         limit 1";
