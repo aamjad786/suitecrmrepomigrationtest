@@ -3,7 +3,7 @@ if(!defined('sugarEntry')) define('sugarEntry', true);
 //ini_set('display_errors','On');
 ini_set('memory_limit','-1');
 require_once('include/SugarCharts/SugarChartFactory.php');
-require_once('include/MVC/View/SugarView.php');
+//require_once('include/MVC/View/SugarView.php');
 include_once('include/SugarPHPMailer.php');
 include_once('modules/Administration/Administration.php');
 require_once 'custom/include/SendEmail.php';

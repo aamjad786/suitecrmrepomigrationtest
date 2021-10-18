@@ -38,31 +38,4 @@
  ********************************************************************************/
 
 
-
-$app_list_strings['moduleList']['scrm_Cases'] = 'Cases Escalation';
-$app_list_strings['email'][''] = '';
-$app_list_strings['Elastic_boost_options'][0] = 'Disabled';
-$app_list_strings['Elastic_boost_options'][1] = 'Low Boost';
-$app_list_strings['Elastic_boost_options'][2] = 'Medium Boost';
-$app_list_strings['Elastic_boost_options'][3] = 'High Boost';
-$app_list_strings['escalation_hours_i_list'][4] = '4';
-$app_list_strings['escalation_hours_i_list'][5] = '5';
-$app_list_strings['escalation_hours_i_list'][12] = '12';
-$app_list_strings['escalation_hours_i_list'][24] = '24';
-$app_list_strings['escalation_hours_i_list'][48] = '48';
-$app_list_strings['email_template_list'][''] = '';
-$app_list_strings['case_category_c_list'][''] = '';
-$app_list_strings['case_category_c_list']['alteration'] = 'Alteration';
-$app_list_strings['case_category_c_list']['documentation'] = 'Documentation';
-$app_list_strings['case_category_c_list']['cibil'] = 'CIBIL ';
-$app_list_strings['case_category_c_list']['financial_live'] = 'Financial- Live Cases';
-$app_list_strings['case_category_c_list']['financial_closed'] = 'Financial- Closed Cases';
-$app_list_strings['case_category_c_list']['settlement'] = 'Settlement';
-$app_list_strings['case_category_c_list']['information'] = 'Information';
-$app_list_strings['case_category_c_list']['legal'] = 'Legal';
-$app_list_strings['case_category_c_list']['pos_machine'] = 'POS Machine';
-$app_list_strings['case_category_c_list']['sales'] = 'Sales';
-$app_list_strings['case_category_c_list']['communication'] = 'Communication';
-$app_list_strings['case_category_c_list']['suggestion'] = 'Suggestion/Feedback';
-$app_list_strings['case_category_c_list']['others'] = 'Others';
-$app_list_strings['case_category_c_list']['penalty'] = 'Delayed Payment Charges';
+$app_list_strings['moduleList']['scrm_Disposition_History'] = 'Disposition History';

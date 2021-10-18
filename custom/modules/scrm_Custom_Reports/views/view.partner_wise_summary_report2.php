@@ -17,7 +17,7 @@ class Report{
 	
 	public function run($from_date, $to_date, $assigned_user_id){
 		global $db;
-		$query = "Select count(*) total_count, partner_name, DATE_FORMAT(date_entered, '%Y%m') month, disposition from neo_paylater_leads where deleted=0 group by partner_name, DATE_FORMAT(date_entered, '%Y%m'), disposition;";
+		//$query = "Select count(*) total_count, partner_name, DATE_FORMAT(date_entered, '%Y%m') month, disposition from neo_paylater_leads where deleted=0 group by partner_name, DATE_FORMAT(date_entered, '%Y%m'), disposition;";
 	    
 	    $result = $db->query($query);
 	    $data = array();

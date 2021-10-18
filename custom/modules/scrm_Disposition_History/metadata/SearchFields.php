@@ -1,5 +1,5 @@
 <?php
-// created: 2017-01-13 11:00:52
+// created: 2021-10-13 10:59:09
 $searchFields['scrm_Disposition_History'] = array (
   'name' => 
   array (
@@ -51,6 +51,24 @@ $searchFields['scrm_Disposition_History'] = array (
     'is_date_field' => true,
   ),
   'end_range_date_modified' => 
+  array (
+    'query_type' => 'default',
+    'enable_range_search' => true,
+    'is_date_field' => true,
+  ),
+  'range_call_pickup_datetime_c' => 
+  array (
+    'query_type' => 'default',
+    'enable_range_search' => true,
+    'is_date_field' => true,
+  ),
+  'start_range_call_pickup_datetime_c' => 
+  array (
+    'query_type' => 'default',
+    'enable_range_search' => true,
+    'is_date_field' => true,
+  ),
+  'end_range_call_pickup_datetime_c' => 
   array (
     'query_type' => 'default',
     'enable_range_search' => true,
