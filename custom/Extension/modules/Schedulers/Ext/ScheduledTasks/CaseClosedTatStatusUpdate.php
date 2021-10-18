@@ -23,26 +23,18 @@ function CaseClosedTatStatusUpdate(){
             $tatInDays = CaseTatInDays($item->case_category_c, $cat);
 
             if(!empty($tatInDays)){
+                $item->tat_in_days_c = $tatInDays;
 
-              $item->tat_in_days_c = $tatInDays;
+                if($item->age_c <= $tatInDays){
+                    $status = "within_tat";
+                } 
+                else {
+                    $status = "beyond_tat";
+                }
 
-              if($item->age_c <= $tatInDays){
-
-                $status = "within_tat";
-
-              } else {
-
-                  $status = "beyond_tat";
-
-              }
-
-              $query = "update cases_cstm set tat_status_c = '$status',tat_in_days_c='$tatInDays' where id_c='$item->id'";
-
-              $results = $db->query($query);
-              
+                $query = "update cases_cstm set tat_status_c = '$status',tat_in_days_c='$tatInDays' where id_c='$item->id'";
+                $results = $db->query($query);
             }
-           
-            
         }
     }
   
