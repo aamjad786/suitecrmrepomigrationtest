@@ -15,9 +15,10 @@ class ApplicationApi {
 
         $url = $as_api_base_url . $apiUrl . $app_id;
         $response = $curl_req->curl_req($url);
-        $myfile = fopen("Logs/ApplicationApi.log", "a");
-        fwrite($myfile, "\n \n Application API Url --> $url\n");
-        fwrite($myfile, var_export($response, true));
+
+        $logger = new CustomLogger('ApplicationApi');
+        $logger->log('debug', " Application API Url --> $url");
+        $logger->log('debug', var_export($response, true));
 
         return $response;
     }
