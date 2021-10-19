@@ -297,10 +297,10 @@ class Cases_functions{
             ";
         $update_result = $db->query($update_query);
         if($update_result){
-            $logger->log('debug', "API response update to db: Success");
+            $logger->log('debug', "API response update to db: Success - Query : $update_query");
         }
         else{
-            $logger->log('debug', "API response update to db: Failed");
+            $logger->log('debug', "API response update to db: Failed - Query : $update_query");
         }
         return $response;        
     }
