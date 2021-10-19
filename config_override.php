@@ -62,7 +62,7 @@ $sugar_config['DEVs_emails'] = array('balayeswanth.b@neogrowth.in','nikhil.kumar
 $sugar_config['ng_mangal_sarang'] = 'mangal.sarang@neogrowth.in';
 $sugar_config['ng_dipali_londhe'] = 'dipali.londhe@neogrowth.in';
 
-// InterimResponseToCustomer
+// InterimResponseToCustomer, SendingCallbackReminderEmail
 $sugar_config['ng_gowthami_gk'] = 'gowthami.gk@neogrowth.in';
 
 // CasesEscalationMail
@@ -81,6 +81,9 @@ $sugar_config['ng_arun_nayyar_name'] = 'Arun Nayyar';
 $sugar_config['ng_piyush_khaitan_khaitan'] = 'pk@khaitan.in';
 $sugar_config['ng_piyush_khaitan_neogrowth'] = 'pk@neogrowth.in';
 $sugar_config['ng_piyush_khaitan_name'] = 'Piyush Khaitan';
+
+// CallProcess, callCustomer
+$sugar_config['default_campaign_name'] ='Inbound_CS_912262587409';
 
 // AssignCaseType
 $sugar_config['case_types'] = array(

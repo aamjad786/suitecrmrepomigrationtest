@@ -3,9 +3,8 @@ if (!defined('sugarEntry'))
 define('sugarEntry', true);
 require_once('include/entryPoint.php');
 require_once 'CurlReq.php';
-global $db;
-global $sugar_config, $app_list_strings, $GLOBALS;
-global $current_user;
+global $db, $sugar_config, $app_list_strings, $GLOBALS, $current_user;
+
 $ozontel_api_key = getenv('SCRM_OZONTEL_API_KEY');
 
 //&agentID="+username+"&campaignName=Inbound_912267304969&customerNumber="+phoneNumber+"&uui="+moduleNm+"&pid="+pid;
@@ -25,7 +24,7 @@ fwrite($myfile, "\n Clud agent $cloudAgent");
 //$agentID = "kserve_2";
 $customerNumber = $_GET['customerNumber'];
 $uui 			= $_GET['uui'];
-$campaignName = empty($_GET['campaign'])?"Inbound_CS_912262587409":$_GET['campaign'];
+$campaignName = empty($_GET['campaign'])?$sugar_config['default_campaign_name']:$_GET['campaign'];
 $pid            = $_GET['pid'];
 if(!empty($uui)){
     $moduleNm = $uui;

@@ -1,14 +1,14 @@
 <?php
-
+require_once 'custom/CustomLogger/CustomLogger.php';
 $job_strings[] = 'CallProcess';
 date_default_timezone_set('Asia/Kolkata');
 
 function CallProcess() {
-    $fp = fopen('Logs/CallProcess.log', 'a');
-	fwrite($fp, "\n\n--------------process_call_details----------");
-	fwrite($fp, "\n".date('Y-m-d H:i:s'));
-	global $db;
-	$query = "select * from call_details where processed=0 and retry_count<7 and CampaignName='Inbound_CS_912262587409' and Status='NotAnswered' and date_entered>'2020-03-22' ";
+	$logger = new CustomLogger('CallProcess');
+	$logger->log('debug', "--- START In CallProcess in ScheduledTasks at ".date('Y-m-d h:i:s')."---");
+
+    global $db, $sugar_config;
+	$query = "select * from call_details where processed=0 and retry_count<7 and CampaignName='".$sugar_config['default_campaign_name']."' and Status='NotAnswered' and date_entered>'2020-03-22' ";
     $results = $db->query($query);
     while($row=$db->fetchByAssoc($results)){
 		
@@ -69,7 +69,7 @@ function CallProcess() {
 		}
 		//echo $id." ".$Type." ".$StartTime." ".$CallDuration." ".$AgentID." ".$CallerID." ".$parent_type." ".$parent_id." ".$hour." ".$min." ".$id." ".$retry_count." ".$uui." ".$campaign." ".$skill." ".$status1;
 
-        fwrite($fp,"\n\nProcessing record# $id");
+        $logger->log('debug', "Processing record# $id");
         $retry_count+=1;
         $call_type="";
         $url="";
@@ -87,29 +87,29 @@ function CallProcess() {
 		}
 		$callid=create_guid();
         $query2 = "insert into calls (id, name, date_entered, date_start, description, duration_hours, duration_minutes, status, direction, parent_id, parent_type, assigned_user_id, calls_action,calls_type) values ('$callid', '$label',NOW(),'$StartTime','$url','$hour','$min','$status', '$Type','$parent_id','$parent_type','$assigned_user_id','$uui','$call_type')";
-		fwrite($fp, "\n\nCalls Query:".$query2);
+		$logger->log('debug', "Calls Query:".$query2);
 		$as_res=$db->query($query2);
         if($as_res){
-            fwrite($fp, "\n\nCalls data inserted successfully");
+            $logger->log('debug', "Calls data inserted successfully");
             $query5 = "update call_details set processed=1,retry_count='$retry_count' where id='$id'";
 			$res = $db->query($query5);
-			fwrite($fp, "\nquery5:".$query5);
+			$logger->log('debug', "query5:".$query5);
 			if($res){
-				fwrite($fp, "\nMarked record $id as processed");
+				$logger->log('debug', "Marked record $id as processed");
 			}
         }
         else{
             $query5 = "update call_details set retry_count='$retry_count' where id='$id'";
 				$res = $db->query($query5);
-				fwrite($fp, "\nquery5:".$query5);
+				$logger->log('debug', "query5:".$query5);
 				if($res){
-					fwrite($fp, "\nUpdated retry count as $retry_count for record $id");
+					$logger->log('debug', "Updated retry count as $retry_count for record $id");
                 }
                 continue;
 		}
 	}
 
   
-	fwrite($fp, "\n\n--------------process_call_details end----------");
+	$logger->log('debug', "--------------process_call_details end----------");
 	return true;
 }
