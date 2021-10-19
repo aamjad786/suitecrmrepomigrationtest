@@ -230,7 +230,7 @@ class Cases_functions{
         $logger = new CustomLogger('AutoScheduleCallsUpload');
 	    $logger->log('debug', "--- START In uploadOzontelAutoScheduleCalls at ".date('Y-m-d h:i:s')."---");
 
-        global $db;
+        global $db, $sugar_config;
         //inserted time to sent is IST, now is GMT
         $fetch_query = "
             SELECT id, type, request_body
@@ -249,7 +249,7 @@ class Cases_functions{
             $id = $row['id'];
             $type = $row['type'];
             $bulkData = $row['request_body'];
-             print_r(json_decode($row['request_body'], true)); echo "<br><hr>";
+            print_r(json_decode($row['request_body'], true)); echo "<br><hr>";
         }
         if(empty($id)){
             $logger->log('debug', "No reports to send to ozontel, Ending the job");
@@ -260,7 +260,7 @@ class Cases_functions{
         // print_r($bulkData_array);echo "<br><hr>";
         $logger->log('debug', "Fetched ID : $id");
         $request_body["api_key"] = $api_key;
-        $request_body["campaign_name"] = "Outbound_912262587414";
+        $request_body["campaign_name"] = $sugar_config['ScheduleCalls_campaign_name'];
         $request_body["bulkData"] = json_encode($bulkData_array);
         // print_r($request_body); echo "<br>";
         $request_body_http_query = http_build_query($request_body);

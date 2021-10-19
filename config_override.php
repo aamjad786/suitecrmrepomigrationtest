@@ -85,6 +85,9 @@ $sugar_config['ng_piyush_khaitan_name'] = 'Piyush Khaitan';
 // CallProcess, callCustomer
 $sugar_config['default_campaign_name'] ='Inbound_CS_912262587409';
 
+// uploadOzontelAutoScheduleCalls
+$sugar_config['ScheduleCalls_campaign_name'] ='Outbound_912262587414';
+
 // AssignCaseType
 $sugar_config['case_types'] = array(
     array ( 'parent' => 'alteration_address' ,                     'qrc'=> 'request',     'ftr'=>'non_ftr' ),
