@@ -44,6 +44,24 @@ $sugar_config['category_change_notification_emails'] = array('manisha.agarwal@ne
 $sugar_config['DEVs_emails'] = array('balayeswanth.b@neogrowth.in','nikhil.kumar@neogrowth.in','gowthami.gk@neogrowth.in');
 $sugar_config['ng_mangal_sarang'] = 'mangal.sarang@neogrowth.in';
 $sugar_config['ng_dipali_londhe'] = 'dipali.londhe@neogrowth.in';
+
+//CasesEscalationMail
+$sugar_config['ng_sachin_bawari'] = 'sachin.bawari@neogrowth.in';
+$sugar_config['ng_sachin_bawari_name'] = 'Sachin Bawari';
+$sugar_config['ng_ravi_sarpangala'] = 'ravi.sarpangala@neogrowth.in';
+$sugar_config['ng_ravi_sarpangala_name'] = 'Ravi Sarpangala';
+$sugar_config['ng_ravi_kumar'] = 'ravi.kumar@neogrowth.in';
+$sugar_config['ng_ravi_kumar_name'] = 'B Ravikumar';
+$sugar_config['ng_yogesh_nakhwa'] = 'yogesh.nakhwa@neogrowth.in';
+$sugar_config['ng_yogesh_nakhwa_name'] = 'Yogesh Suresh Nakhwa';
+$sugar_config['ng_sorabh_malhotra'] = 'Sorabh.Malhotra@neogrowth.in';
+$sugar_config['ng_sorabh_malhotra_name'] = 'Sorabh Malhotra';
+$sugar_config['ng_arun_nayyar'] = 'arun.nayyar@neogrowth.in';
+$sugar_config['ng_arun_nayyar_name'] = 'Arun Nayyar';
+$sugar_config['ng_piyush_khaitan_khaitan'] = 'pk@khaitan.in';
+$sugar_config['ng_piyush_khaitan_neogrowth'] = 'pk@neogrowth.in';
+$sugar_config['ng_piyush_khaitan_name'] = 'Piyush Khaitan';
+
 $sugar_config['case_types'] = array(
     array ( 'parent' => 'alteration_address' ,                     'qrc'=> 'request',     'ftr'=>'non_ftr' ),
     array ( 'parent' => 'alteration_bank_account' ,                'qrc'=> 'request',     'ftr'=>'non_ftr' ),

@@ -4,15 +4,15 @@ date_default_timezone_set('Asia/Kolkata');
 require_once('include/entryPoint.php');
 
 function CasesEscalationMail(){
-    global $timedate;
-    $myfile = fopen("Logs/CasesEscalationMail.log", "a");
-    fwrite($myfile, "\n"."------------------function::CasesEscalationMail() Starts--------------");
-    fwrite($myfile, "\n"."time - ".$timedate->now());
+    global $sugar_config;
+    $logger = new CustomLogger('CasesEscalationMail');
+    $logger->log('debug', "---Start function::CasesEscalationMail() at - ".date('Y-m-d H:i:s')."---");
+    
     $bean = BeanFactory::getBean('Cases');
     $query = "cases.deleted=0 and cases.state in ('Open','In_progress')";
-    fwrite($myfile, "\n"."Query :: " . $query);
+    $logger->log('debug', "Query :: " . $query);
     $items = $bean->get_full_list('',$query);
-    $count=0;
+    
     if ($items){
         foreach($items as $item){
             if ($item->escalation_level_c>=1){
@@ -22,65 +22,63 @@ function CasesEscalationMail(){
                 //print_r($item);
                 $cc = getCCListFromTable($item,$user);
                 if ($item->case_subcategory_c=="information_suspicious_transaction") {
-                    $cc[0][3]='sachin.bawari@neogrowth.in';
-                    $cc[0][4]='ravi.sarpangala@neogrowth.in';
-                    $cc[0][5]='ravi.kumar@neogrowth.in';
-                    $cc[0][6]='yogesh.nakhwa@neogrowth.in';
+                    $cc[0][3] = $sugar_config['ng_sachin_bawari'];
+                    $cc[0][4] = $sugar_config['ng_ravi_sarpangala'];
+                    $cc[0][5] = $sugar_config['ng_ravi_kumar'];
+                    $cc[0][6] = $sugar_config['ng_yogesh_nakhwa'];
                     
-                    $cc[1][3]='Sachin Bawari';
-                    $cc[1][4]='Ravi Sarpangala';
-                    $cc[1][5]='B Ravikumar';
-                    $cc[1][6]='Yogesh Suresh Nakhwa';
+                    $cc[1][3] = $sugar_config['ng_sachin_bawari_name'];
+                    $cc[1][4] = $sugar_config['ng_ravi_sarpangala_name'];
+                    $cc[1][5] = $sugar_config['ng_ravi_kumar_name'];
+                    $cc[1][6] = $sugar_config['ng_yogesh_nakhwa_name'];
 
                     $department=strtolower($item->assigned_user_department_c);
                     
-                    if(preg_match('/collection/i', $department))
-                    {
-                        $cc[0][2]='Sorabh.Malhotra@neogrowth.in';
-                        $cc[1][2]='Sorabh Malhotra';
+                    if(preg_match('/collection/i', $department)){
+                        $cc[0][2] = $sugar_config['ng_sorabh_malhotra'];
+                        $cc[1][2] = $sugar_config['ng_sorabh_malhotra_name'];
                     }
                 }
 
-                fwrite($myfile,print_r($cc,true));
+                $logger->log('debug', print_r($cc,true));
 
-               
                 // old logic ends
                 if($item->age_c>30){
                     $cc[0][7]=$cc[0][4];
                     $cc[1][7]=$cc[1][4];
-                    $cc[0][4] = 'arun.nayyar@neogrowth.in';
-                    $cc[1][4] = 'Arun Nayyar';
+                    $cc[0][4] = $sugar_config['ng_arun_nayyar'];
+                    $cc[1][4] = $sugar_config['ng_arun_nayyar_name'];
                 }else{
-                    if(($key = array_search('arun.nayyar@neogrowth.in', $cc[0])) !== false) {
+                    if(($key = array_search($sugar_config['ng_arun_nayyar'], $cc[0])) !== false) {
                         unset($cc[0][$key]);
 
                         if($key==$level){
                             $level--;
                         }
                     }
-                    if(($key = array_search('Arun Nayyar', $cc[1])) !== false) {
+                    if(($key = array_search($sugar_config['ng_arun_nayyar_name'], $cc[1])) !== false) {
                         unset($cc[1][$key]);
                     }
                 }
                 //Escalation mails are not supposed to sent to PK - start
-                if(($key = array_search('pk@khaitan.in', $cc[0])) !== false) {
+                if(($key = array_search($sugar_config['ng_piyush_khaitan_khaitan'], $cc[0])) !== false) {
                     unset($cc[0][$key]);
 
                     if($key==$level){
                         $level--;
                     }
                 }
-                if(($key = array_search('pk@neogrowth.in', $cc[0])) !== false) {
+                if(($key = array_search($sugar_config['ng_piyush_khaitan_neogrowth'], $cc[0])) !== false) {
                     unset($cc[0][$key]);
 
                     if($key==$level){
                         $level--;
                     }
                 }                    
-                if(($key = array_search('Piyush Khaitan', $cc[1])) !== false) {
+                if(($key = array_search($sugar_config['ng_piyush_khaitan_name'], $cc[1])) !== false) {
                     unset($cc[1][$key]);
                 }
-                if(($key = array_search('Piyush Khaitan', $cc[1])) !== false) {
+                if(($key = array_search($sugar_config['ng_piyush_khaitan_name'], $cc[1])) !== false) {
                     unset($cc[1][$key]);
                 }
                 //Escalation mails are not supposed to sent to PK - end
@@ -130,33 +128,33 @@ function CasesEscalationMail(){
                         group by id
                         order by date_modified desc 
                         limit 1";
-                    fwrite($myfile, "\n"."Query :: ". $query_comments);
+                    $logger->log('debug', "Query :: ". $query_comments);
                     $results_comments = $db->query($query_comments);
                     $total_comments = 0;
                     $latest_comment = "N/A";
                     while ($row_comment = $db->fetchByAssoc($results_comments)) {
                         if(isset($row_comment['total_comments']) && !empty($row_comment['total_comments'])){
-                             $total_comments = $row_comment['total_comments'];
+                            $total_comments = $row_comment['total_comments'];
                         }
                         if(isset($row_comment['description']) && !empty($row_comment['description'])){
-                             $latest_comment = $row_comment['description'];
+                            $latest_comment = $row_comment['description'];
                         }
                     }
-                    fwrite($myfile, "\n"."Latest Comment Length:: ". strlen($latest_comment));
+                    $logger->log('debug', "Latest Comment Length:: ". strlen($latest_comment));
                     $read_more = "";
                     if(strlen($latest_comment)>200){
                         $latest_comment = substr($latest_comment, 0, 200);
                         $read_more = "<a href='$url'>...ReadMore</a>"; 
                     }
-                    fwrite($myfile, "\n"."Total Comment made on this case :: ". $total_comments);
-                    fwrite($myfile, "\n"."Latest Comment :: ". $latest_comment);
+                    $logger->log('debug', "Total Comment made on this case :: ". $total_comments);
+                    $logger->log('debug', "Latest Comment :: ". $latest_comment);
                     
                     $desc ="<pre>
-Dear $to_name,
+                        Dear $to_name,
 
-This is a system generated auto escalation email. This is to bring to your notice 
-that Case No: SR-#$item->case_number is pending for resolution with $user->department since $item->age_c days.
-Request your attention to help resolve this escalation as soon as possible.";
+                        This is a system generated auto escalation email. This is to bring to your notice 
+                        that Case No: SR-#$item->case_number is pending for resolution with $user->department since $item->age_c days.
+                        Request your attention to help resolve this escalation as soon as possible.";
 
                     $msg = $results;
                     $receipt_date = date_format(date_create($item->date_entered), 'd/m/Y h:i:s a');
@@ -223,24 +221,24 @@ Request your attention to help resolve this escalation as soon as possible.";
                     }
                     $desc.= "</table></pre>";
                     $desc.= "<pre>You may review this Case at:
-<a href='$url'>$url</a></pre>";
+                        <a href='$url'>$url</a></pre>";
                 }
 
                 $email = new SendEmail();
 
                 $app_host = getenv('SCRM_ENVIRONMENT');
                 $caseLevel = $item->escalation_level_c;
-                fwrite($myfile,print_r($to,true));
-                fwrite($myfile,print_r($cc,true));
+                $logger->log('debug', print_r($to,true));
+                $logger->log('debug', print_r($cc,true));
                 echo "Case id: ".$item->id."<br>";
                 echo "Case Subcategory: ".$item->case_subcategory_c."<br>";
                 echo "Assigned to: ".$item->assigned_user_name."<br>";
                 echo "Escalation Level: ".$item->escalation_level_c."<br>";
-                echo "Email will be sent to: " ;print_r($to);echo "<br>";
+                echo "Email will be sent to: " ; print_r($to);echo "<br>";
                 print_r($cc);
                 echo "<br><br>";
                 $email->send_email_to_user($sub,$desc,$to, $cc,$item);
-                fwrite($myfile, "\n"."------------------function::CasesEscalationMail() Ends--------------");
+                $logger->log('debug', "------------------function::CasesEscalationMail() Ends--------------");
             }
 
         }
@@ -250,8 +248,8 @@ Request your attention to help resolve this escalation as soon as possible.";
 
 
 function getCCListFromTable($case,$user){
-    $myfile = fopen("Logs/CasesEscalationMail.log", "a");
-    fwrite($myfile, "\n"."------------------function::getCCListFromTable() Starts--------------");
+    $logger = new CustomLogger('CasesEscalationMail');
+    $logger->log('debug', "------------------function::getCCListFromTable() Starts--------------");
     $emails = array();
     $names  = array();
     $level  = $case->escalation_level_c;
@@ -262,7 +260,7 @@ function getCCListFromTable($case,$user){
         FROM user_case_escalation
         WHERE id = '$user->id'
         ";
-    fwrite($myfile, "\n"."query :: $query");
+    $logger->log('debug', "query :: $query");
     $results = $db->query($query);
     $esc_details = array();
     while ($row = $db->fetchByAssoc($results)) {
@@ -277,8 +275,8 @@ function getCCListFromTable($case,$user){
         //PK'S DETAILS WILL BE ADDED IN THE PARENT FUNCTION
         $level = $level-1;
     }
-    fwrite($myfile, "\n"."Escalation Level :: " . $level);
-    fwrite($myfile, "\n"."Escalation Matrix :: " . serialize($esc_details) . " For $user->user_name");
+    $logger->log('debug', "Escalation Level :: " . $level);
+    $logger->log('debug', "Escalation Matrix :: " . serialize($esc_details) . " For $user->user_name");
     for($i=0;$i<=$level;$i++){
         $user_bean = "";
         $name = "";
@@ -291,8 +289,8 @@ function getCCListFromTable($case,$user){
             }
         }        
     }
-    fwrite($myfile, "\n"."names: " .serialize($names) . ", emails: ". serialize($emails));
-    fwrite($myfile, "\n"."------------------function::getCCListFromTable() Ends--------------");
+    $logger->log('debug', "names: " .serialize($names) . ", emails: ". serialize($emails));
+    $logger->log('debug', "------------------function::getCCListFromTable() Ends--------------");
     return array($emails, $names);
 }
 
