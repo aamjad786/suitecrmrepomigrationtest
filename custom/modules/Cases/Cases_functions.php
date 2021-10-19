@@ -226,9 +226,10 @@ class Cases_functions{
         $api_response_code = "";
         $api_key = getenv("SCRM_OZONTEL_API_KEY");
         $url = "http://api1.cloudagent.in/cloudAgentRestAPI/index.php/AddCampaignBulkData/addBulkData/format/json";
-        $log = fopen("Logs/AutoScheduleCallsUpload.log", "a");
-        fwrite($log, "\n-------------uploadOzontelAutoScheduleCalls() starts------------\n");
-        fwrite($log, "\n--------------" . $timedate->now() . "-----------\n");
+
+        $logger = new CustomLogger('AutoScheduleCallsUpload');
+	    $logger->log('debug', "--- START In uploadOzontelAutoScheduleCalls at ".date('Y-m-d h:i:s')."---");
+
         global $db;
         //inserted time to sent is IST, now is GMT
         $fetch_query = "
@@ -242,7 +243,6 @@ class Cases_functions{
         // echo "$fetch_query<br>";
         $result = $db->query($fetch_query);
         $id = "";
-        $type = "";
         $bulkData = "";
         $request_body = array();
         while ($row = $db->fetchByAssoc($result)) {
@@ -252,13 +252,13 @@ class Cases_functions{
              print_r(json_decode($row['request_body'], true)); echo "<br><hr>";
         }
         if(empty($id)){
-            fwrite($log, "\nNo reports to send to ozontel, Ending the job");
+            $logger->log('debug', "No reports to send to ozontel, Ending the job");
             return true;    
         }
         $bulkData_array = array();
         $bulkData_array = unserialize(base64_decode($bulkData));
         // print_r($bulkData_array);echo "<br><hr>";
-        fwrite($log, "\nFetched ID : $id");
+        $logger->log('debug', "Fetched ID : $id");
         $request_body["api_key"] = $api_key;
         $request_body["campaign_name"] = "Outbound_912262587414";
         $request_body["bulkData"] = json_encode($bulkData_array);
@@ -266,7 +266,7 @@ class Cases_functions{
         $request_body_http_query = http_build_query($request_body);
         // print_r($request_body_http_query); echo "<br>";
         if(empty($request_body_http_query)){
-            fwrite($log, "\nerror while forming request_body_http_query : id=> $id");
+            $logger->log('debug', "error while forming request_body_http_query : id=> $id");
             return false;
         }
         // die();
@@ -278,31 +278,30 @@ class Cases_functions{
         $api_response_code = "";
         if(!empty($api_response_arr["message"]["Status"]) 
             && $api_response_arr["message"]["Status"] == "SuccessFully Updated"){
-            fwrite($log, "API call success"); 
+                $logger->log('debug', "API call success"); 
             $api_response_code = 200;
         }
         else{
-            fwrite($log, "API call failed recieved failure message");   
-            fwrite($log, "api_response : $api_response");
+            $logger->log('debug', "API call failed recieved failure message");   
+            $logger->log('debug', "api_response : $api_response");
         }
         // echo "Response :: ";print_r($api_response);echo "<br>";
         // echo "Response array :: ";print_r($arr);echo "<br>";
         $update_query = "
-        UPDATE auto_schedule_calls
-        SET is_sent = 1,
-            response = '$api_response',
-            response_code = '$api_response_code',
-            date_modified = NOW()
-        WHERE id = '$id'
-        ";
+            UPDATE auto_schedule_calls
+            SET is_sent = 1,
+                response = '$api_response',
+                response_code = '$api_response_code',
+                date_modified = NOW()
+            WHERE id = '$id'
+            ";
         $update_result = $db->query($update_query);
         if($update_result){
-            fwrite($log, "API response update to db: Success");
+            $logger->log('debug', "API response update to db: Success");
         }
         else{
-            fwrite($log, "API response update to db: Failed");
+            $logger->log('debug', "API response update to db: Failed");
         }
-        fclose($log);
         return $response;        
     }
     /**
