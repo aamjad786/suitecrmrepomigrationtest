@@ -7,11 +7,11 @@ function InterimResponseToCustomer() {
     if (!defined('sugarEntry'))
         define('sugarEntry', true);
     require_once('include/entryPoint.php');
-    require_once('SendEmail.php');
+    require_once('custom/include/SendEmail.php');
     // $currentDate = date("Y-m-d");
     $env = getenv('SCRM_ENVIRONMENT');
 
-    global $db;
+    global $db, $sugar_config;
     $getCasesQuery = "SELECT cases.id, cases.date_entered, cases.case_number, cases.state, cases_cstm.merchant_email_id_c, cases_cstm.escalation_level_c from cases JOIN cases_cstm ON cases.id = cases_cstm.id_c WHERE state !='Closed'";
     $cases = $db->query($getCasesQuery);
 
@@ -26,7 +26,7 @@ function InterimResponseToCustomer() {
             $ticket = $row['case_number'];
             $body = getEmailContent($ticket);
             if(in_array($env,array('dev','local')))
-                $emailId = 'gowthami.gk@neogrowth.in';
+                $emailId = $sugar_config['ng_gowthami_gk'];
             else if($env == 'prod')
                 $emailId = $customerEmail;
             $subject = "Update on your query SR#$ticket";

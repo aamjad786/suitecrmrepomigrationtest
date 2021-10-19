@@ -6,7 +6,7 @@ $sugar_config['CAS_host'] = 'uat.advancesuite.in';
 $sugar_config['CAS_port'] = '3053';
 $sugar_config['authenticationClass'] = 'CASAuthenticate';
 $sugar_config['developerMode'] = true;
-$sugar_config['logger']['level'] = 'debug';
+$sugar_config['logger']['level'] = 'error';
 $sugar_config['default_module_favicon'] = false;
 $sugar_config['dashlet_auto_refresh_min'] = '30';
 $sugar_config['stack_trace_errors'] = false;
@@ -25,27 +25,47 @@ $sugar_config['email_confirm_opt_in_email_template_id'] = '';
 $sugar_config['email_allow_send_as_user'] = false;
 $sugar_config['email_xss'] = 'YToxMzp7czo2OiJhcHBsZXQiO3M6NjoiYXBwbGV0IjtzOjQ6ImJhc2UiO3M6NDoiYmFzZSI7czo1OiJlbWJlZCI7czo1OiJlbWJlZCI7czo0OiJmb3JtIjtzOjQ6ImZvcm0iO3M6NToiZnJhbWUiO3M6NToiZnJhbWUiO3M6ODoiZnJhbWVzZXQiO3M6ODoiZnJhbWVzZXQiO3M6NjoiaWZyYW1lIjtzOjY6ImlmcmFtZSI7czo2OiJpbXBvcnQiO3M6ODoiXD9pbXBvcnQiO3M6NToibGF5ZXIiO3M6NToibGF5ZXIiO3M6NDoibGluayI7czo0OiJsaW5rIjtzOjY6Im9iamVjdCI7czo2OiJvYmplY3QiO3M6MzoieG1wIjtzOjM6InhtcCI7czo2OiJzY3JpcHQiO3M6Njoic2NyaXB0Ijt9';
 $sugar_config['verify_client_ip'] = false;
+
+// handleCaseAssignment
 $sugar_config['assigned_user_id_MineField'] = '1B866D74-0D07-4B27-80A2-688347ECF864';
+
+// handleCreateCase
 $sugar_config['skip_handleCreateCase_from_addrs'][0] = 'communications@neogrowth.in';
 $sugar_config['skip_handleCreateCase_from_addrs'][1] = 'mis@neogrowth.in';
 $sugar_config['skip_handleCreateCase_from_addrs'][2] = 'info@cibil.com';
 $sugar_config['skip_handleCreateCase_from_addrs'][3] = 'bpo-dipika.vala@neogrowth.in';
 $sugar_config['skip_handleCreateCase_from_domain'] = '@neogrowth.onmicrosoft.com';
+
+// data_sync edit_case closed state
 $sugar_config['not_prod_user_email'] = array('nikhil.kumar@neogrowth.in');
 $sugar_config['not_prod_netcore_number'] = '9743473424';
-$sugar_config['user_ng171'] = 'ng171';
+
 $sugar_config['helpdesk_email'] = 'Helpdesk@neogrowth.in';
 $sugar_config['helpdesk_email_arr'] = array('helpdesk@neogrowth.in');
 $sugar_config['neogrowth_in_domain'] = 'neogrowth.in';
+
+// updateCaseAssignmentExcecutiveRole, data_sync create_case
+$sugar_config['user_ng171'] = 'ng171';
 $sugar_config['Customer_support_executive_Assignment_Dynamic'] = 'Customer support executive Assignment Dynamic';
 $sugar_config['Customer_support_executive_Assignment'] = 'Customer support executive Assignment';
+
+// data_sync checkInsertedFields
 $sugar_config['tdsrefund_email'] = array('tdsrefund@neogrowth.in');
+
+// data_sync tempCategoryStore
 $sugar_config['category_change_notification_emails'] = array('manisha.agarwal@neogrowth.in','yogesh.nakhwa@neogrowth.in');
+
+// sendNotificationToDevs
 $sugar_config['DEVs_emails'] = array('balayeswanth.b@neogrowth.in','nikhil.kumar@neogrowth.in','gowthami.gk@neogrowth.in');
+
+// notificationForCasesAssignedToAdmin
 $sugar_config['ng_mangal_sarang'] = 'mangal.sarang@neogrowth.in';
 $sugar_config['ng_dipali_londhe'] = 'dipali.londhe@neogrowth.in';
 
-//CasesEscalationMail
+// InterimResponseToCustomer
+$sugar_config['ng_gowthami_gk'] = 'gowthami.gk@neogrowth.in';
+
+// CasesEscalationMail
 $sugar_config['ng_sachin_bawari'] = 'sachin.bawari@neogrowth.in';
 $sugar_config['ng_sachin_bawari_name'] = 'Sachin Bawari';
 $sugar_config['ng_ravi_sarpangala'] = 'ravi.sarpangala@neogrowth.in';
@@ -62,6 +82,7 @@ $sugar_config['ng_piyush_khaitan_khaitan'] = 'pk@khaitan.in';
 $sugar_config['ng_piyush_khaitan_neogrowth'] = 'pk@neogrowth.in';
 $sugar_config['ng_piyush_khaitan_name'] = 'Piyush Khaitan';
 
+// AssignCaseType
 $sugar_config['case_types'] = array(
     array ( 'parent' => 'alteration_address' ,                     'qrc'=> 'request',     'ftr'=>'non_ftr' ),
     array ( 'parent' => 'alteration_bank_account' ,                'qrc'=> 'request',     'ftr'=>'non_ftr' ),
