@@ -8,11 +8,11 @@ function SendingCallbackReminderEmail() {
     if (!defined('sugarEntry'))
         define('sugarEntry', true);
     require_once('include/entryPoint.php');
-    require_once('SendEmail.php');
+    require_once('custom/include/SendEmail.php');
 
     $userBean = new User();
     $emailObj = new Email();
-    global $db;
+    global $db, $sugar_config;
 
     $todaysData = date("Y-m-d");
     $queryToGetDistinct = "SELECT assigned_user_id FROM smacc_sm_account WHERE callback_date BETWEEN '$todaysData 00:00:00' AND '$todaysData 23:59:59' AND deleted NOT LIKE '1' GROUP BY assigned_user_id";
@@ -58,7 +58,7 @@ function SendingCallbackReminderEmail() {
 
                 //Send email to the service manager.
                 $emailId = $userData->email1;
-                $emailId = "gowthami.gk@neogrowth.in";
+                $emailId = $sugar_config['ng_gowthami_gk'];
                 $subject = "Call Back alert";
                 $to = array($emailId);
                 $email = new SendEmail();
