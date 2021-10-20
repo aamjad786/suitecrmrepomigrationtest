@@ -13,7 +13,7 @@ $hook_array['after_save'][] = Array(77, 'updateRelatedMeetingsGeocodeInfo', 'mod
 // Custom Login Hooks
 
 $hook_array['before_save'][] = Array(1, 'Check 10 Digit Mobile', 'custom/modules/Leads/BeforeSaveLead.php','BeforeSaveLead', 'checkMobileNumber');
-$hook_array['before_save'][] = Array(2, 'Dedup Check For Lead', 'custom/modules/Leads/BeforeSaveLead.php','BeforeSaveLead', 'checkDuplicateLead'); 
+// $hook_array['before_save'][] = Array(2, 'Dedup Check For Lead', 'custom/modules/Leads/BeforeSaveLead.php','BeforeSaveLead', 'checkDuplicateLead'); 
 $hook_array['before_save'][] = Array(3, 'Sanity For Filed Values', 'custom/modules/Leads/BeforeSaveLead.php','BeforeSaveLead', 'fieldSanity');
 
 

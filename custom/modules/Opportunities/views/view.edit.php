@@ -1,25 +1,20 @@
 <?php
 // Sorting opportunities in reverse chronological order by default (on any date created)
 require_once('include/MVC/View/views/view.edit.php');
-class OpportunitiesViewEdit extends ViewEdit
-{
+class OpportunitiesViewEdit extends ViewEdit {
 
 
-	public function __construct()
-	{
+	public function __construct() {
 		parent::__construct();
 	}
 
-
-
-	function display()
-	{
+	function display() {
 
 		$id = $this->bean->id;
 		$opp = BeanFactory::getBean('Opportunities', $id);
 
 		$assigned_user_id = $opp->assigned_user_id;
-
+		$assigned_user_name = $opp->assigned_user_name;
 		global $current_user;
 
 		$roleObj = new ACLRole();
@@ -45,11 +40,9 @@ class OpportunitiesViewEdit extends ViewEdit
 <?php
 		}
 
-
 		global $sugar_config;
-		$users = $this->getCrmUserDetails($assigned_user_id);
-
 		$sep = $sugar_config['default_number_grouping_seperator'];
+
 		echo $Currency_comma_sep_script = <<<EOQ
 	<script>
 	
@@ -77,35 +70,39 @@ class OpportunitiesViewEdit extends ViewEdit
 			test_skill('loan_amount_c');
 			document.getElementById('loan_amount_c').value =test_remove_comma('loan_amount_c');	
 		});
-		
 
-		$("<div class='col-xs-12 col-sm-6 edit-view-row-item'><div class='col-xs-12 col-sm-4 label'>CAM</div><div class='col-xs-12 col-sm-8 edit-view-field '><input list='esc_user' autocomplete='off' name='ngid' id='ngid' value='$_REQUEST[ngid]' required=''><datalist id='esc_user'></datalist></div></div>").insertAfter($('#assigned_user_id').parent().parent().next('.edit-view-row-item'));
-
-		var cam_users = "$users";
-		
-		cam_users = cam_users.split(",");
-		//console.log(cam_users);
-		jQuery.each(cam_users, (index, item) => {
-			console.log(index + "=>" + item);
-			item = item.split(":");
-			if(item[0]!=''){
-				
-				$('#esc_user').append("<option data-id='" + item[2] + "' value='" + item[1] + "'>"+item[0]+"</option>");
-			}
+		$("#cam_auto_assign").change(function() {
+			camToggle();
 		});
 		
-		
 	});
 
-	$(document).on('change','#ngid',function(){
-		var value = $(this).val();
-        var assign_id = $('#esc_user option').filter(function() {
-            return this.value == value;
-        }).data('id');
-		$('#assigned_user_name').val(value);
-		$('#assigned_user_id').val(assign_id);
+	$(document).on('change','#cam_c',function(){
+	
+		var id = $(this).val();
+		var name=$('#cam_c :selected').text();
+		// console.log('id: '+id);
+		// console.log('name: '+name);
+		$('#assigned_user_id').val(id);
+		$('#assigned_user_name').val(name);
 	});
 	
+	function camToggle() {
+		// console.log('toggle called')
+		if ($("#cam_auto_assign").is(':checked')) {
+			$('#cam_c').attr('disabled', true);
+			$('#cam_c').val('');
+			$('#assigned_user_name').val('$assigned_user_name');
+			// console.log('checked true')
+		} else {
+			// console.log('checked false ','$assigned_user_name');
+			$('#assigned_user_name').val('$assigned_user_name');
+			$('#cam_c').attr('disabled', false);
+		}
+	}
+
+	camToggle();
+
 	
 	
 	function test_remove_comma(amount_ID) {
@@ -123,9 +120,6 @@ class OpportunitiesViewEdit extends ViewEdit
 						var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, sep) + lastThree;
 				return res;
 	}
-	
-	
-	
 	
 	function test_skill(amount_ID) {
 		var amount=document.getElementById(amount_ID).value;
@@ -295,34 +289,10 @@ class OpportunitiesViewEdit extends ViewEdit
 		}
 		span.appendChild( document.createTextNode(finalWord) );
 		}
-		
-		
+	
 	}
-
-
-
 	</script>
 EOQ;
 		parent::display();
-	}
-
-	function getCrmUserDetails($assigned_user_id)
-	{
-		global $db;
-		$users = array();
-		// echo "<pre>";print_r($assigned_user_id);exit;
-		$query = "SELECT id,user_name,CONCAT(first_name, ' ', last_name) AS 'name' FROM users u join users_cstm ucstm on u.id=ucstm.id_c  WHERE deleted = 0 and status = 'Active' and (reports_to_id='" . $assigned_user_id . "' AND designation_c LIKE '%Customer Acquisition%')";
-
-		$results = $db->query($query);
-		$i = 0;
-		while ($row = $db->fetchByAssoc($results)) {
-			if (!empty($row['user_name']) && !empty($row['name'])) {
-				// $users[$row['user_name']] = $row['name'];
-				$users[$i++] = $row['user_name'] . ":" . $row['name'] . ":" . $row['id'];
-			}
-		}
-		// print_r($users);
-		$users = implode(",", $users);
-		return $users;
 	}
 }
