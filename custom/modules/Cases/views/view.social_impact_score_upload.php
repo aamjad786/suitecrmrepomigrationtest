@@ -22,11 +22,11 @@ class CasesViewSocial_impact_score_upload extends SugarView {
         fclose($this->log);
     }
     function checkAccess(){
-        global $current_user;
+        global $current_user, $sugar_config;
         $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         $roles = ACLRole::getUserRoleNames($current_user->id);
-        if (strpos($url, 'crm.advancesuite.in') !== false) {
-            $permitted_users = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG2029");
+        if (strpos($url, $sugar_config['AS_CRM_Domain']) !== false) {
+            $permitted_users = $sugar_config['social_impact_score_permitted_user'];
             if (!$current_user->is_admin && !in_array($current_user->user_name, $permitted_users)) {
                 die("<p style='color:red'>You cannot access this page. Please contact admin</p>");
             }

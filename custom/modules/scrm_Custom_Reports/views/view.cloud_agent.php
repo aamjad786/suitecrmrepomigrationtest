@@ -13,9 +13,8 @@ class scrm_Custom_ReportsViewcloud_agent extends SugarView {
 
     function display(){
 
-
     	global $db;
-		global $current_user;
+		global $current_user, $sugar_config;
 
 		echo '<link rel="stylesheet" href="custom/modules/scrm_Custom_Reports/Report.css" type="text/css">';		
 		$header_style="style=\"width:30%;background-color:black; padding: 10px;color:white;\"";
@@ -51,7 +50,7 @@ HTML_Data_header;
 			</div>
 		</div>";
 
-		$permitted_users_pri = array("NG618","NG417","Kserve_1");
+		$permitted_users_pri = $sugar_config['CR_cloud_agent_permitted_user'];
 		if ($current_user->is_admin || in_array($current_user->user_name, $permitted_users_pri)) {
 	    	echo $html = <<<HTMLFORM2
 			<h1><center><b>PRI Integration</b></center></h1>

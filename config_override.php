@@ -26,6 +26,50 @@ $sugar_config['email_allow_send_as_user'] = false;
 $sugar_config['email_xss'] = 'YToxMzp7czo2OiJhcHBsZXQiO3M6NjoiYXBwbGV0IjtzOjQ6ImJhc2UiO3M6NDoiYmFzZSI7czo1OiJlbWJlZCI7czo1OiJlbWJlZCI7czo0OiJmb3JtIjtzOjQ6ImZvcm0iO3M6NToiZnJhbWUiO3M6NToiZnJhbWUiO3M6ODoiZnJhbWVzZXQiO3M6ODoiZnJhbWVzZXQiO3M6NjoiaWZyYW1lIjtzOjY6ImlmcmFtZSI7czo2OiJpbXBvcnQiO3M6ODoiXD9pbXBvcnQiO3M6NToibGF5ZXIiO3M6NToibGF5ZXIiO3M6NDoibGluayI7czo0OiJsaW5rIjtzOjY6Im9iamVjdCI7czo2OiJvYmplY3QiO3M6MzoieG1wIjtzOjM6InhtcCI7czo2OiJzY3JpcHQiO3M6Njoic2NyaXB0Ijt9';
 $sugar_config['verify_client_ip'] = false;
 
+$sugar_config['AS_CRM_Domain'] = 'crm.advancesuite.in';
+
+// Maker checker history permitted users
+$sugar_config['maker_checker_h_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG536","NG2029","NG2064","NG2054");
+
+// Maker checker permitted users
+$sugar_config['maker_checker_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG536","NG2029","NG2054","NG2064");
+
+// Maker checker menu permitted users
+$sugar_config['maker_checker_menu_permitted_user'] = array('ng1647','ng1273','ng619','ng478','ng866','ng1273','ng1274','ng2054','ng2064');
+
+// Macker_checker PROD checkers
+$sugar_config['prod_checker_user'] = array('ng1647','ng536'); // Manisha,Yogesh
+
+// Macker_checker NON PROD checkers
+$sugar_config['non_prod_checker_user'] = array('ng1273','ng619','ng1275'); // Nikhil, GOPI
+
+// agent_attendance_upload permitted users
+$sugar_config['agent_attendance_up_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG2029","NG2054","NG2064");
+
+// social_impact_score_upload permitted users
+$sugar_config['social_impact_score_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG2029");
+
+// scrm_Custom_Reports assign_user permitted users
+$sugar_config['CR_assign_user_permitted_user'] = array("NG377","NG894","NG619","NG618","NG538","NG1039","NG171");
+
+// Neo_Customers renewals_user_analytics permitted users
+$sugar_config['renewals_user_analytics_permitted_user'] = array("NG377","NG894");
+
+// Neo_Customers renewals permitted users
+$sugar_config['renewals_permitted_user'] = array("NG618","NG586","NG660","NG894");
+
+// Cases_functions casesAuthentication permitted users
+$sugar_config['casesAuthentication_permitted_user'] = array("NG2064","NG2054","NG377", "NG855", "NG950", "NG1007", "NG660", "NG894", "NG690", "NG316", "Gaurav.Bavkar", "NG478", "NG417", "NG828", "Anuraj.Sharma", "NG866", "Karthik.Chakravarthy", "kserve_11", "NG1190", "Rushikesh.Gawde", "Faisel.Waghu", "Faisal.Ansari","Dimple.Boricha");
+
+// scrm_Custom_Reports cloud_agent permitted users
+$sugar_config['CR_cloud_agent_permitted_user'] = array("NG618","NG417","Kserve_1");
+
+// scrm_Custom_Reports customer_profile permitted users
+$sugar_config['CR_cust_profile_permitted_user'] = array("NG618","NG586","NG660");
+
+//  update_case_escalation_matrix permitted users
+$sugar_config['up_case_esc_matrix_permitted_user'] = array("NG377","NG690","NG478","NG894","NG660","NG637","NG1647","NG2029","NG2054","NG2064");
+
 // handleCaseAssignment
 $sugar_config['assigned_user_id_MineField'] = '1B866D74-0D07-4B27-80A2-688347ECF864';
 
@@ -64,6 +108,25 @@ $sugar_config['ng_dipali_londhe'] = 'dipali.londhe@neogrowth.in';
 
 // InterimResponseToCustomer, SendingCallbackReminderEmail
 $sugar_config['ng_gowthami_gk'] = 'gowthami.gk@neogrowth.in';
+
+// custom\modules\scrm_Custom_Reports\views\view.assign_user.php - SendSuccessEmail
+$sugar_config['ng_hemanth_vaddi'] = 'hemanth.vaddi@neogrowth.in';
+$sugar_config['ng_nikhil.kumar'] = 'nikhil.kumar@neogrowth.in';
+$sugar_config['ng_ramesh_a'] = 'ramesh.a@neogrowth.in';
+
+// Escalation_Functions Escalation matrix update 
+$sugar_config['esc_mat_non_prod_sms_name'] = 'Balayeswanth';
+$sugar_config['esc_mat_non_prod_sms_no'] = '7373267373';
+$sugar_config['esc_mat_non_prod_email'] = 'crmteam@neogrowth.in';
+$sugar_config['esc_mat_non_prod_email_name'] = 'Balayeswanth';
+
+$sugar_config['esc_mat_prod_sms_name1'] = 'NG1647 Manisha Agarwal 9820018638';
+$sugar_config['esc_mat_prod_sms_no1'] = '9820018638';
+$sugar_config['esc_mat_prod_sms_name2'] = 'NG637 Sumeet Thanekar 7666855666';
+$sugar_config['esc_mat_prod_sms_no2'] = '7666855666';
+
+$sugar_config['esc_mat_prod_emails'] = array("manisha.agarwal@neogrowth.in","sumeet.thanekar@neogrowth.in");
+$sugar_config['esc_mat_prod_emails_names'] = 'manisha.agarwal@neogrowth.in, sumeet.thanekar@neogrowth.in';
 
 // CasesEscalationMail
 $sugar_config['ng_sachin_bawari'] = 'sachin.bawari@neogrowth.in';

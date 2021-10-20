@@ -53,7 +53,7 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
     }
 
     function SendSuccessEmail(){
-    	global $current_user;
+    	global $sugar_config;
         $send = new SendEmail();
         $template = new EmailTemplate();
         $template->retrieve_by_string_fields(array('name' => 'Role Assignment' ));
@@ -65,11 +65,13 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
 
         $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         if (strpos($url, 'dev') !== false) {
-            $send->send_email_to_user($email_subject,$body,array('ramesh.a@neogrowth.in'),array('nikhil.kumar@neogrowth.in','hemanth.vaddi@neogrowth.in'));
-        }else if (strpos($url, 'crm.advancesuite.in') !== false) {
-            $send->send_email_to_user($email_subject,$body,array('ramesh.a@neogrowth.in'),array('nikhil.kumar@neogrowth.in','hemanth.vaddi@neogrowth.in'));
-        }else{
-            $send->send_email_to_user($email_subject,$body,array('hemanth.vaddi@neogrowth.in'),array('nikhil.kumar@neogrowth.in'));
+            $send->send_email_to_user($email_subject,$body,array($sugar_config['ng_ramesh_a']),array($sugar_config['ng_nikhil.kumar'],$sugar_config['ng_hemanth_vaddi']));
+        }
+        else if (strpos($url, $sugar_config['AS_CRM_Domain']) !== false) {
+            $send->send_email_to_user($email_subject,$body,array($sugar_config['ng_ramesh_a']),array($sugar_config['ng_nikhil.kumar'],$sugar_config['ng_hemanth_vaddi']));
+        }
+        else{
+            $send->send_email_to_user($email_subject,$body,array($sugar_config['ng_hemanth_vaddi']),array($sugar_config['ng_nikhil.kumar']));
         }
     }
 
@@ -513,12 +515,12 @@ DEPARTMENTFORM1;
         return $users;
     }
     function display() {
-        global $current_user;
+        global $current_user, $sugar_config;
         global $db;
         $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         $roles = ACLRole::getUserRoleNames($current_user->id);
-        if (strpos($url, 'crm.advancesuite.in') !== false) {
-            $permitted_users = array("NG377","NG894","NG619","NG618","NG538","NG1039","NG171");
+        if (strpos($url, $sugar_config['AS_CRM_Domain']) !== false) {
+            $permitted_users = $sugar_config['CR_assign_user_permitted_user'];
             if (!$current_user->is_admin && !in_array(strtoupper($current_user->user_name), ($permitted_users))  && !$this->isAdminRoleUser($roles)) {
                 // print_r("here too:P");
                 die("<p style='color:red'>You cannot access this page. Please contact admin</p>");

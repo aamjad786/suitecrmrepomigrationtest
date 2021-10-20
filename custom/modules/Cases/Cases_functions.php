@@ -43,10 +43,10 @@ class Cases_functions{
 		$case_bean->save();
 	}
         
-        function casesAuthentication() {
-        global $current_user;
+    function casesAuthentication() {
+        global $current_user, $sugar_config;
         $roles = ACLRole::getUserRoleNames($current_user->id);
-        $permitted_users = array("NG2064","NG2054","NG377", "NG855", "NG950", "NG1007", "NG660", "NG894", "NG690", "NG316", "Gaurav.Bavkar", "NG478", "NG417", "NG828", "Anuraj.Sharma", "NG866", "Karthik.Chakravarthy", "kserve_11", "NG1190", "Rushikesh.Gawde", "Faisel.Waghu", "Faisal.Ansari","Dimple.Boricha");
+        $permitted_users = $sugar_config['casesAuthentication_permitted_user'];
         if ($current_user->is_admin || in_array($current_user->user_name, $permitted_users) || $this->isCustomerManagerUser($roles) || in_array("Admin", $roles)) {
             return true;
         } else {

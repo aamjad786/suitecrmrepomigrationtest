@@ -521,11 +521,11 @@ ENDTABLE;
 	}
 
     function checkAccess(){
-		global $current_user;
+		global $current_user, $sugar_config;
 		$url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 		$roles = ACLRole::getUserRoleNames($current_user->id);
-		if (strpos($url, 'crm.advancesuite.in') !== false) {
-		    $permitted_users = array("NG377","NG894");
+		if (strpos($url, $sugar_config['AS_CRM_Domain']) !== false) {
+		    $permitted_users = $sugar_config['renewals_user_analytics_permitted_user'];
 		    if (!$current_user->is_admin && !in_array($current_user->user_name, $permitted_users)  && !$this->isRenewalAdmin($roles)) {
 		        // print_r("here too:P");
 		        die("<p style='color:red'>You cannot access this page. Please contact admin</p>");

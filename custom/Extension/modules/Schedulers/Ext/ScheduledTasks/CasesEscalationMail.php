@@ -2,6 +2,7 @@
 $job_strings[] = 'CasesEscalationMail';
 date_default_timezone_set('Asia/Kolkata');
 require_once('include/entryPoint.php');
+require_once 'custom/CustomLogger/CustomLogger.php';
 
 function CasesEscalationMail(){
     global $sugar_config;

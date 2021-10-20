@@ -132,6 +132,7 @@ class CallBackFlow {
 	 *	@param case bean, call bean
 	 */
 	function sendMailsToMerchant($case_bean, $call_bean){
+		global $sugar_config;
 		$email = new SendEmail();
         $c = new aCase;
         $c->retrieve($case_bean->id);
@@ -156,7 +157,14 @@ class CallBackFlow {
         require_once('custom/include/SendSMS.php');    
         $sms = new SendSMS();
         if($app_host == 'prod'){
-            $email_result = $email->send_email_to_user($sub,$body,array($case_bean->merchant_email_id_c),null,$case_bean,array('helpdesk@neogrowth.in'), array(),1);
+            $email_result = $email->send_email_to_user(	$sub,
+														$body,
+														array($case_bean->merchant_email_id_c),
+														null,
+														$case_bean,$sugar_config['helpdesk_email_arr'], 
+														array(),
+														1
+													);
             $to = $case_bean->merchant_contact_number_c;
         } else{
             $email_result = $email->send_email_to_user($sub,$body,array('balayeswanth.b@neogrowth.in'),null,$case_bean,array(),1);
