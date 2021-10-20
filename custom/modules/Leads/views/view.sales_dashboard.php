@@ -177,7 +177,7 @@ SCRIPT;
     			FORMAT(sth.ops_rejected_amount,0,'en_IN') AS 'ops_rejected_amount',
     			FORMAT(sth.sent_to_finance_count,0,'en_IN') AS 'sent_to_finance_count',
     			FORMAT(sth.sent_to_finance_amount,0,'en_IN') AS 'sent_to_finance_amount',
-    			FORMAT(sth.insurance,0,'en_IN') AS 'insurance',
+    			FORMAT(sth.insurance_amount,0,'en_IN') AS 'insurance',
     			FORMAT(sth.processing_fees,0,'en_IN') AS 'processing_fees',
     			FORMAT(sth.apr,0,'en_IN') AS 'apr',
     			FORMAT(sth.disbursal_target,0,'en_IN') AS 'disbursal_target',

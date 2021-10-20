@@ -230,14 +230,19 @@ SCRIPT;
     			FORMAT(sth.dsa_cases_sanctioned_amount,0,'en_IN') AS 'dsa_cases_sanctioned_amount',
     			FORMAT(sth.dsa_cases_disbursed_amount,0,'en_IN') AS 'dsa_cases_disbursed_amount'
 
-    		FROM users u
-			JOIN users_cstm ucstm ON u.id=ucstm.id_c
-    		LEFT JOIN users mu ON mu.id = u.reports_to_id
-    		LEFT JOIN scrm_targets_history sth ON sth.user_profile_id = u.id
-    		WHERE u.reports_to_id = '$user_id'
-    		AND sth.month = '$requested_month'
-    		AND sth.target_amount_achieved > 0
-    		AND u.deleted = 0
+    		FROM 
+				users u
+					JOIN 
+				users_cstm ucstm ON u.id=ucstm.id_c
+    				LEFT JOIN
+				users mu ON mu.id = u.reports_to_id
+    				LEFT JOIN
+				scrm_targets_history sth ON sth.user_profile_id = u.id
+			WHERE
+				u.reports_to_id = '$user_id'
+    			AND sth.month = '$requested_month'
+    			AND sth.target_amount_achieved > 0
+    			AND u.deleted = 0
     	";
 
     	// print_r($query); echo "<br>";
@@ -304,331 +309,7 @@ SCRIPT;
 
     }
 
-    function display_dsa_performance_report_table($results){
-        echo $HTML = <<<DSA_PERFORMANCE_REPORT_TABLE
-            <hr>
-            <h4>
-                DSA Performance Report - For the month of $this->month
-            </h4>
-            <table id = 'dsa_performance_report_table' class='stripe row-border order-column' style='width:100%'>
-	        <thead>
-	            <tr>
-	            	<th>Sno</th>
-	                <th>User Name</th>
-	                <th>NG ID</th>
-	                
-	                <th>Active DSA</th>
-	                <th>Disbursed No.</th>
-	                <th>Disbursed Amount</th>
-	                <th>Sanctioned No.</th>
-	                <th>Sanctioned Amount</th>
-	                <th>Disbursed No.</th>
-	                <th>Disbursed Amount</th>
-	                <th>WIP No.</th>
-	                <th>WIP Amount</th>
-
-	            </tr>
-	        </thead>
-DSA_PERFORMANCE_REPORT_TABLE;
-		$i=1;
-	    foreach ($results as $row) {
-	    	if(!empty($row['lead_source'])){
-	    		continue;
-	    	}
-	    	echo "<tr>";
-	    	//To avoid failure page
-	    	$this_user_id = $user_id;
-	    	$display_user_name = "-";
-	    	$user_name = "-";
-
-	    	$no_of_dsa_assigned = "0";
-	    	$active_dsa = "0";
-	    	$dsa_cases_logged_in = "0";
-	    	$dsa_cases_login_amount = "0";
-	    	$dsa_cases_sanctioned = "0";
-	    	$dsa_cases_sanctioned_amount = "0";
-	    	$dsa_cases_disbursed = "0";
-	    	$dsa_cases_disbursed_amount = "0";
-	    	$cases_wip = "0";
-	    	$cases_wip_amount = "0";
-
-	        if(!empty($row['id'])){
-	        	$this_user_id = $row['id'];
-	        }
-	    	if(!empty($row['first_name']) && !empty($row['last_name'])){
-	    		$display_user_name = $row['first_name'] . ' ' . $row['last_name'];
-	    	}
-	        if(!empty($row['user_name'])){
-	        	$user_name = $row['user_name'];
-	        }
-
-	        if(!empty($row['no_of_dsa_assigned'])){
-	        	$no_of_dsa_assigned = $row['no_of_dsa_assigned'];
-	        }
-	        if(!empty($row['active_dsa'])){
-	        	$active_dsa = $row['active_dsa'];
-	        }
-	        if(!empty($row['dsa_cases_logged_in'])){
-	        	$dsa_cases_logged_in = $row['dsa_cases_logged_in'];
-	        }
-	        if(!empty($row['dsa_cases_login_amount'])){
-	        	$dsa_cases_login_amount = $row['dsa_cases_login_amount'];
-	        }
-	        if(!empty($row['dsa_cases_sanctioned'])){
-	        	$dsa_cases_sanctioned = $row['dsa_cases_sanctioned'];
-	        }
-	        if(!empty($row['dsa_cases_sanctioned_amount'])){
-	        	$dsa_cases_sanctioned_amount = $row['dsa_cases_sanctioned_amount'];
-	        }
-	        if(!empty($row['dsa_cases_disbursed'])){
-	        	$dsa_cases_disbursed = $row['dsa_cases_disbursed'];
-	        }
-	        if(!empty($row['dsa_cases_disbursed_amount'])){
-	        	$dsa_cases_disbursed_amount = $row['dsa_cases_disbursed_amount'];
-	        }
-	        if(!empty($row['cases_wip'])){
-	        	$cases_wip = $row['cases_wip'];
-	        }
-	        if(!empty($row['cases_wip_amount'])){
-	        	$cases_wip_amount = $row['cases_wip_amount'];
-	        }
-
-
-	        echo "<td>" . $i++ . "</td>";
-	        echo "<td><a href='index.php?module=Leads&action=Month_sales_report&user_id=$this_user_id&alt_startDate=$this->requested_month' target='_blank'>$display_user_name</a></td>";
-	        echo "<td><a href='index.php?module=Users&action=DetailView&record=$this_user_id' target='_blank'>$user_name
-	        	</a></td>";
-        	
-        	echo "<td>$active_dsa</td>";
-        	echo "<td>$dsa_cases_logged_in</td>";
-        	echo "<td>$dsa_cases_login_amount</td>";
-        	echo "<td>$dsa_cases_sanctioned</td>";
-        	echo "<td>$dsa_cases_sanctioned_amount</td>";
-        	echo "<td>$dsa_cases_disbursed</td>";
-        	echo "<td>$dsa_cases_disbursed_amount</td>";
-        	echo "<td>$cases_wip</td>";
-        	echo "<td>$cases_wip_amount</td>";
-	        echo "</tr>";
-
-    	}
-    	echo "  
-    	<tfoot>
-		    <tr>
-		      <th>Total</th>
-		      <th></th>
-		      <th></th>
-		      <th>x</th>
-		      <th>x</th>
-
-		      <th>x</th>
-		      <th>x</th>
-		      <th>x</th>
-		      <th>x</th>
-		      <th>x</th>
-		      <th>x</th>
-		      <th>x</th>
-		    </tr>
-  		</tfoot>
-  		";
-    	echo "</table>";
-    }
-
-    function display_lead_source_report_table($from_date, $to_date, $user_id){
-    	global $db;
-    	$query = "
-    		SELECT 
-    			u.id AS 'id',
-    			u.user_name AS 'user_name',
-    			u.first_name AS 'first_name',
-    			u.last_name AS 'last_name',
-    			ucstm.designation_c AS 'designation',
-    			sth.lead_source AS 'lead_source',
-    			sth.cases_picked_up AS 'cases_picked_up',
-    			sth.dsa_cases_logged_in AS 'dsa_cases_logged_in',
-    			sth.dsa_cases_sanctioned AS 'dsa_cases_sanctioned',
-    			sth.dsa_cases_disbursed AS 'dsa_cases_disbursed'
-
-    		FROM users u
-			JOIN users_cstm ucstm ON u.id=ucstm.id_c
-    		LEFT JOIN scrm_targets_history sth ON sth.user_profile_id = u.id
-    		AND sth.date_entered >= '$from_date'
-    		AND sth.date_entered <= '$to_date'
-    		WHERE u.id = '$user_id'
-    		AND u.deleted = 0
-    		AND u.status = 'Active'
-    	";
-
-    	// print_r($query); echo "<br>";
-    	$results = $db->query($query);
-        echo $HTML = <<<LEAD_SOURCE_REPORT_TABLE
-            <hr>
-            <h4>
-                Lead Source Report - For the month of $this->month
-            </h4>
-            <table id = 'lead_source_report_table' class='stripe row-border order-column' style='width:100%'>
-	        <thead>
-	            <tr>
-	            	<th>Sno</th>
-	                <th>Lead Source</th>
-	                <th>Open</th>
-	                <th>Logged In</th>
-	                <th>Sanctioned</th>
-	                <th>Disbursed</th>
-	            </tr>
-	        </thead>
-LEAD_SOURCE_REPORT_TABLE;
-		$i=1;
-	    while($row = $db->fetchByAssoc($results)){
-	    	if(empty($row['lead_source'])){
-	    		continue;
-	    	}
-	    	echo "<tr>";
-
-	    	$lead_source = "-";
-	    	$cases_picked_up = "0";
-	    	$dsa_cases_logged_in = "0";
-	    	$dsa_cases_sanctioned = "0";
-	    	$dsa_cases_disbursed = "0";
-
-	        if(!empty($row['lead_source'])){
-	        	$lead_source = $row['lead_source'];
-	        }
-	        if(!empty($row['cases_picked_up'])){
-	        	$cases_picked_up = $row['cases_picked_up'];
-	        }
-	        if(!empty($row['dsa_cases_logged_in'])){
-	        	$dsa_cases_logged_in = $row['dsa_cases_logged_in'];
-	        }
-	        if(!empty($row['dsa_cases_sanctioned'])){
-	        	$dsa_cases_sanctioned = $row['dsa_cases_sanctioned'];
-	        }
-	        if(!empty($row['dsa_cases_disbursed'])){
-	        	$dsa_cases_disbursed = $row['dsa_cases_disbursed'];
-	        }
-
-
-	        echo "<td>" . $i++ . "</td>";
-        	echo "<td>$lead_source</td>";
-        	echo "<td>$cases_picked_up</td>";
-        	echo "<td>$dsa_cases_logged_in</td>";
-        	echo "<td>$dsa_cases_sanctioned</td>";
-        	echo "<td>$dsa_cases_disbursed</td>";
-	        echo "</tr>";
-
-    	}
-    	echo "</table>";
-    }
-
-    function display_lead_status_report_table($results){
-    	// echo "display_lead_status_report_table";
-    	// print_r($results);
-        echo $HTML = <<<LEAD_STATUS_REPORT_TABLE
-            <hr>
-            <h4>
-                Lead Status Report - For the month of $this->month
-            </h4>
-            <table id = 'lead_status_report_table' class='stripe row-border order-column' style='width:100%'>
-	        <thead>
-	            <tr>
-	            	<th>Sno</th>
-	                <th>User Name</th>
-	                <th>NG ID</th>
-	                <th>Leads Assigned</th>
-	                
-	                <th>Logged in</th>
-	                <th>Sanctioned</th>
-	                <th>Disbursed</th>
-	                <th>WIP</th>
-	                <th>Dropped</th>
-	            </tr>
-	        </thead>
-LEAD_STATUS_REPORT_TABLE;
-		$i=1;
-	    foreach ($results as $row) {
-	    	if(!empty($row['lead_source'])){
-	    		continue;
-	    	}
-	    		    	// echo "<br>".$i;
-	    	echo "<tr>";
-	    	//To avoid failure page
-	    	$this_user_id = $user_id;
-	    	$display_user_name = "-";
-	    	$user_name = "-";
-
-	    	$cases_picked_up = "0";
-	    	$cases_attended = "0";
-	    	$cases_logged_in = "0";
-	    	$cases_sanctioned = "0";
-	    	$achieved = "0";
-	    	$cases_wip = "0";
-	    	$cases_dropped = "0";
-
-	        if(!empty($row['id'])){
-	        	$this_user_id = $row['id'];
-	        }
-	    	if(!empty($row['first_name']) && !empty($row['last_name'])){
-	    		$display_user_name = $row['first_name'] . ' ' . $row['last_name'];
-	    	}
-	        if(!empty($row['user_name'])){
-	        	$user_name = $row['user_name'];
-	        }
-
-	        if(!empty($row['cases_picked_up'])){
-	        	$cases_picked_up = $row['cases_picked_up'];
-	        }
-	        // if(!empty($row['cases_attended'])){
-	        // 	$cases_attended = $row['cases_attended'];
-	        // }
-	        if(!empty($row['cases_logged_in'])){
-	        	$cases_logged_in = $row['cases_logged_in'];
-	        }
-	        if(!empty($row['cases_sanctioned'])){
-	        	$cases_sanctioned = $row['cases_sanctioned'];
-	        }
-	        if(!empty($row['achieved'])){
-	        	$achieved = $row['achieved'];
-	        }
-	        if(!empty($row['cases_wip'])){
-	        	$cases_wip = $row['cases_wip'];
-	        }
-	        if(!empty($row['cases_dropped'])){
-	        	$cases_dropped = $row['cases_dropped'];
-	        }
-	        echo "<td>" . $i++ . "</td>";
-	        echo "<td><a href='index.php?module=Leads&action=Month_sales_report&user_id=$this_user_id&alt_startDate=$this->requested_month' target='_blank'>$display_user_name</a></td>";
-	        echo "<td><a href='index.php?module=Users&action=DetailView&record=$this_user_id' target='_blank'>$user_name
-	        	</a></td>";
-        	echo "<td>$cases_picked_up</td>";
-        	// echo "<td>$cases_attended</td>";
-        	echo "<td>$cases_logged_in</td>";
-        	echo "<td>$cases_sanctioned</td>";
-        	echo "<td>$achieved</td>";
-        	echo "<td>$cases_wip</td>";
-        	echo "<td>$cases_dropped</td>";
-	        echo "</tr>";
-
-    	}
-    	echo "  
-    	<tfoot>
-		    <tr>
-		      <th>Total</th>
-		      <th></th>
-		      <th></th>
-		      <th>x</th>
-		      <th>x</th>
-		      <th>x</th>
-		      <th>x</th>
-		      <th>x</th>
-		      <th>x</th>
-
-		    </tr>
-  		</tfoot>
-  		";
-    	echo "</table>";
-    }
-
-
-    function display_monthly_performance_table($results,$id='monthly_performance_table',$unaccounted=""){
+	function display_monthly_performance_table($results,$id='monthly_performance_table',$unaccounted=""){
     	global $db;
     	if(empty($unaccounted)){
     		$unaccounted="";
@@ -754,5 +435,333 @@ LEAD_STATUS_REPORT_TABLE;
   		";
     	echo "</table>";
     }
+
+	// Not in user as of now
+    function display_dsa_performance_report_table($results)	{
+		echo $HTML = <<<DSA_PERFORMANCE_REPORT_TABLE
+            <hr>
+            <h4>
+                DSA Performance Report - For the month of $this->month
+            </h4>
+            <table id = 'dsa_performance_report_table' class='stripe row-border order-column' style='width:100%'>
+	        <thead>
+	            <tr>
+	            	<th>Sno</th>
+	                <th>User Name</th>
+	                <th>NG ID</th>
+	                
+	                <th>Active DSA</th>
+	                <th>Disbursed No.</th>
+	                <th>Disbursed Amount</th>
+	                <th>Sanctioned No.</th>
+	                <th>Sanctioned Amount</th>
+	                <th>Disbursed No.</th>
+	                <th>Disbursed Amount</th>
+	                <th>WIP No.</th>
+	                <th>WIP Amount</th>
+
+	            </tr>
+	        </thead>
+DSA_PERFORMANCE_REPORT_TABLE;
+		$i = 1;
+		foreach ($results as $row) {
+			if (!empty($row['lead_source'])) {
+				continue;
+			}
+			echo "<tr>";
+			//To avoid failure page
+			$this_user_id = $user_id;
+			$display_user_name = "-";
+			$user_name = "-";
+
+			$no_of_dsa_assigned = "0";
+			$active_dsa = "0";
+			$dsa_cases_logged_in = "0";
+			$dsa_cases_login_amount = "0";
+			$dsa_cases_sanctioned = "0";
+			$dsa_cases_sanctioned_amount = "0";
+			$dsa_cases_disbursed = "0";
+			$dsa_cases_disbursed_amount = "0";
+			$cases_wip = "0";
+			$cases_wip_amount = "0";
+
+			if (!empty($row['id'])) {
+				$this_user_id = $row['id'];
+			}
+			if (!empty($row['first_name']) && !empty($row['last_name'])) {
+				$display_user_name = $row['first_name'] . ' ' . $row['last_name'];
+			}
+			if (!empty($row['user_name'])) {
+				$user_name = $row['user_name'];
+			}
+
+			if (!empty($row['no_of_dsa_assigned'])) {
+				$no_of_dsa_assigned = $row['no_of_dsa_assigned'];
+			}
+			if (!empty($row['active_dsa'])) {
+				$active_dsa = $row['active_dsa'];
+			}
+			if (!empty($row['dsa_cases_logged_in'])) {
+				$dsa_cases_logged_in = $row['dsa_cases_logged_in'];
+			}
+			if (!empty($row['dsa_cases_login_amount'])) {
+				$dsa_cases_login_amount = $row['dsa_cases_login_amount'];
+			}
+			if (!empty($row['dsa_cases_sanctioned'])) {
+				$dsa_cases_sanctioned = $row['dsa_cases_sanctioned'];
+			}
+			if (!empty($row['dsa_cases_sanctioned_amount'])) {
+				$dsa_cases_sanctioned_amount = $row['dsa_cases_sanctioned_amount'];
+			}
+			if (!empty($row['dsa_cases_disbursed'])) {
+				$dsa_cases_disbursed = $row['dsa_cases_disbursed'];
+			}
+			if (!empty($row['dsa_cases_disbursed_amount'])) {
+				$dsa_cases_disbursed_amount = $row['dsa_cases_disbursed_amount'];
+			}
+			if (!empty($row['cases_wip'])) {
+				$cases_wip = $row['cases_wip'];
+			}
+			if (!empty($row['cases_wip_amount'])) {
+				$cases_wip_amount = $row['cases_wip_amount'];
+			}
+
+
+			echo "<td>" . $i++ . "</td>";
+			echo "<td><a href='index.php?module=Leads&action=Month_sales_report&user_id=$this_user_id&alt_startDate=$this->requested_month' target='_blank'>$display_user_name</a></td>";
+			echo "<td><a href='index.php?module=Users&action=DetailView&record=$this_user_id' target='_blank'>$user_name
+	        	</a></td>";
+
+			echo "<td>$active_dsa</td>";
+			echo "<td>$dsa_cases_logged_in</td>";
+			echo "<td>$dsa_cases_login_amount</td>";
+			echo "<td>$dsa_cases_sanctioned</td>";
+			echo "<td>$dsa_cases_sanctioned_amount</td>";
+			echo "<td>$dsa_cases_disbursed</td>";
+			echo "<td>$dsa_cases_disbursed_amount</td>";
+			echo "<td>$cases_wip</td>";
+			echo "<td>$cases_wip_amount</td>";
+			echo "</tr>";
+		}
+		echo "  
+    	<tfoot>
+		    <tr>
+		      <th>Total</th>
+		      <th></th>
+		      <th></th>
+		      <th>x</th>
+		      <th>x</th>
+
+		      <th>x</th>
+		      <th>x</th>
+		      <th>x</th>
+		      <th>x</th>
+		      <th>x</th>
+		      <th>x</th>
+		      <th>x</th>
+		    </tr>
+  		</tfoot>
+  		";
+		echo "</table>";
+    }
+
+	// Not in user as of now
+    function display_lead_source_report_table($from_date, $to_date, $user_id){
+    	global $db;
+    	$query = "
+    		SELECT 
+    			u.id AS 'id',
+    			u.user_name AS 'user_name',
+    			u.first_name AS 'first_name',
+    			u.last_name AS 'last_name',
+    			ucstm.designation_c AS 'designation',
+    			sth.lead_source AS 'lead_source',
+    			sth.cases_picked_up AS 'cases_picked_up',
+    			sth.dsa_cases_logged_in AS 'dsa_cases_logged_in',
+    			sth.dsa_cases_sanctioned AS 'dsa_cases_sanctioned',
+    			sth.dsa_cases_disbursed AS 'dsa_cases_disbursed'
+
+    		FROM users u
+			JOIN users_cstm ucstm ON u.id=ucstm.id_c
+    		LEFT JOIN scrm_targets_history sth ON sth.user_profile_id = u.id
+    		AND sth.date_entered >= '$from_date'
+    		AND sth.date_entered <= '$to_date'
+    		WHERE u.id = '$user_id'
+    		AND u.deleted = 0
+    		AND u.status = 'Active'
+    	";
+
+    	// print_r($query); echo "<br>";
+    	$results = $db->query($query);
+        echo $HTML = <<<LEAD_SOURCE_REPORT_TABLE
+            <hr>
+            <h4>
+                Lead Source Report - For the month of $this->month
+            </h4>
+            <table id = 'lead_source_report_table' class='stripe row-border order-column' style='width:100%'>
+	        <thead>
+	            <tr>
+	            	<th>Sno</th>
+	                <th>Lead Source</th>
+	                <th>Open</th>
+	                <th>Logged In</th>
+	                <th>Sanctioned</th>
+	                <th>Disbursed</th>
+	            </tr>
+	        </thead>
+LEAD_SOURCE_REPORT_TABLE;
+		$i=1;
+	    while($row = $db->fetchByAssoc($results)){
+	    	if(empty($row['lead_source'])){
+	    		continue;
+	    	}
+	    	echo "<tr>";
+
+	    	$lead_source = "-";
+	    	$cases_picked_up = "0";
+	    	$dsa_cases_logged_in = "0";
+	    	$dsa_cases_sanctioned = "0";
+	    	$dsa_cases_disbursed = "0";
+
+	        if(!empty($row['lead_source'])){
+	        	$lead_source = $row['lead_source'];
+	        }
+	        if(!empty($row['cases_picked_up'])){
+	        	$cases_picked_up = $row['cases_picked_up'];
+	        }
+	        if(!empty($row['dsa_cases_logged_in'])){
+	        	$dsa_cases_logged_in = $row['dsa_cases_logged_in'];
+	        }
+	        if(!empty($row['dsa_cases_sanctioned'])){
+	        	$dsa_cases_sanctioned = $row['dsa_cases_sanctioned'];
+	        }
+	        if(!empty($row['dsa_cases_disbursed'])){
+	        	$dsa_cases_disbursed = $row['dsa_cases_disbursed'];
+	        }
+
+
+	        echo "<td>" . $i++ . "</td>";
+        	echo "<td>$lead_source</td>";
+        	echo "<td>$cases_picked_up</td>";
+        	echo "<td>$dsa_cases_logged_in</td>";
+        	echo "<td>$dsa_cases_sanctioned</td>";
+        	echo "<td>$dsa_cases_disbursed</td>";
+	        echo "</tr>";
+
+    	}
+    	echo "</table>";
+    }
+
+	// Not in user as of now
+    function display_lead_status_report_table($results){
+    	// echo "display_lead_status_report_table";
+    	// print_r($results);
+        echo $HTML = <<<LEAD_STATUS_REPORT_TABLE
+            <hr>
+            <h4>
+                Lead Status Report - For the month of $this->month
+            </h4>
+            <table id = 'lead_status_report_table' class='stripe row-border order-column' style='width:100%'>
+	        <thead>
+	            <tr>
+	            	<th>Sno</th>
+	                <th>User Name</th>
+	                <th>NG ID</th>
+	                <th>Leads Assigned</th>
+	                
+	                <th>Logged in</th>
+	                <th>Sanctioned</th>
+	                <th>Disbursed</th>
+	                <th>WIP</th>
+	                <th>Dropped</th>
+	            </tr>
+	        </thead>
+LEAD_STATUS_REPORT_TABLE;
+		$i=1;
+	    foreach ($results as $row) {
+	    	if(!empty($row['lead_source'])){
+	    		continue;
+	    	}
+	    		    	// echo "<br>".$i;
+	    	echo "<tr>";
+	    	//To avoid failure page
+	    	$this_user_id = $user_id;
+	    	$display_user_name = "-";
+	    	$user_name = "-";
+
+	    	$cases_picked_up = "0";
+	    	$cases_attended = "0";
+	    	$cases_logged_in = "0";
+	    	$cases_sanctioned = "0";
+	    	$achieved = "0";
+	    	$cases_wip = "0";
+	    	$cases_dropped = "0";
+
+	        if(!empty($row['id'])){
+	        	$this_user_id = $row['id'];
+	        }
+	    	if(!empty($row['first_name']) && !empty($row['last_name'])){
+	    		$display_user_name = $row['first_name'] . ' ' . $row['last_name'];
+	    	}
+	        if(!empty($row['user_name'])){
+	        	$user_name = $row['user_name'];
+	        }
+
+	        if(!empty($row['cases_picked_up'])){
+	        	$cases_picked_up = $row['cases_picked_up'];
+	        }
+	        // if(!empty($row['cases_attended'])){
+	        // 	$cases_attended = $row['cases_attended'];
+	        // }
+	        if(!empty($row['cases_logged_in'])){
+	        	$cases_logged_in = $row['cases_logged_in'];
+	        }
+	        if(!empty($row['cases_sanctioned'])){
+	        	$cases_sanctioned = $row['cases_sanctioned'];
+	        }
+	        if(!empty($row['achieved'])){
+	        	$achieved = $row['achieved'];
+	        }
+	        if(!empty($row['cases_wip'])){
+	        	$cases_wip = $row['cases_wip'];
+	        }
+	        if(!empty($row['cases_dropped'])){
+	        	$cases_dropped = $row['cases_dropped'];
+	        }
+	        echo "<td>" . $i++ . "</td>";
+	        echo "<td><a href='index.php?module=Leads&action=Month_sales_report&user_id=$this_user_id&alt_startDate=$this->requested_month' target='_blank'>$display_user_name</a></td>";
+	        echo "<td><a href='index.php?module=Users&action=DetailView&record=$this_user_id' target='_blank'>$user_name
+	        	</a></td>";
+        	echo "<td>$cases_picked_up</td>";
+        	// echo "<td>$cases_attended</td>";
+        	echo "<td>$cases_logged_in</td>";
+        	echo "<td>$cases_sanctioned</td>";
+        	echo "<td>$achieved</td>";
+        	echo "<td>$cases_wip</td>";
+        	echo "<td>$cases_dropped</td>";
+	        echo "</tr>";
+
+    	}
+    	echo "  
+    	<tfoot>
+		    <tr>
+		      <th>Total</th>
+		      <th></th>
+		      <th></th>
+		      <th>x</th>
+		      <th>x</th>
+		      <th>x</th>
+		      <th>x</th>
+		      <th>x</th>
+		      <th>x</th>
+
+		    </tr>
+  		</tfoot>
+  		";
+    	echo "</table>";
+    }
+
+
+    
 }
 ?>

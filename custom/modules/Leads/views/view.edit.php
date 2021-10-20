@@ -198,12 +198,14 @@ class LeadsViewEdit extends ViewEdit
 				$('#call_back_date_time_c_hours').val('');
 				$('#call_back_date_time_c_minutes').val('');
 				$('#user_id_c').val('');
-				$('#detailpanel_2').hide();
+				
 				$('#detailpanel_0').prev().hide();
+				$('#detailpanel_0').hide();
 		
 			} else if ((disposition == 'interested') || (disposition == 'pick_up')) {
-				$('#detailpanel_2').show();
+				
 				$('#detailpanel_0').prev().show();
+				$('#detailpanel_0').show();
 				$("#call_back_date_time_c").parent().parent().hide();
 				$('#call_back_date_time_c_date').val('');
 				$('#call_back_date_time_c_hours').val('');

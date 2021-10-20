@@ -654,4 +654,30 @@ class Lead extends Person implements EmailInterface
 
         return $query;
     }
+
+    function findDuplicateLead($index){
+
+        $logger = new CustomLogger('ImportLeadsDupeCheck');
+        $logger->log('debug', 'ImportLeadsDupeCheck For Mobile No: ' . $this->phone_mobile);
+
+        if(!empty($this->phone_mobile) && !empty($this->scheme_c)){
+
+            $query  = "select id,scheme_c from leads l join leads_cstm lcstm where deleted = 0 and phone_mobile = '$this->phone_mobile' and lcstm.scheme_c='$this->scheme_c'and date_entered> CURDATE() - INTERVAL 30 DAY order by date_entered desc limit 1";
+            $logger->log('debug', 'ImportLeadsDupeCheck Query: ' . $query);
+            global $db;
+            $result = $db->query($query);
+
+            if ($result->num_rows > 0) {
+                $logger->log('debug', 'Duplicare Leads Found While Importing: ' . $this->phone_mobile);
+                return true;
+            }
+
+        }else{
+            $logger->log('debug', 'Field Rquired For Duplicate Check Are Empty!');
+        }
+
+        
+
+        return false;
+    }
 }

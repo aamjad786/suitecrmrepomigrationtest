@@ -157,6 +157,17 @@ array (
             'label' => 'LBL_ACSPM',
           ),
         ),
+        9 => 
+        array (
+          0 => array (
+            'name' => 'cam_c',
+            'label' => 'LBL_CAM_C',
+          ),
+          1 => array (
+            'name' => 'cam_auto_assign',
+            'label' => 'LBL_CAM_AUTO_ASSIGN',
+          ),
+        ),
       ),
       'LBL_PANEL_ASSIGNMENT' => 
       array (

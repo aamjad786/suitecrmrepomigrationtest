@@ -1930,4 +1930,28 @@ $app_list_strings['moduleListSingular']['neo_Paylater_Open']='Paylater';
 $app_strings['LBL_GROUPTAB5_1631783180'] = 'Cases';
 
 $app_strings['LBL_GROUPTAB6_1631783180'] = 'New Group';
-?>
+
+$GLOBALS['app_list_strings']['visit_purpose_list']=array (
+  '' => '',
+  'lead_creation' => 'Lead Creation',
+  'ra_empanelment' => 'RA Empanelment',
+  'meeting_relationship_building' => 'Meeting/Relationship Building',
+  'document_collection' => 'Document Collection',
+  'follow_up_for_logins' => 'Follow up for Logins',
+  'sanction_acceptance_documentation' => 'Sanction Acceptance Documentation',
+  'disbursal_documentation' => 'Disbursal Documentation',
+);
+$GLOBALS['app_list_strings']['visit_location_list']=array (
+  '' => '',
+  'channel_partner_office_address' => 'Channel Partner Office Address',
+  'customer_residence' => 'Customer Residence',
+  'customer_business_address' => 'Customer Business Address',
+  'other_location' => 'Other Location',
+);
+$GLOBALS['app_list_strings']['meeting_type_c_list']=array (
+  '' => '',
+  'channel_partner_office_address' => 'Channel Partner Office Address',
+  'customer_residence' => 'Customer Residence',
+  'customer_business_address' => 'Customer Business Address',
+  'other_location' => 'Other Location',
+);

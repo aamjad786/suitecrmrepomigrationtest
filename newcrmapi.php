@@ -27,7 +27,6 @@ $apiModule = array(
     'Opportunities',
     'Cases',
     'Opportunity_Status',
-    'Neo_Paylater_Leads',
     'Neo_Customers',
     "Users",
     'Paylater_Open'
@@ -45,9 +44,17 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
 
     $module = $_SERVER['HTTP_REQUESTEDMODULE'];
     $action = $_SERVER['HTTP_REQUESTEDMETHOD'];
+    $clientIP=$_SERVER['REMOTE_ADDR'];
+    
     $fp      = fopen('php://input', 'r');
     $rawData = json_decode(stream_get_contents($fp));
 
+    $logger->log('debug', 'Request Coming From IP: '.$clientIP);
+
+    // Setting Admin As Global User For Audit Purpose
+    global $current_user;
+    $current_user = BeanFactory::newBean('Users');
+    $current_user->getSystemUser();
 
 if ($action == 'Audit') {
     require_once ('modules/Audit/Audit.php');
@@ -83,7 +90,7 @@ else if ($module == "Lead" && $action == 'Create') {
    
     $isDataValid=true;
 
-    $logger->log('debug', 'Create Lead API Request =====>'.print_r($rawData, true));
+    $logger->log('debug', 'Create Lead API Request =====>'.var_export($rawData, true));
 
     //  Mandatory Fields 
 
@@ -197,7 +204,7 @@ else if ($module == "Lead" && $action == 'Create') {
 }
 else if ($module == "Lead" && $action == 'Update') {
     
-        $logger->log('debug', 'Update Lead API Request =====>'.print_r($rawData, true));
+        $logger->log('debug', 'Update Lead API Request =====>'.var_export($rawData, true));
         
         $leadId = $rawData->lead_id;
 
@@ -306,90 +313,73 @@ else if ($module == "Lead" && $action == 'Fetch') {
     }
 }
 else if ($module == "Opportunities" && $action == 'Update') {
-    $myfile = fopen("Logs/OpportunityUpdateCrmApi.log", "a");
-    fwrite($myfile, "\n".date('Y-m-d h:i:s'));
-    fwrite($myfile, var_export($rawData, true));
-    $opp_id = $rawData->opportunity_id;
-    (isset($rawData->update_date) ? $update_date = $rawData->update_date : '');
+    
+    $logger->log('debug', 'Update Opportunities API Request =====>'.var_export($rawData, true));
+    
+    $oppId = $rawData->opportunity_id;
+    
+    if (isset($oppId) or !empty($oppId)) {
 
-    if (!isset($opp_id) or empty($opp_id)) {
-        $msg = array(
-            'Success' => false,
-            'Message' => 'Mandatory field(s) are missing'
-        );
-    }
-    else {
-        
-        $op = new Opportunity();
-        $retrieved_data = $op->retrieve($opp_id);
-        if(!empty($retrieved_data)){
-            $op->sales_stage = $rawData->opportunity_stage;
-            $op->amount = $rawData->amount;
-            $op->pickup_appointment_feedback_c = $rawData->feedback;
-            $op->remarks_c = $rawData->remarks_c;
-            $op->source_type_c=$rawData->source_type_c;
-            $op->loan_amount_sanctioned_c = $rawData->loan_amount_sanctioned_c;
-            $op->assigned_user_id = $rawData->user_id;
+        $oppBean = new Opportunity();
+        $oppBean=$oppBean->retrieve($oppId);
+       
+        if(!empty($oppBean)) {
 
-            if(!empty($rawData->pickup_appointment_city_c)){
-                $op->pickup_appointment_city_c = $rawData->pickup_appointment_city_c;
-            }
-            $op->application_id_c = $rawData->application_id;
-            if(!empty($rawData->date_updated_EOS))
-            {
-                $op->eos_opportunity_status_c=$rawData->eos_opportunity_status_c;
-                $op->eos_sub_status_c=$rawData->eos_sub_status_c;
-
-                $time=strtotime($rawData->date_updated_EOS);
-                $time=$time-(330*60);
-                $op->date_updated_by_EOS=date("Y-m-d H:i:s", $time);
-            }
-                $op->opportunity_status_c = $rawData->opportunity_status;
-                $op->sub_status_c=$rawData->sub_status_c;
-            $op->pickup_appointment_date_c=$rawData->pickup_appointment_date_c;
-            $op->control_program_c=$rawData->control_program_c;
-            $op->stage_drop_off_c=$rawData->stage_drop_off_c;
-            $op->app_form_link_c=$rawData->app_form_link_c;
-            // $time=strtotime($rawData->date_updated_EOS);
-            // $time=$time-(330*60);
-            // $op->date_updated_by_EOS=date("Y-m-d H:i:s", $time);
-            $op->eos_disposition_c=$rawData->eos_disposition_c;
-            $op->eos_sub_disposition_c=$rawData->eos_sub_disposition_c;
-            $op->pickup_appointment_pincode_c=$rawData->Address_pin;
-            $op->pickup_appointment_address_c=$rawData->Address_Street;
-            $op->reject_reason_c=$rawData->reject_reason_c;
-            $op->is_eligible=$rawData->is_eligible;
-
-
-            $id = $op->save();
-            if(!empty($update_date) && !empty($opp_stage)){
-                $query = "update Opportunities_audit set date_created='$update_date' where parent_id='$id' and after_value_string='$opp_stage' order by date_created desc limit 1";
-
-                global $db;
-
-                $db->query($query);
-
-            }
-            if($id){
+            if (!empty($rawData->opportunity_stage)) $oppBean->sales_stage = $rawData->opportunity_stage;
+            if (!empty($rawData->amount)) $oppBean->amount = $rawData->amount;
+            if (!empty($rawData->feedback)) $oppBean->pickup_appointment_feedback_c = $rawData->feedback;
+            if (!empty($rawData->remarks_c)) $oppBean->remarks_c = $rawData->remarks_c;
+            if (!empty($rawData->source_type_c)) $oppBean->source_type_c = $rawData->source_type_c;
+            if (!empty($rawData->loan_amount_sanctioned_c)) $oppBean->loan_amount_sanctioned_c = $rawData->loan_amount_sanctioned_c;
+            if (!empty($rawData->user_id)) $oppBean->assigned_user_id = $rawData->user_id;
+            if (!empty($rawData->pickup_appointment_city_c)) $oppBean->pickup_appointment_city_c = $rawData->pickup_appointment_city_c;
+            if (!empty($rawData->application_id)) $oppBean->application_id_c = $rawData->application_id;
+            if (!empty($rawData->opportunity_status)) $oppBean->opportunity_status_c = $rawData->opportunity_status;
+            if (!empty($rawData->sub_status_c)) $oppBean->sub_status_c = $rawData->sub_status_c;
+            if (!empty($rawData->pickup_appointment_date_c)) $oppBean->pickup_appointment_date_c = $rawData->pickup_appointment_date_c;
+            if (!empty($rawData->control_program_c)) $oppBean->control_program_c = $rawData->control_program_c;
+            if (!empty($rawData->stage_drop_off_c)) $oppBean->stage_drop_off_c = $rawData->stage_drop_off_c;
+            if (!empty($rawData->app_form_link_c)) $oppBean->app_form_link_c = $rawData->app_form_link_c;
+            if (!empty($rawData->Address_pin)) $oppBean->pickup_appointment_pincode_c = $rawData->Address_pin;
+            if (!empty($rawData->Address_Street)) $oppBean->pickup_appointment_address_c = $rawData->Address_Street;
+            if (!empty($rawData->reject_reason_c)) $oppBean->reject_reason_c = $rawData->reject_reason_c;
+            if (!empty($rawData->is_eligible)) $oppBean->is_eligible = $rawData->is_eligible;
+            
+            $oppId=$oppBean->save();
+            
+            if(!empty($oppId)){
                 $msg = array(
                     'Success' => true,
                     'Message' => 'Opportunity Updated Successfully'
-                );
-            }else{
-                $msg = array(
-                    'Success' => false,
-                    'Message' => 'Opportunity was not updated'
-                );
+                );   
             }
-        }else{
+            else{
+                $logger->log('error', 'Unable To Update Opportunity');
+            }
+
+        } else {
             $msg = array(
                 'Success' => false,
-                'Message' => "Opportunity $opp_id not found in DB"
+                'Message' => 'Unable To Update Opportunity.'
             );
+            $logger->log('error', 'Unable To Find Data With Request Opp ID: '.$oppId);
         }
+        
     }
+    else {
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Mandatory field(s) are missing. Empty Opportunity ID.'
+        );
+        $logger->log('error', 'UMandatory field(s) are missing. Empty Opportunity ID.');
+    }
+    
+    
 }
 else if ($module == "Opportunities" && $action == 'Fetch') {
+
+    $logger->log('debug', 'Fetch Opportunities API Request =====>'.var_export($rawData, true));
+
     (isset($rawData->status) ? $status = $rawData->status : '');
     (isset($rawData->from_date) ? $from_date = $rawData->from_date : '');
     (isset($rawData->to_date) ? $to_date = $rawData->to_date : '');
@@ -465,6 +455,8 @@ else if ($module == "Opportunities" && $action == 'Fetch') {
 }
 else if ($module == "Meeting" && ($action == 'Create' ||$action == 'Update')) {
 
+    $logger->log('debug', $action .' Meeting API Request =====>'.var_export($rawData, true));    
+
     if (empty($rawData->name) or empty($rawData->status) or empty($rawData->date_start)) {
         $msg = array(
             'Success' => false,
@@ -514,6 +506,9 @@ else if ($module == "Meeting" && ($action == 'Create' ||$action == 'Update')) {
     }
 }
 else if ($module == "Meeting" && $action == 'Fetch') {
+
+    $logger->log('debug', 'Fetch Meeting API Request =====>'.var_export($rawData, true));  
+
     (isset($rawData->parent_id) ? $parent_id = $rawData->parent_id : '');
     (isset($rawData->user_id) ? $user_id = $rawData->user_id : '');
     (isset($rawData->from_date) ? $from_date = $rawData->from_date : '');
