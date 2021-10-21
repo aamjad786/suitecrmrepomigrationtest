@@ -76,8 +76,9 @@ class AOPInboundEmail extends InboundEmail
     
     
     function isMineField($str) {
-        $arrayOfMineFieldElements = array('CXO', 'Legal', 'Media', 'Newspaper', 'Press', 'Court', 'lawyers', 'Grievance Redressal Officer', 'Ombudsman');
-        $listOfEmailsListedUnderMineField = array('pk@khaitan.in', 'dk@khaitan.in', 'ravi.kumar@neogrowth.in', 'sumit.mukherjee@neogrowth.in', 'arun.nayyar@neogrowth.in', 'vivek.r@neogrowth.in', 'rajan.pundhir@neogrowth.in', 'sorabh.malhotra@neogrowth.in', 'sachin.bawari@neogrowth.in', 'gkshettigar@neogrowth.in', 'yogesh.nakhwa@neogrowth.in', 'tanushri.yewale@neogrowth.in', 'sanjay.kapse@neogrowth.in');
+        global $sugar_config;
+        $arrayOfMineFieldElements = $sugar_config['arrayOfMineFieldElements'];
+        $listOfEmailsListedUnderMineField = $sugar_config['listOfEmailsListedUnderMineField'];
         if(is_array($str)) {
             foreach($str as $instanceElement){
                 if(in_array($instanceElement, $listOfEmailsListedUnderMineField)){
