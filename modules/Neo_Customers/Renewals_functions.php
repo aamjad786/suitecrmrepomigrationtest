@@ -1,5 +1,7 @@
 <?php
-
+require_once 'custom/CustomLogger/CustomLogger.php';
+global $logger;
+$logger= new CustomLogger('updaterenewedAppid');
 require_once('include/entryPoint.php');
 
 class Renewals_functions{
@@ -443,21 +445,25 @@ class Renewals_functions{
     }
 
     function checkRenewedAppIdsFromAudit($last_run_date){
+        global $logger;
+        $logger= new CustomLogger('updaterenewedAppid');
+        $logger->log('debug', "<--------------called function checkRenewedAppIdsFromAudit---------------->");
         try{
             $response = true;
             global $db;
             $query          = "select id, parent_id, field_name, before_value_string, after_value_string from neo_customers_audit where date_created > '$last_run_date' and field_name = 'app_id_list' ";
             $results        = $db->query($query);
+            
             $ids            = array();
             $changed_values = array();
-            //print_r($results);
-            fwrite($this->log, "\nrows fetched from db fetch (audit log entries) :: " . $results->num_rows);
+           // print_r($results);
+            $logger->log('debug', "\nrows fetched from db fetch (audit log entries) :: " . $results->num_rows);
             while($row = $db->fetchByAssoc($results)){
                 if(!isset($row['parent_id']) && empty($row['parent_id'])
                     && !isset($row['field_name']) && empty($row['field_name'])
                     && !isset($row['before_value_string']) && empty($row['before_value_string'])
                     && !isset($row['after_value_string']) && empty($row['after_value_string'])){
-                    fwrite($this->log, "\nfatal :: checkRenewedAppIdsFromAudit :: Details not available for neo_customers_audit id = " . $row['id']);
+                        $logger->log('debug',  "\nfatal :: checkRenewedAppIdsFromAudit :: Details not available for neo_customers_audit id = " . $row['id']);
                     $response = false;
                     continue;
                 }
@@ -468,16 +474,17 @@ class Renewals_functions{
                 $changed_values[$row['parent_id']] = $values;
                 //print_r($changed_values);
             }
+            print_r($ids);
             $ids_str = "('" . implode("','", $ids) . "')";
-            fwrite($this->log, "\nids to fetch :: " . $ids_str);
-            fwrite($this->log, "\nChanged Values :: " . print_r($changed_values));
+            $logger->log('debug', "\nids to fetch :: " . $ids_str);
+            $logger->log('debug', "\nChanged Values :: " . print_r($changed_values));
             if(!empty($ids_str) && !empty($changed_values)){
                 $response = $response && $this->updateRenewedAppIds($ids_str, $changed_values);
             }
             return $response;
         }
         catch(Exception $e){
-            fwrite($this->log, "\nException in checkRenewedAppIdsFromAudit :: " . $e->getMessage());
+            $logger->log('debug',  "\nException in checkRenewedAppIdsFromAudit :: " . $e->getMessage());
             return false;
         }
     }
