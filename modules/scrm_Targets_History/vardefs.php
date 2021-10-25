@@ -381,8 +381,8 @@ $dictionary['scrm_Targets_History'] = array(
   'insurance' => 
   array (
     'required' => false,
-    'name' => 'insurance_amount',
-    'vname' => 'insurance_amount',
+    'name' => 'insurance',
+    'vname' => 'insurance',
     'type' => 'varchar',
     'massupdate' => 0,
     'no_default' => false,
