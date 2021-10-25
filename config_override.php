@@ -130,7 +130,7 @@ $sugar_config['esc_mat_prod_sms_name2'] = 'NG637 Sumeet Thanekar 7666855666';
 $sugar_config['esc_mat_prod_sms_no2'] = '7666855666';
 
 $sugar_config['esc_mat_prod_emails'] = array("manisha.agarwal@neogrowth.in","sumeet.thanekar@neogrowth.in");
-$sugar_config['esc_mat_prod_emails_names'] = 'manisha.agarwal@neogrowth.in, sumeet.thanekar@neogrowth.in';
+$sugar_config['esc_mat_prod_emails_names'] = array('manisha.agarwal@neogrowth.in, sumeet.thanekar@neogrowth.in');
 
 // CallBackFlow CC emails
 $sugar_config['callbackflow_cc_emails'] = array('sumeet.thanekar@neogrowth.in','mangal.sarang@neogrowth.in','dipali.londhe@neogrowth.in');
