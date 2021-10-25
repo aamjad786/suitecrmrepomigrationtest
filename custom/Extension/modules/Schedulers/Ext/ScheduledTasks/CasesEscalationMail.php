@@ -196,7 +196,8 @@ function CasesEscalationMail(){
                             $action_status = '';
                             if ($receipt_date == date_format(date_create($item->date_entered), 'd/m/Y h:i:s a')) {
                                 $action_status = 'Allocated';
-                            }else{
+                            }
+                            else{
                                 $action_status = 'Reassigned';
                             }
                             $action_date = date_format(date_create($r['date_created']), 'd/m/Y h:i:s a');
@@ -227,8 +228,6 @@ function CasesEscalationMail(){
 
                 $email = new SendEmail();
 
-                $app_host = getenv('SCRM_ENVIRONMENT');
-                $caseLevel = $item->escalation_level_c;
                 $logger->log('debug', print_r($to,true));
                 $logger->log('debug', print_r($cc,true));
                 echo "Case id: ".$item->id."<br>";
@@ -239,20 +238,35 @@ function CasesEscalationMail(){
                 print_r($cc);
                 echo "<br><br>";
                 $email->send_email_to_user($sub,$desc,$to, $cc,$item);
+
+                // Pallavi : Send sms logic added
+                $cc = getCCListFromTable($item,$user,true); // For SMS
+                $ccmobiles = $cc[0];
+                //$ccnames = $cc[1];
+                $to = $ccmobiles[$level];
+                //$to_name = $ccnames[$level];
+                require_once 'custom/include/SendSMS.php';
+                $send = new SendSMS();
+                $send->send_sms_to_user($tag_name="Cust_CRM_ESC_SMS", 
+                                        $to,
+                                        $sub,
+                                        $item
+                                    );
+
                 $logger->log('debug', "------------------function::CasesEscalationMail() Ends--------------");
             }
-
         }
     }
     return true;
 }
 
 
-function getCCListFromTable($case,$user){
+function getCCListFromTable($case,$user, $forMobiles = false){
     $logger = new CustomLogger('CasesEscalationMail');
     $logger->log('debug', "------------------function::getCCListFromTable() Starts--------------");
     $emails = array();
     $names  = array();
+    $mobiles  = array();
     $level  = $case->escalation_level_c;
     // print_r($level);echo "<br>";
     global $db;
@@ -287,11 +301,17 @@ function getCCListFromTable($case,$user){
             if(!empty($user_bean->email1) && !empty($name)){
                 $emails[]   = $user_bean->email1;   
                 $names[]    = $name;
+                $mobiles[]  = $user_bean->phone_mobile;
             }
         }        
     }
-    $logger->log('debug', "names: " .serialize($names) . ", emails: ". serialize($emails));
+    $logger->log('debug', "names: " .serialize($names) . ", emails: ". serialize($emails) . ", Mobile: ". serialize($mobiles));
+    $logger->log('debug', "FOR SMS : $forMobiles");
     $logger->log('debug', "------------------function::getCCListFromTable() Ends--------------");
+
+    if ($forMobiles) {
+        return array($mobiles, $names);
+    }
     return array($emails, $names);
 }
 
