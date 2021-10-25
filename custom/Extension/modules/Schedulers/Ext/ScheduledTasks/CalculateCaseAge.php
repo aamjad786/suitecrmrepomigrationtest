@@ -1,48 +1,52 @@
 <?php
+require_once 'custom/CustomLogger/CustomLogger.php';
+
 $job_strings[] = 'CalculateCaseAge';
 date_default_timezone_set('Asia/Kolkata');
 
 
 function CalculateCaseAge(){
-  $myfile = fopen("Logs/CasesEscalationMail.log", "a");
-  $bean = BeanFactory::getBean('Cases');
-  $query = "cases.deleted=0 and cases.state in ('Open','In_progress')";
-  $items = $bean->get_full_list('',$query);
-  $count=0;
-  if ($items){
-      foreach($items as $item){
-          // Calculating Case Age
-          if($item->date_entered < '2019-02-26'){
-            $time = getWeekdays2($item->date_entered);
-          }else{
-            $time = getWeekdays($item->date_entered);
-          }
-         
-          
-          $item->age_c = $time[0];
-          // Calculating Case Escalation Level
-          $time_spent  = $time[0]*24+$time[1];
+    $logger = new CustomLogger('CasesEscalationLevel');
+    $logger->log('debug', "--- START In CalculateCaseAge in ScheduledTasks---");
+    $bean = BeanFactory::getBean('Cases');
+    $query = "cases.deleted=0 and cases.state in ('Open','In_progress')";
+    $items = $bean->get_full_list('',$query);
+    if ($items){
+        foreach($items as $item){
+            $logger->log('debug', "\n"."Escalation Level Calcuation for CaseID [$item->id]");
+            // Calculating Case Age
+            if($item->date_entered < '2019-02-26'){
+                $time = getWeekdays2($item->date_entered);
+            }
+            else{
+                $time = getWeekdays($item->date_entered);
+            }
+            
+            $item->age_c = $time[0];
+            // Calculating Case Escalation Level
+            $time_spent  = $time[0]*24+$time[1];
 
-          $cat = $item->case_subcategory_c;
-          //$defined_hours = 48;
+            $cat = $item->case_subcategory_c;
+            //$defined_hours = 48;
 
+            $level = escalationLevel($time[0], $cat);
+            
+            //Sending interim response
+            if ($item->escalation_level_c != $level) {
+                $item->escalation_level_c = $level;
+                $item->save();
 
-        $level = escalationLevel($time[0],$cat);
-          
-          
-          //Sending interim response
-          if ($item->escalation_level_c != $level) {
-              $item->escalation_level_c = $level;
-              sendIterimResponse($item);
-          }
-          
-          fwrite($myfile, "\n"."Escalation Level - " . $level);
-          $item->save();
-          
-      }
-  }
+                $logger->log('debug', "\n"."Escalation Level - [$level] for CaseID [$item->id] and sending responce to merchant");
 
-  return true;
+                sendIterimResponse($item);
+            }
+            
+            
+            
+        }
+    }
+    $logger->log('debug', "--- END CalculateCaseAge in ScheduledTasks---");
+    return true;
 }
 
 function getWeekdays($dt1, $dt2=""){
@@ -116,16 +120,16 @@ function getWeekdays2($dt1, $dt2=""){
     // echo $days."<Br>";
     return array($days,$hours);
 }
-function escalationLevel($ah,$cat)
-{
+
+function escalationLevel($ah, $cat) {
     global $timedate;
-    $myfile = fopen("Logs/CasesEscalationMail.log", "a");
-    fwrite($myfile, "\n"."-----------------CalculateCaseAge::escalationLevel starts------------ ");
-    fwrite($myfile, "\n"."time - ".$timedate->now());
-    fwrite($myfile, "\n"."sub_issue_type - ".$cat);
+    $logger = new CustomLogger('CasesEscalationLevel');
+    $logger->log('debug', "-----------------CalculateCaseAge::escalationLevel starts------------ ");
+    $logger->log('debug', "time - ".$timedate->now());
+    $logger->log('debug', "sub_issue_type - ".$cat);
     $bean  = BeanFactory::getBean("scrm_Cases");
     $query = "scrm_cases.deleted=0 and scrm_cases.sub_issue_type = '$cat'";
-    fwrite($myfile, "\n"."query - ".$query);
+    $logger->log('debug', "query - ".$query);
     $items = $bean->get_full_list('',$query);
     $l1 = 0;
     $l2 = 0;
@@ -137,16 +141,16 @@ function escalationLevel($ah,$cat)
       $l3 = $item->tat_3;
     }
     else{
-      fwrite($myfile, "\n"."No Escalation Details found for this sub category :: " . $cat);
-      fwrite($myfile, "\n"."Using Default values");
+        $logger->log('debug', "No Escalation Details found for this sub category :: " . $cat);
+        $logger->log('debug', "Using Default values");
     }
     $l1 = (empty($l1)?2:$l1);
     $l2 = (empty($l2)?3:($l2));
     $l3 = (empty($l3)?4:($l3));
-    fwrite($myfile, "\n"."Days :: l1 - $l1, l2 - $l2, l3 - $l3");
-    fwrite($myfile, "\n"."Hours :: l1 - $l1, l2 - $l2, l3 - $l3");
-    fwrite($myfile, "\n"."hours taken by the case till now : $ah");
-    fwrite($myfile, "\n"."-----------------CalculateCaseAge::escalationLevel ends------------ ");
+    $logger->log('debug', "Days :: l1 - $l1, l2 - $l2, l3 - $l3");
+    $logger->log('debug', "Hours :: l1 - $l1, l2 - $l2, l3 - $l3");
+    $logger->log('debug', "hours taken by the case till now : $ah");
+    $logger->log('debug', "-----------------CalculateCaseAge::escalationLevel ends------------ ");
     $l4 = 30;    // 30 days
     if ($ah>=$l4)    //4th level escalation MD
         return 4;
@@ -160,7 +164,8 @@ function escalationLevel($ah,$cat)
         return 0;
 }
 
-function escalationLevelForTDS($bean) {
+// Pallavi : Not in use
+/*function escalationLevelForTDS($bean) {
     
     $myfile = fopen("Logs/TDSEscalation.log", "a");
     fwrite($myfile, "\n\n--------escalationLevelForTDS -----------");
@@ -234,7 +239,7 @@ function escalationLevelForTDS($bean) {
     }
     
     return (!empty($escalationLevel)?$escalationLevel:$bean->escalation_level_c);
-}
+}*/
 
 function sendIterimResponse($item) {
     if (!empty($item)) {
@@ -267,23 +272,14 @@ function sendIterimResponse($item) {
 function getInterimResponseEmailContent($ticket) {
 
     $body = "<pre>
-    Dear NeoGrowth Customer, </br></br>"
-    ."Greetings from NeoGrowth! Our records indicate that a decision on your query [SR-#$ticket] is still pending."
-    ."Please be rest assured that we are following-up on this with the respective department and will certainly contact you once a resolution is received. </br></br>"
-    ."We appreciate your patience and apologise for any inconvenience.</br></br>"
-    ."For any further assistance, please do not hesitate to email us on helpdesk@neogrowth.in or call us on 1800-419-5565 between 10 A.M - 6 P.M from Monday to Saturday.</br></br>"
-    ."We are always here to assist you.</br></br>"
-    ."Thank you for choosing NeoGrowth.</br></br>
-    </pre>";
-//     $body = "<pre>
-// Dear NeoGrowth Customer, </br></br> 
-//   Greetings from NeoGrowth!</br></br>"
-// . "Our records indicate that a decision on your query [SR-#$ticket] is still pending. "
-// . "Please be rest assured that we are following-up on this with the respective department and will certainly contact you once a resolution is received.</br></br>"
-// . "We appreciate your patience and apologise for any inconvenience.</br></br>"
-// . "For any further assistance, please do not hesitate to email us on helpdesk@neogrowth.in or call us on 1800-419-5565 between 10 A.M - 6 P.M from Monday to Friday.</br></br>"
-// . "We are always here to assist you.</br></br>"
-// . "Thank you for choosing NeoGrowth.</br></br>
-//     </pre>";
+        Dear NeoGrowth Customer, </br></br>"
+        ."Greetings from NeoGrowth! Our records indicate that a decision on your query [SR-#$ticket] is still pending."
+        ."Please be rest assured that we are following-up on this with the respective department and will certainly contact you once a resolution is received. </br></br>"
+        ."We appreciate your patience and apologise for any inconvenience.</br></br>"
+        ."For any further assistance, please do not hesitate to email us on helpdesk@neogrowth.in or call us on 1800-419-5565 between 10 A.M - 6 P.M from Monday to Saturday.</br></br>"
+        ."We are always here to assist you.</br></br>"
+        ."Thank you for choosing NeoGrowth.</br></br>
+        </pre>";
+
     return $body;
 }

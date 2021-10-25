@@ -22,11 +22,11 @@ class CasesViewMaker_checker extends SugarView {
         fclose($this->log);
     }
     function checkAccess(){
-        global $current_user;
+        global $current_user, $sugar_config;
         $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         $roles = ACLRole::getUserRoleNames($current_user->id);
-        if (strpos($url, 'crm.advancesuite.in') !== false) {
-            $permitted_users = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG536","NG2029","NG2054","NG2064");
+        if (strpos($url, $sugar_config['AS_CRM_Domain']) !== false) {
+            $permitted_users = $sugar_config['maker_checker_permitted_user'];
             if (!$current_user->is_admin && !in_array($current_user->user_name, $permitted_users)) {
                 die("<p style='color:red'>You cannot access this page. Please contact admin</p>");
             }
@@ -128,7 +128,7 @@ HTMLFORM_2;
 
     function handleFormUpload(){
         
-        global $db,$current_user;
+        global $db, $current_user, $sugar_config;
         $date = date('Y-m-d', strtotime('-7 days'));
         $query = "select s.id,case_number,maker_comment_c,case_category_c,date_of_changes_c,date_of_request_c,case_subcategory_c,case_category_c_new_c, case_subcategory_c_new_c, first_name,last_name from cases s join cases_cstm c on s.id=c.id_c join users u on c.maker_id_c=u.id where case_category_approval_c=0 order by c.date_of_request_c desc";
       
@@ -136,9 +136,9 @@ HTMLFORM_2;
         
         $env = getenv('SCRM_ENVIRONMENT');
         if($env =='prod'){
-            $checker =['ng1647','ng536']; // Manisha,Yogesh
+            $checker = $sugar_config['prod_checker_user']; // Manisha,Yogesh
         } else {
-            $checker = ['ng1273','ng619','ng1275']; // Nikhil, GOPI
+            $checker = $sugar_config['non_prod_checker_user']; // Nikhil, GOPI
         }
 
         if(in_array(strtolower($current_user->user_name),$checker)){

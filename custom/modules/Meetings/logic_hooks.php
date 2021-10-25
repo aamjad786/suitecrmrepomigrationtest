@@ -7,6 +7,6 @@ $hook_array = Array();
 $hook_array['after_save'] = Array(); 
 $hook_array['after_save'][] = Array(77, 'updateMeetingGeocodeInfo', 'modules/Meetings/MeetingsJjwg_MapsLogicHook.php','MeetingsJjwg_MapsLogicHook', 'updateMeetingGeocodeInfo'); 
 
-
+$hook_array['before_save'][] = Array(2, 'Create Reminder And Invitee For Meeting', 'custom/modules/Meetings/BeforeSaveMeetings.php','BeforeSaveMeetings', 'createReminderAndInvitee'); 
 
 ?>

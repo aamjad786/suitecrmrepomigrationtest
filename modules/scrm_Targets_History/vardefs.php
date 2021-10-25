@@ -378,7 +378,7 @@ $dictionary['scrm_Targets_History'] = array(
     'enable_range_search' => false,
     'precision' => 6,
   ),
-  'insurance' => 
+  'insurance_amount' => 
   array (
     'required' => false,
     'name' => 'insurance',

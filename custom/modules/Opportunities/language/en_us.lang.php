@@ -1,5 +1,5 @@
 <?php
-// created: 2021-09-02 16:23:27
+// created: 2021-10-08 15:19:54
 $mod_strings = array (
   'EOS DISPOSITION' => 'EOS DISPOSITION',
   'EOS SUB-DISPOSITION' => 'EOS SUB-DISPOSITION',
@@ -7,4 +7,6 @@ $mod_strings = array (
   'EOS OPPORTUNITY SUB-STATUS' => 'EOS OPPORTUNITY SUB-STATUS',
   'LBL_PICKUP_APPOINTMENT_CITY' => 'Pickup/ appointment city',
   'OPPORTUNITY SUB-STATUS' => 'OPPORTUNITY SUB-STATUS',
+  'LBL_CAM_C' => 'CAM',
+  'LBL_CAM_AUTO_ASSIGN' => 'Auto Assign To CAM'
 );

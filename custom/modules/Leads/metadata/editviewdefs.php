@@ -247,13 +247,6 @@ array (
             'label' => 'Indicative Deal Amount',
           ),
         ),
-        14 => 
-        array (
-          0 => 
-          array (
-            'name' => 'scrm_disposition_history_leads_1_name',
-          ),
-        ),
       ),
       'LBL_EDITVIEW_PANEL3' => 
       array (

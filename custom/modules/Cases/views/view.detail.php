@@ -83,7 +83,7 @@ class CasesViewDetail extends SugarView {
     public function display() {
 
 
-        global $db;
+        global $db, $sugar_config;
         $this->dv->process();
       
         echo $this->dv->display();
@@ -181,11 +181,10 @@ class CasesViewDetail extends SugarView {
         $category = $this->bean->case_subcategory_c_new_c;
         $isApproved = $this->bean->fetched_row['case_category_approval_c'];
         if($env =='prod'){
-            $checker_c =['ng1647','ng536']; // Manisha,Yogesh
+            $checker_c = $sugar_config['prod_checker_user']; // Manisha,Yogesh
         } else {
-            $checker_c = ['ng1273','ng619']; // Nikhil, GOPI
+            $checker_c = $sugar_config['non_prod_checker_user']; // Nikhil, GOPI
         }
-        //$checker_c = ['ng1273','ng619']; // Nikhil, GOPI
 
         
         if(!empty($category) && empty($isApproved)){
@@ -195,13 +194,7 @@ class CasesViewDetail extends SugarView {
            echo $this->bean->id; ?>">Reject New Category</button><?php }
         } ?></td></tr>');
       <?php   
-        $env = getenv('SCRM_ENVIRONMENT');
-        if($env =='prod'){
-            $checker_c =['ng1647','ng536']; // Manisha,Yogesh
-        } else {
-            $checker_c = ['ng1273','ng619']; // Nikhil, GOPI
-        }
-        //$checker_c = ['ng1273','ng619']; // Nikhil, GOPI
+        
         if(in_array(strtolower($current_user->user_name),$checker_c)){ ?>
             $(document).ready(function(){
                 var comment = $('#checker_comment_c').text();

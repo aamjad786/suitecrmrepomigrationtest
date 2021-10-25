@@ -325,8 +325,8 @@ JS;
     }
 
     function display(){
-    	global $current_user;
-		$permitted_users = array("NG377","NG690","NG478","NG894","NG660","NG637","NG1647","NG2029","NG2054","NG2064");
+    	global $current_user, $sugar_config;
+		$permitted_users = $sugar_config['up_case_esc_matrix_permitted_user'];
 		if (!$current_user->is_admin  && !(in_array(strtoupper($current_user->user_name), $permitted_users))){
 		    die("<p style='color:red'>You cannot access this page. Please contact admin</p>");
 		}

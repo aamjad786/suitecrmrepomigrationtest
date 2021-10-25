@@ -5,16 +5,15 @@ if(!defined('sugarEntry') || !sugarEntry) {
 }
 require_once('include/entryPoint.php');
 require_once('custom/include/SendEmail.php');
+require_once 'custom/CustomLogger/CustomLogger.php';
 
 class CallBackFlow {
 
     private $log;
     function __construct() {
-        $this->log = fopen("Logs/WebsiteCallBack.log", "a");
+        $this->logger = new CustomLogger('CaseAssignmentExcecutiveRole');
     }
-    function __destruct() {
-        fclose($this->log);
-    }
+    
 
 	/**
 	 *	create invite for the user for provided remainders.
@@ -53,23 +52,23 @@ class CallBackFlow {
 	 *	@param case id, call back starting time, duration of the call
 	 */
 	function createCallBackFlow($case_id, $call_back_start_time_c, $call_back_duration_c){
-		fwrite($this->log, "\n--------------CallBackFlow::createCallBackFlow start ".date('Y-m-d H:i:s')."----------------\n");
-		fwrite($this->log, "\n" . "Entry case id : " . $case_id);
+		$this->logger->log('debug', "--------------CallBackFlow::createCallBackFlow start ".date('Y-m-d H:i:s')."----------------");
+		$this->logger->log('debug', "Entry case id : " . $case_id);
 		$case_bean = BeanFactory::getBean('Cases', $case_id); 
-		fwrite($this->log, "\n" . "existing assigned user : " . $case_bean->assigned_user_id);
+		$this->logger->log('debug', "existing assigned user : " . $case_bean->assigned_user_id);
         $assigned_user = new User;
         $assigned_user->retrieve($case_bean->assigned_user_id);
-        fwrite($this->log, "\n" . "assigned_user user id : " . $assigned_user->id);
+        $this->logger->log('debug', "assigned_user user id : " . $assigned_user->id);
 
 		$call = new Call();
 		$call->name = "Website Call Back : " . $case_bean->merchant_name_c . "-" . $case_bean->merchant_contact_number_c;
 		$call->description = "Website Call Back : " . $case_bean->merchant_name_c . "-" . $case_bean->merchant_contact_number_c;
-		fwrite($this->log, "\n" . "Given local start time: " . $call_back_start_time_c);
+		$this->logger->log('debug', "Given local start time: " . $call_back_start_time_c);
 		$call_back_start_time_c_db = date("Y-m-d H:i:s", strtotime("-5 hours, -30 minutes",strtotime($call_back_start_time_c)));
-		fwrite($this->log, "\n" . "After converting to DB format : " . $call_back_start_time_c_db);
+		$this->logger->log('debug', "After converting to DB format : " . $call_back_start_time_c_db);
 		$call->date_start = $call_back_start_time_c_db;
 		$call_back_end_time_c = date("Y-m-d H:i:s", strtotime("+$call_back_duration_c minutes",strtotime($call_back_start_time_c_db)));
-		fwrite($this->log, "\n" . "DB end time: " . $call_back_start_time_c_db);
+		$this->logger->log('debug', "DB end time: " . $call_back_start_time_c_db);
 		$call->date_end = $call_back_end_time_c;
 		$call->lead_id = $case_bean->id;
 		$call->parent_type = "Cases";
@@ -95,16 +94,16 @@ class CallBackFlow {
 		$alert_bean->assigned_user_id = $case_bean->assigned_user_id;
 		$alert_bean->type = 'info';
 		$alert_bean->save();
-		fwrite($this->log, "\n" . "after alert_bean creation: " . $alert_bean->id);
+		$this->logger->log('debug', "after alert_bean creation: " . $alert_bean->id);
 
 
 		if(isset($assigned_user->id) && !empty($assigned_user->id)){
-			fwrite($this->log, "\n" . "Assigned Users found");
+			$this->logger->log('debug', "Assigned Users found");
 			//For 15 & 1 MinPrior set remainder and add invites to assigned user and his/her reporting
 			$reminderBean_15 = $this->setRemainderAndInvite(1, 1, 15*60, 15*60, $call);
 			$reminderBean_1 = $this->setRemainderAndInvite(1, 1, 60, 60, $call);
-			fwrite($this->log, "\n" . "reminderBean_15 id : " . $reminderBean_15->id);
-			fwrite($this->log, "\n" . "reminderBean_1 id : " . $reminderBean_1->id);
+			$this->logger->log('debug', "reminderBean_15 id : " . $reminderBean_15->id);
+			$this->logger->log('debug', "reminderBean_1 id : " . $reminderBean_1->id);
 			$assigned_user->load_relationship('calls');
 			$assigned_user->calls->add($call->id);	
 			$this->setReminders_Invitees($reminderBean_15, $assigned_user->id);
@@ -114,14 +113,14 @@ class CallBackFlow {
         	$assigned_user_manager->retrieve($assigned_user->reports_to_id);
 			$assigned_user_manager->load_relationship('calls');
 			$assigned_user_manager->calls->add($call->id);
-			fwrite($this->log, "\n" . "assigned_user_manager id : " . $assigned_user_manager->id);
+			$this->logger->log('debug', "assigned_user_manager id : " . $assigned_user_manager->id);
 			if(isset($assigned_user_manager->id) && !empty($assigned_user_manager->id)){
 				$this->setReminders_Invitees($reminderBean_15, $assigned_user->reports_to_id);
 				$this->setReminders_Invitees($reminderBean_1, $assigned_user->reports_to_id);
 			}
 		  	$call_back_time_range = date('d/m/Y h:i A', strtotime($call->date_start.'+330 minutes')) 
 				. ' - ' . date('h:i A', strtotime($call->date_end.'+330 minutes'));
-			fwrite($this->log, "\n" . "call_back_time_range : " . $call_back_time_range);
+			$this->logger->log('debug', "call_back_time_range : " . $call_back_time_range);
 			$this->sendMails($case_bean,$call_back_time_range,$assigned_user,$assigned_user_manager,"- Creation");
 			$this->sendMailsToMerchant($case_bean, $call);
 		}
@@ -133,6 +132,7 @@ class CallBackFlow {
 	 *	@param case bean, call bean
 	 */
 	function sendMailsToMerchant($case_bean, $call_bean){
+		global $sugar_config;
 		$email = new SendEmail();
         $c = new aCase;
         $c->retrieve($case_bean->id);
@@ -142,7 +142,7 @@ class CallBackFlow {
 		$sub = $templ_array['subject'];
 		$body = $this->getMerchantCaseCreationEmailBody($case_bean, $call_bean);
        	$app_host = getenv('SCRM_ENVIRONMENT');
-       	fwrite($this->log, "\n" . "Sending Mail status :: " . $email_result);
+       	$this->logger->log('debug', "Sending Mail status :: " . $email_result);
         $requestNumber = $c->case_number;
         $betweenFrom = $call_bean->date_start;
         $initialTime = substr($betweenFrom, strpos($betweenFrom, " ") + 1);
@@ -153,18 +153,25 @@ class CallBackFlow {
         $endTime = substr($betweenTo, strpos($betweenTo, " ") + 1);
         $toTime = date("g:i A", strtotime("$endTime UTC"));
         $message = "Dear Customer, We have registered your request under service request number $requestNumber. Our executive will call you between $fromTime & $toTime on $date. Team NeoGrowth";
-        fwrite($this->log, "\n" . "SMS :: " . $message . "to ". $case_bean->merchant_contact_number_c);
+        $this->logger->log('debug', "SMS :: " . $message . "to ". $case_bean->merchant_contact_number_c);
         require_once('custom/include/SendSMS.php');    
         $sms = new SendSMS();
         if($app_host == 'prod'){
-            $email_result = $email->send_email_to_user($sub,$body,array($case_bean->merchant_email_id_c),null,$case_bean,array('helpdesk@neogrowth.in'), array(),1);
+            $email_result = $email->send_email_to_user(	$sub,
+														$body,
+														array($case_bean->merchant_email_id_c),
+														null,
+														$case_bean,$sugar_config['helpdesk_email_arr'], 
+														array(),
+														1
+													);
             $to = $case_bean->merchant_contact_number_c;
         } else{
             $email_result = $email->send_email_to_user($sub,$body,array('balayeswanth.b@neogrowth.in'),null,$case_bean,array(),1);
             $to = "9743473424";
             $reponse = $sms->send_sms_to_user($tag_name="Cust_CRM_10", $to, $message, $case_bean);
         }
-        fwrite($this->log, "\n" . "Sending Mail status :: " . $email_result);
+        $this->logger->log('debug', "Sending Mail status :: " . $email_result);
 	}
 
 	/**
@@ -172,31 +179,31 @@ class CallBackFlow {
 	 */
 	function sendMailAdapter($call_bean){
 		global $timedate;
-        fwrite($this->log, "\n-------------sendMailAdapter() starts------------\n");
-        fwrite($this->log, "\n--------------" . $timedate->now() . "-----------\n");
+        $this->logger->log('debug', "-------------sendMailAdapter() starts at " . $timedate->now() . "------------");
+
 		require_once('custom/include/SendEmail.php');
 		$email = new SendEmail();
 		$email_result = false;
-		fwrite($this->log, "\n" . "sendMailAdapter: call id :: " . $call_bean->id);
+		$this->logger->log('debug', "sendMailAdapter: call id :: " . $call_bean->id);
 		$case_id 	= $call_bean->parent_id;
 		$case_bean 	= BeanFactory::getBean('Cases', $case_id); 
 		if($case_bean->is_call_back_c != 1){
 			return -1;	
 		}
 		$body = $this->getEmailBodyForCallBackRemainder($case_bean,$call_bean);
-		fwrite($this->log, "\n" . "body: ".print_r($body,true));
+		$this->logger->log('debug', "body: ".print_r($body,true));
 		// $subject = $this->getEmailSubForCallBackRemainderFromCall($call_bean);
 		$to_email = $this->getToMailForAcase($case_bean);
 		$subject = $this->getEmailSubForCallBackRemainder($case_bean)."- reminder";
-		fwrite($this->log, "\n" . "Subject : " . $subject);
+		$this->logger->log('debug', "Subject : " . $subject);
 		$cc_email = array();
         if(!empty($to_email)){
-        	fwrite($this->log, "\n" . "Sending Mail from adapter......" . "\n");
+        	$this->logger->log('debug', "Sending Mail from adapter......" . "\n");
     	    $email_result = $email->send_email_to_user($subject, $body, $to_email, $cc_email,$case_bean,null,1);
-    	    fwrite($this->log, "\n" . "Sending Mail status :: " . $email_result);
+    	    $this->logger->log('debug', "Sending Mail status :: " . $email_result);
         }
         else{
-        	fwrite($this->log, "\n" . "To Mail address is empty :: case_bean id - ", $case_bean->id);
+        	$this->logger->log('debug', "To Mail address is empty :: case_bean id - ", $case_bean->id);
         }
         return $email_result;
 	}
@@ -207,38 +214,37 @@ class CallBackFlow {
 	 */
 	function sendMails($case_bean,$call_back_time_range,$assigned_user=null,$assigned_user_manager=null,$subject_arg=""){
 		global $timedate;
-        fwrite($this->log, "\n-------------sendMails() starts------------\n");
-        fwrite($this->log, "\n--------------" . $timedate->now() . "-----------\n");
+        $this->logger->log('debug', "-------------sendMails() starts at " . $timedate->now() . "------------");
 		require_once('custom/include/SendEmail.php');
         $email = new SendEmail();
         $body = $this->getEmailBody($case_bean, $assigned_user, $assigned_user_manager, $call_back_time_range);
-        // fwrite($this->log, "\n" . "body: ".print_r($body,true));
+        // $this->logger->log('debug', "body: ".print_r($body,true));
         $subject = $this->getEmailSubForCallBackRemainder($case_bean);
         if(!empty($subject_arg)){
         	$subject .= $subject_arg;
         }
-        fwrite($this->log, "\n" . "Subject : " . $subject);
+        $this->logger->log('debug', "Subject : " . $subject);
         $to_email = array();
         $to_email = $this->getToMailArray($case_bean, $assigned_user, $assigned_user_manager);
         $cc_email = array('sumeet.thanekar@neogrowth.in','mangal.sarang@neogrowth.in','dipali.londhe@neogrowth.in');    
         // $cc_email = array('balayeswanth.b@neogrowth.in', 'gowthami.gk@neogrowth.in');
         if(!empty($to_email)){
-        	fwrite($this->log, "\n" . "Sending Mail from sendMails() ......" . "\n");
+        	$this->logger->log('debug', "Sending Mail from sendMails() ......" . "\n");
     	    $email_result = $email->send_email_to_user($subject, $body, $to_email, $cc_email, $case_bean,null,1);
-    	    fwrite($this->log, "\n" . "Sending Mail status :: " . $email_result);
+    	    $this->logger->log('debug', "Sending Mail status :: " . $email_result);
 
         }
         else{
-        	fwrite($this->log, "\n" . "To Mail address is empty :: assigned_user id - ", $assigned_user->id);
-        	fwrite($this->log, "\n" . "To Mail address is empty :: assigned_user_manager id - ", $assigned_user_manager->id);
+        	$this->logger->log('debug', "To Mail address is empty :: assigned_user id - ", $assigned_user->id);
+        	$this->logger->log('debug', "To Mail address is empty :: assigned_user_manager id - ", $assigned_user_manager->id);
         }
 	}
 
 	function getEmailBody($case_bean, $assigned_user, $assigned_user_manager, $call_back_time_range){
 		$assigned_user_name = $assigned_user->first_name . " " . $assigned_user->last_name;
 		$manager_name = $assigned_user_manager->first_name . " " . $assigned_user_manager->last_name;
-		fwrite($this->log, "\n" . "Sending Mail Assigned user name : " . $assigned_user_name);
-		fwrite($this->log, "\n" . "Sending Mail Manager user name : " . $manager_name);
+		$this->logger->log('debug', "Sending Mail Assigned user name : " . $assigned_user_name);
+		$this->logger->log('debug', "Sending Mail Manager user name : " . $manager_name);
         $url = (getenv('SCRM_SITE_URL')."/index.php?module=Cases&action=DetailView&record=".$case_bean->id);
 	    $table = '<style>
 	            table, th, td {
@@ -304,7 +310,7 @@ class CallBackFlow {
 	 *	@return email body
 	 */
 	function getEmailBodyForCallBackRemainderFromCall($call_bean){
-		fwrite($this->log, "\n" . "getEmailBodyForCallBackRemainderFromCall: call id :: " . $call_bean->id);
+		$this->logger->log('debug', "getEmailBodyForCallBackRemainderFromCall: call id :: " . $call_bean->id);
 		$case_id 	= $call_bean->parent_id;
 		$case_bean = $this->getCaseFromCall($call_bean);
 		return $this->getEmailBodyForCallBackRemainder($case_bean,$call_bean);
@@ -338,7 +344,7 @@ class CallBackFlow {
 	 */
 	function getEmailSubForCallBackRemainderFromCall($call_bean){
 		$case_id 	= $call_bean->parent_id;
-		fwrite($this->log, "\n" . "getEmailSubForCallBackRemainderFromCall: call id :: " . $call_bean->id);
+		$this->logger->log('debug', "getEmailSubForCallBackRemainderFromCall: call id :: " . $call_bean->id);
 		if(empty($case_id)){
 			return null;
 		}
@@ -368,7 +374,7 @@ class CallBackFlow {
 	 */
 	function getToMailForAcase($case_bean){
 		$to_email = array();
-		fwrite($this->log, "\n" . "getToMailForAcase: inside");
+		$this->logger->log('debug', "getToMailForAcase: inside");
 		if($case_bean->is_call_back_c != 1){
 			return $to_email;	
 		}
@@ -378,8 +384,8 @@ class CallBackFlow {
         	$assigned_user_manager = new User;
         	$assigned_user_manager->retrieve($assigned_user->reports_to_id);
         }
-        fwrite($this->log, "\n" . "assigned_user id : " . $assigned_user->id);
-        fwrite($this->log, "\n" . "assigned_user_manager id : " . $assigned_user_manager->id);
+        $this->logger->log('debug', "assigned_user id : " . $assigned_user->id);
+        $this->logger->log('debug', "assigned_user_manager id : " . $assigned_user_manager->id);
         return $this->getToMailArray($case_bean, $assigned_user, $assigned_user_manager);
 	}
 
@@ -391,7 +397,7 @@ class CallBackFlow {
 	function getToMailArray($case_bean, $assigned_user = null, $assigned_user_manager = null){
 		$to_email = array();
 		$env = getenv('SCRM_ENVIRONMENT');
-		fwrite($this->log, "\n" . "env: ". $env);
+		$this->logger->log('debug', "env: ". $env);
         if(in_array($env,array('prod'))){
 	        if(!empty($assigned_user->email1)){
 	        	array_push($to_email, $assigned_user->email1);
@@ -403,7 +409,7 @@ class CallBackFlow {
         else{
         	array_push($to_email, "balayeswanth.b@neogrowth.in");
         }
-        fwrite($this->log, "\n" . "to_email: ".print_r($to_email,true));
+        $this->logger->log('debug', "to_email: ".print_r($to_email,true));
         return $to_email;
 	}
 	/**
@@ -413,11 +419,11 @@ class CallBackFlow {
 	 *	@return actual user name
 	 */
 	function getKserverName($kserve_user){
-		fwrite($this->log, "\n" . "Fetching actual_name for $kserve_user->user_name");
+		$this->logger->log('debug', "Fetching actual_name for $kserve_user->user_name");
 		$actual_name = "";
 		global $db;
 		if(empty($kserve_user->user_name)){
-			fwrite($this->log, "\n" . "Empty kserve_user name. user_id :: $kserve_user->id");
+			$this->logger->log('debug', "Empty kserve_user name. user_id :: $kserve_user->id");
 			return $actual_name;
 		}
 		$query = "
@@ -430,7 +436,7 @@ class CallBackFlow {
 		";
 		$results = $db->query($query);
 		while($row = $db->fetchByAssoc($results)){
-			fwrite($this->log, "\n" . "actual_name for $kserve_user->user_name - " . $row['agent_name'] );
+			$this->logger->log('debug', "actual_name for $kserve_user->user_name - " . $row['agent_name'] );
 			$actual_name = $row['agent_name'];
 		}
 		return $actual_name;
@@ -442,21 +448,21 @@ class CallBackFlow {
 		$is_call_available = false;
 		$assigned_user_name = $assigned_user->first_name . " " . $assigned_user->last_name;
 		$manager_name = $assigned_user_manager->first_name . " " . $assigned_user_manager->last_name;
-		fwrite($this->log, "\n" . "Sending Mail Assigned user name : " . $assigned_user_name);
+		$this->logger->log('debug', "Sending Mail Assigned user name : " . $assigned_user_name);
 		if(preg_match("/kserve/", strtolower($assigned_user_name))){
 			$actual_name = $this->getKserverName($assigned_user);
 			if(!empty($actual_name)){
 				$assigned_user_name = $actual_name;
-				fwrite($this->log, "\n" . "Sending Mail Assigned user name (actual): " . $assigned_user_name);
+				$this->logger->log('debug', "Sending Mail Assigned user name (actual): " . $assigned_user_name);
 			}
 		}
-		fwrite($this->log, "\n" . "Sending Mail Manager user name : " . $manager_name);
+		$this->logger->log('debug', "Sending Mail Manager user name : " . $manager_name);
     	$date = strtotime("+1 day");
     	$date = date('Y-m-d', $date);
     	$start_date = $date . ' 00:00:00';
     	$end_date = $date . ' 23:59:59';
-    	fwrite($this->log, "\n" . "Calls start date : " . $start_date);
-    	fwrite($this->log, "\n" . "Calls end date : " . $end_date);
+    	$this->logger->log('debug', "Calls start date : " . $start_date);
+    	$this->logger->log('debug', "Calls end date : " . $end_date);
 	    $table = '<style>
 	            table, th, td {
 	                border: 1px solid black;
@@ -483,14 +489,14 @@ class CallBackFlow {
 	    	$bean = BeanFactory::getBean('Calls');
  			$query = "calls.deleted=0 and calls.parent_type = 'Cases' and calls.parent_id = '$case_bean->id'
  				and calls.date_start between '$start_date' and '$end_date'";
-			fwrite($this->log, "\n" . "query for fetching calls : " . $query);
+			$this->logger->log('debug', "query for fetching calls : " . $query);
  			$items = $bean->get_full_list('',$query);
  			foreach ($items as $call_bean) {
 		    	if(empty($call_bean->id)){
 		    		continue;
 		    	}
 		    	$is_call_available = true;
-				fwrite($this->log, "\n" . "call_bean id : " . $call_bean->id);
+				$this->logger->log('debug', "call_bean id : " . $call_bean->id);
 				$call_back_start_time = date("Y-m-d H:i:s", strtotime("+5 hours, +30 minutes",strtotime($call_bean->date_start)));
 			    $link = "<a target='_blank' href='".$url."'>Open</a>";
 		        $table .= "<tr>"
@@ -524,10 +530,10 @@ class CallBackFlow {
 	 *	@return bool status
 	 */
 	function sendCallBackRemaindersDump(){
-        fwrite($this->log, "\n-------------sendCallBackRemaindersDump() starts------------\n");
-        global $timedate;
-        fwrite($this->log, "\n--------------" . $timedate->now() . "-----------\n");
-		global $db;
+		global $timedate, $db;
+
+        $this->logger->log('debug', "-------------sendCallBackRemaindersDump() starts at " . $timedate->now() . "------------\n");
+		
 		$return_status = true;
 		$query = "
 			SELECT DISTINCT assigned_user_id FROM cases
@@ -537,7 +543,7 @@ class CallBackFlow {
 			AND deleted = 0
 		";
 		$results = $db->query($query);
-		fwrite($this->log, "\n" . "results : " . print_r($results, true));
+		$this->logger->log('debug', "results : " . print_r($results, true));
 		while ($row = $db->fetchByAssoc($results)) {
 			$assigned_user_id = $row['assigned_user_id'];
 			if(empty($row['assigned_user_id'])){
@@ -550,15 +556,15 @@ class CallBackFlow {
 				continue;
 			}
 			// print_r($assigned_user_id); echo "<br>";
-			fwrite($this->log, "\n" . "row assigned_user id : " . $row['assigned_user_id']);
+			$this->logger->log('debug', "row assigned_user id : " . $row['assigned_user_id']);
 			$bean = BeanFactory::getBean('Cases');
 			$query = "cases.deleted=0 and cases.state!='Closed' and cases.is_call_back_c = 1 and cases.assigned_user_id = '$assigned_user_id'";
 			$case_bean_list = $bean->get_full_list('',$query);
-	        fwrite($this->log, "\n" . "assigned_user id : " . $assigned_user->id);
+	        $this->logger->log('debug', "assigned_user id : " . $assigned_user->id);
 	        if(!empty($assigned_user->id)){
 	    		$assigned_user_manager = new User;
 	    		$assigned_user_manager->retrieve($assigned_user->reports_to_id);
-	    		fwrite($this->log, "\n" . "assigned_user_manager id : " . $assigned_user_manager->id);
+	    		$this->logger->log('debug', "assigned_user_manager id : " . $assigned_user_manager->id);
 	        }
 	        if(sizeof($case_bean_list)>0){
 	        	$body = $this->getEmailBodyListCases($case_bean_list, $assigned_user, $assigned_user_manager);
@@ -574,15 +580,15 @@ class CallBackFlow {
 		        if(!empty($body) && !empty($to_email)){
 					require_once('custom/include/SendEmail.php');
 					$email = new SendEmail();
-		        	fwrite($this->log, "\n" . "Sending Mail for remainders dump......" . "\n");
+		        	$this->logger->log('debug', "Sending Mail for remainders dump......" . "\n");
 		    	    $status = $email->send_email_to_user($subject, $body, $to_email, $cc_email,null,null,1);
-		    	    fwrite($this->log, "\n" . "Status of sending remainders dump mail :: " . $status);
+		    	    $this->logger->log('debug', "Status of sending remainders dump mail :: " . $status);
 		    	    $return_status = $return_status and $status;
 
 		        }
 		        else{
-		        	fwrite($this->log, "\n" . "To Mail address is empty :: assigned_user id - ", $assigned_user->id);
-		        	fwrite($this->log, "\n" . "To Mail address is empty :: assigned_user_manager id - ", $assigned_user_manager->id);
+		        	$this->logger->log('debug', "To Mail address is empty :: assigned_user id - ", $assigned_user->id);
+		        	$this->logger->log('debug', "To Mail address is empty :: assigned_user_manager id - ", $assigned_user_manager->id);
 		        }
 	        }
 		}
@@ -596,19 +602,19 @@ class CallBackFlow {
 	 */	
 	function getCallFromCase($case_bean){
 		$bean = BeanFactory::getBean('Calls');
-			$query = "calls.deleted=0 and calls.parent_type = 'Cases' and calls.parent_id = '$case_bean->id'
+		$query = "calls.deleted=0 and calls.parent_type = 'Cases' and calls.parent_id = '$case_bean->id'
 			and calls.date_start > NOW() - INTERVAL 330 MINUTE";
-		fwrite($this->log, "\n" . "query for fetching calls : " . $query);
-			$items = $bean->get_full_list('',$query);
-			if(!empty($items[0]->id)){
-				fwrite($this->log, "\n" . "Call ID  : " . $items[0]->id);
-				return $items[0];		
-			}
-			else{
-				$GLOBALS['log']->fatal("function::getCallFromCase. Case ID - $case_bean->id, Call bean are empty. 
-					query - $query");
-				return "";
-			}
+		$this->logger->log('debug', "query for fetching calls : " . $query);
+		$items = $bean->get_full_list('',$query);
+		if(!empty($items[0]->id)){
+			$this->logger->log('debug', "Call ID  : " . $items[0]->id);
+			return $items[0];		
+		}
+		else{
+			$GLOBALS['log']->fatal("function::getCallFromCase. Case ID - $case_bean->id, Call bean are empty. 
+				query - $query");
+			return "";
+		}
 	}
 
 	/**
@@ -628,18 +634,18 @@ class CallBackFlow {
 	 *	@return email subject
 	 */	
 	function getMerchantCaseCreationEmailBody($case_bean, $call_bean){
-		fwrite($this->log, "\n" . "function::getMerchantCaseCreationEmailBody()----Starts");
-		fwrite($this->log, "\n" . "case id: " . $case_bean->id);
+		$this->logger->log('debug', "function::getMerchantCaseCreationEmailBody()----Starts");
+		$this->logger->log('debug', "case id: " . $case_bean->id);
 		if(!empty($call_bean->id)){
 			$call_back_start_time_c = $call_bean->date_start;
-			fwrite($this->log, "\n" . "call_back_start_time_c: " . $call_back_start_time_c);
+			$this->logger->log('debug', "call_back_start_time_c: " . $call_back_start_time_c);
 			$call_back_date = date('d-m-Y', strtotime($call_back_start_time_c));
-			fwrite($this->log, "\n" . "call_back_date: " . $call_back_date);
+			$this->logger->log('debug', "call_back_date: " . $call_back_date);
 			$call_back_end_time_c = $call_bean->date_end;
-			fwrite($this->log, "\n" . "call_back_end_time_c: " . $call_back_end_time_c);
+			$this->logger->log('debug', "call_back_end_time_c: " . $call_back_end_time_c);
 			$call_back_time = date('h:i A', strtotime($call_back_start_time_c . " +330 minutes")) 
 				. ' - ' . date('h:i A', strtotime($call_back_end_time_c . " +330 minutes"));
-			fwrite($this->log, "\n" . "call_back_time: " . $call_back_time);
+			$this->logger->log('debug', "call_back_time: " . $call_back_time);
 		}
 		else{
 			$GLOBALS['log']->fatal("function::getMerchantCaseCreationEmailBody. Case ID - $case_bean->id, Call bean are empty");

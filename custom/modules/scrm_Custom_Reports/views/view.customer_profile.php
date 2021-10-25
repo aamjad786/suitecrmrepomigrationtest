@@ -37,9 +37,9 @@ class scrm_Custom_ReportsViewcustomer_profile extends ViewDetail {
     }
 
     function display(){	
-    	global $current_user;
+    	global $current_user, $sugar_config;
     	$roles = ACLRole::getUserRoleNames($current_user->id);
-    	$permitted_users = array("NG618","NG586","NG660");
+    	$permitted_users = $sugar_config['CR_cust_profile_permitted_user'];
     	if (!$current_user->is_admin  && !(in_array(strtoupper($current_user->user_name), $permitted_users)) && !(in_array('Customer support executive', $roles))) {
     		die("<p style='color:red'>You cannot access this page. Please contact admin</p>");
     	}

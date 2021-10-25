@@ -46,7 +46,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
  * Contributor(s): ______________________________________..
  ********************************************************************************/
 
-global $mod_strings,$app_strings,$current_user;
+global $mod_strings,$app_strings,$current_user, $sugar_config;
 
 $module_menu=array();
 if(ACLController::checkAccess('Cases', 'edit', true))
@@ -60,7 +60,7 @@ $module_menu [] = Array("index.php?module=Cases&action=Social_impact_score", $mo
 $module_menu [] = Array("index.php?module=Cases&action=agent_attendance_upload", $mod_strings['LNK_AGENT_ATTENDANCE_UPLOAD'],"Agent Attendance Upload");
 
 $isAdmin            = $current_user->is_admin;
-$user =['ng1647','ng1273','ng619','ng478','ng866','ng1273','ng1274','ng2054','ng2064']; 
+$user = $sugar_config['maker_checker_menu_permitted_user']; 
 if(in_array(strtolower($current_user->user_name),$user) || $isAdmin==1){
 
 	$module_menu [] = Array("index.php?module=Cases&action=maker_checker", $mod_strings['LNK_MAKER_CHECKER'],"Maker & Checker Dashboard");

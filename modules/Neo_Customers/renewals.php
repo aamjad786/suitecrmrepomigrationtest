@@ -24,9 +24,9 @@ require_once 'excel_reader2.php';
         }   
         return $results;
     }
-global $current_user;
+global $current_user, $sugar_config;
 $roles = ACLRole::getUserRoleNames($current_user->id);
-$permitted_users = array("NG618","NG586","NG660","NG894");
+$permitted_users = $sugar_config['renewals_permitted_user'];
 if (!$current_user->is_admin  && !(in_array(strtoupper($current_user->user_name), $permitted_users)) && !isRenewalsUser($roles)) {
     die("<p style='color:red'>You cannot access this page. Please contact admin</p>");
 }

@@ -1,7 +1,10 @@
 <?php
 require_once('include/entryPoint.php');
-
+require_once 'custom/CustomLogger/CustomLogger.php';
 class Escalation_Functions{
+    function __construct() {
+        $this->logger = new CustomLogger('CasesEscalationMail');
+    }
 	function UpdateNameAndEmail(&$bean, $event, $arguments){
         //UPDATE ESCALATION LEVEL 1 USER ONLY IF PROVIDED. IF NOT IT WILL BE FETCHED DYNAMICALLY FROM SPOC/ASSIGNED USER'S REPORTING MANAGER
         if(!empty($bean->scrm_cases_usersusers_ida)){
@@ -20,48 +23,45 @@ class Escalation_Functions{
     function sendUpdateSms($message){
         require_once('custom/include/SendSMS.php');
         $env = getenv('SCRM_ENVIRONMENT');
-        $myfile = fopen("Logs/CasesEscalationMail.log", "a");
         $sms = new SendSMS();
         if(in_array($env,array('dev','local'))){
-            fwrite($myfile, "\nSending Notification sms to  ". 'Balayeswanth');
-            $sms->send_sms_to_user($tag_name="Cust_CRM_1","7373267373", $message);
-            fwrite($myfile, "\nSms sent\n");
+            $this->logger->log('debug', "Sending Notification sms to  ". $sugar_config['esc_mat_non_prod_sms_name']);
+            $sms->send_sms_to_user($tag_name="Cust_CRM_1",$sugar_config['esc_mat_non_prod_sms_no'], $message);
+            $this->logger->log('debug', "Sms sent\n");
             return;
         }
-        fwrite($myfile, "\nSending Notification sms to  ". 'NG1647 Manisha Agarwal 9820018638');
-        fwrite($myfile, "\nSending Notification sms to  ". 'NG637 Sumeet Thanekar 7666855666');
-        $sms->send_sms_to_user($tag_name="Cust_CRM_1","9820018638", $message);
-        $sms->send_sms_to_user($tag_name="Cust_CRM_1","7666855666", $message);
-        fwrite($myfile, "\nSms sent");
+        $this->logger->log('debug', "Sending Notification sms to  ". $sugar_config['esc_mat_prod_sms_name1']);
+        $this->logger->log('debug', "Sending Notification sms to  ". $sugar_config['esc_mat_prod_sms_name2']);
+        $sms->send_sms_to_user($tag_name="Cust_CRM_1",$sugar_config['esc_mat_prod_sms_no1'], $message);
+        $sms->send_sms_to_user($tag_name="Cust_CRM_1",$sugar_config['esc_mat_prod_sms_no2'], $message);
+        $this->logger->log('debug', "Sms sent");
     }
 
     function sendUpdateEmail($body){
     	require_once('custom/include/SendEmail.php');
-    	$myfile = fopen("Logs/CasesEscalationMail.log", "a");
         //Send email to the service manager.
         $emailId = $userData->email1;
         $subject = "Case Escalation Matrix Modified";
         $env = getenv('SCRM_ENVIRONMENT');
         if(in_array($env,array('prod'))){
-            $to = array("manisha.agarwal@neogrowth.in","sumeet.thanekar@neogrowth.in");
-            fwrite($myfile, "\nSending Notification mail to  ". "manisha.agarwal@neogrowth.in, sumeet.thanekar@neogrowth.in");
+            $to = $sugar_config['esc_mat_prod_emails'];
+            $this->logger->log('debug', "Sending Notification mail to  ". $sugar_config['esc_mat_prod_emails_names']);
         }
         else{
-            fwrite($myfile, "\nSending Notification mail to  ". 'Balayeswanth');
-            $to = array("crmteam@neogrowth.in"); 
+            $this->logger->log('debug', "Sending Notification mail to  ". $sugar_config['esc_mat_non_prod_email_name']);
+            $to = array($sugar_config['esc_mat_non_prod_email']); 
         }
         $email = new SendEmail();
         $email->send_email_to_user($subject, $body, $to);
-        fwrite($myfile, "\nEmail sent");
+        $this->logger->log('debug', "Email sent");
     }
 
 	function sendUpdateNotification(&$bean, $event, $arguments){
 
 		global $sugar_config;
 		global $timedate;
-		$myfile = fopen("Logs/CasesEscalationMail.log", "a");
-		fwrite($myfile, "\n----------------- Logic hook case escalation :: sendUpdateNotification() starts -----------");
-		fwrite($myfile, "\ntime :: " . $timedate->now());
+		$this->logger->log('debug', "----------------- Logic hook case escalation :: sendUpdateNotification() starts -----------");
+		$this->logger->log('debug', "time :: " . $timedate->now());
         $parsedSiteUrl = parse_url($sugar_config['site_url']);
         $host = $parsedSiteUrl['host'];
         if (!isset($parsedSiteUrl['port'])) {
@@ -72,10 +72,10 @@ class Escalation_Functions{
         $cleanUrl = "{$parsedSiteUrl['scheme']}://{$host}{$port}{$path}";
         $url = $cleanUrl . "/index.php?module={$bean->module_dir}&action=DetailView&record={$bean->id}";
         $message = "Changes Have Been Made in Escalation Matrix for Issue Type : $bean->issue_type Sub Issue Type : $bean->sub_issue_type. Check this at " . $url ."<br><hr>";   
-        fwrite($myfile, "\nNotification Message : ".$message);
+        $this->logger->log('debug', "Notification Message : ".$message);
         $this->sendUpdateSms($message);
         $this->sendUpdateEmail($message);
-		fwrite($myfile, "\n----------------- Logic hook case escalation :: sendUpdateNotification() ends -----------");
+		$this->logger->log('debug', "----------------- Logic hook case escalation :: sendUpdateNotification() ends -----------");
 
 
 	}

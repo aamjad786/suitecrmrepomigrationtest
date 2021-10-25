@@ -1,11 +1,14 @@
 <?php
 
 require_once('include/entryPoint.php');
+require_once 'custom/CustomLogger/CustomLogger.php';
 
 class Cases_functions{
     private $log;
     function __construct() {
         $this->log = fopen("Logs/Cases_functions.log", "a");
+        $this->logger_case_assign_role = new CustomLogger('CaseAssignmentExcecutiveRole');
+        $this->logger_case_assigned_to_admin = new CustomLogger('CasesAssignedToAdmin');
     }
     function __destruct() {
         fclose($this->log);
@@ -40,10 +43,10 @@ class Cases_functions{
 		$case_bean->save();
 	}
         
-        function casesAuthentication() {
-        global $current_user;
+    function casesAuthentication() {
+        global $current_user, $sugar_config;
         $roles = ACLRole::getUserRoleNames($current_user->id);
-        $permitted_users = array("NG2064","NG2054","NG377", "NG855", "NG950", "NG1007", "NG660", "NG894", "NG690", "NG316", "Gaurav.Bavkar", "NG478", "NG417", "NG828", "Anuraj.Sharma", "NG866", "Karthik.Chakravarthy", "kserve_11", "NG1190", "Rushikesh.Gawde", "Faisel.Waghu", "Faisal.Ansari","Dimple.Boricha");
+        $permitted_users = $sugar_config['casesAuthentication_permitted_user'];
         if ($current_user->is_admin || in_array($current_user->user_name, $permitted_users) || $this->isCustomerManagerUser($roles) || in_array("Admin", $roles)) {
             return true;
         } else {
@@ -80,15 +83,15 @@ class Cases_functions{
             AND u.deleted = 0
     	";
     	$results = $db->query($query);
-    	fwrite($this->log, "\n" . "Role name : " . $role_name);
-        fwrite($this->log, "\n" . "Fetched Results from DB : " . print_r($results,true));
+        $this->logger_case_assign_role->log('debug', "Role name : " . $role_name);
+        $this->logger_case_assign_role->log('debug', "Fetched Results from DB : " . print_r($results,true));
     	$user_id_list = array();
     	while ($row = $db->fetchByAssoc($results)) {
     		if(!empty($row['id'])){
     			array_push($user_id_list, $row['id']);
     		}
     	}
-    	fwrite($this->log, "\n" . "Fetched Users - Array Count : " . sizeof($user_id_list));
+    	$this->logger_case_assign_role->log('debug', "Fetched Users - Array Count : " . sizeof($user_id_list));
     	return $user_id_list;
     }
 
@@ -106,32 +109,35 @@ class Cases_functions{
     *		If no abscense is found, Update the role with all users found in Default 'Customer support executive Assignment'
     */
     function updateCaseAssignmentExcecutiveRole(){
-        fwrite($this->log, "\n-------------Scheduler starts---------------\n");
-        fwrite($this->log, "\n-------------updateCaseAssignmentExcecutiveRole::handleFormUpload start ".date('Y-m-d H:i:s')."---------------\n");
-        global $db;
+        
+        $this->logger_case_assign_role->log('debug', "--- START In UpdateCaseAssignmentExcecutiveRole in  ScheduledTasks at". date('Y-m-d H:i:s')."------");
+
+        global $db, $sugar_config;
         $return_status = true;
     	$default_user_id_list = array();
-    	$default_user_id_list = $this->getUserIdForThisRole('Customer support executive Assignment');
+    	$default_user_id_list = $this->getUserIdForThisRole($sugar_config['Customer_support_executive_Assignment']);
     	$default_user_id_list_str = $this->getQueryList($default_user_id_list);
 
     	if(empty($default_user_id_list_str)){
-    		fwrite($this->log, "\n" . "Fetched Users count is zero. Ending the job. ");
-            fwrite($this->log, "\n-------------Scheduler ends---------------\n");
+    		$this->logger_case_assign_role->log('debug', "Fetched Users count is zero. Ending the job. ");
+            $this->logger_case_assign_role->log('debug', "-------------Scheduler ends---------------");
     		return false;
     	}
     	$date = date('Y-m-d');
-        fwrite($this->log, "\n" . "check leave for date : " . $date);
-    	$query = "
+        $query = "
 	    	SELECT id, user_id, attendance_date, attendance_status, date_created, date_modified FROM cases_agents_attendance
 			WHERE attendance_date = '$date'
 			AND user_id in ($default_user_id_list_str)
-			ORDER BY date_modified DESC
-		";
-        fwrite($this->log, "\n" . "check users on leave query: " . $query);
+			ORDER BY date_modified DESC";
+
+        $this->logger_case_assign_role->log('debug', "check users on leave query: " . $query);
 		$results = $db->query($query);
+
 		//multiple values for a user on a same day can be found because of re upload. So to handle that we use visited array.
 		$visited_users_id = array();
 		$leave_users_id = array();
+
+        //remove users who are on leave that day.
 		while ($row = $db->fetchByAssoc($results)) {
 			if(!in_array($row['user_id'], $visited_users_id)){
 				array_push($visited_users_id, $row['user_id']);
@@ -140,50 +146,53 @@ class Cases_functions{
 				}
 			}
 		}
-		//remove users who are on leave that day.
-        fwrite($this->log, "\n" . "Default User ID list: ".print_r($default_user_id_list,true));
-        fwrite($this->log, "\n" . "On leave User ID list: ".print_r($leave_users_id,true));
+        
 		$cases_to_be_assigned_to = array_diff($default_user_id_list, $leave_users_id);
-        fwrite($this->log, "\n" . "User ID list for cases to be assigned : ".print_r($cases_to_be_assigned_to,true));
-        $role_id = $this->getRoleIdFromName("Customer support executive Assignment Dynamic");
+
+        $this->logger_case_assign_role->log('debug', "Default User ID list: ".print_r($default_user_id_list,true));
+        $this->logger_case_assign_role->log('debug', "On leave User ID list: ".print_r($leave_users_id,true));
+        $this->logger_case_assign_role->log('debug', "User ID list for cases to be assigned : ".print_r($cases_to_be_assigned_to,true));
+
+        $role_id = $this->getRoleIdFromName($sugar_config['Customer_support_executive_Assignment_Dynamic']);
         $return_status = $return_status and $this->removeUsersAssignedToRole($role_id);
         $return_status = $return_status and $this->addUsersToRole($cases_to_be_assigned_to, $role_id);
-        fwrite($this->log, "\n-------------Scheduler ends---------------\n");
+
+        $this->logger_case_assign_role->log('debug', "-------------Scheduler ends---------------");
         return $return_status;
     }
 
     function addUsersToRole($cases_to_be_assigned_to, $role_id){
         $return_status = true;
         foreach ($cases_to_be_assigned_to as $user_id) {
-            fwrite($this->log, "\n" . "User ID : " . $user_id);
+            $this->logger_case_assign_role->log('debug', "User ID : " . $user_id);
             $bean = BeanFactory::getBean('Users',$user_id);
-            fwrite($this->log, "\n" . "User Name : " . $bean->name);
+            $this->logger_case_assign_role->log('debug', "User Name : " . $bean->name);
             $bean->load_relationship('aclroles');
             $status = $bean->aclroles->add($role_id);    
-            fwrite($this->log, "\n" . "status after adding role : " . $status);   
+            $this->logger_case_assign_role->log('debug', "status after adding role : " . $status);   
             $return_status = $return_status and $status;
         }
-        fwrite($this->log, "\n" . "Final return status after adding role : " . $return_status); 
+        $this->logger_case_assign_role->log('debug', "Final return status after adding role : " . $return_status); 
         return $return_status;
     }
 
 
     function removeUsersAssignedToRole($role_id){
-        fwrite($this->log, "\n" . "Remove all users assigned to this Role id : " . $role_id);
+        $this->logger_case_assign_role->log('debug', "Remove all users assigned to this Role id : " . $role_id);
         require_once('modules/ACLRoles/ACLRole.php');
         $role = new ACLRole();
         $role->retrieve($role_id);
-        fwrite($this->log, "\n" . "Role Name : " . $role->name);
+        $this->logger_case_assign_role->log('debug', "Role Name : " . $role->name);
         $role_users = $role->get_linked_beans( 'users','User');
         $return_status = true;
         foreach ($role_users as $user) {
-            fwrite($this->log, "\n" . "User ID : " . $user->id);
+            $this->logger_case_assign_role->log('debug', "User ID : " . $user->id);
             $user->load_relationship('aclroles');
             $status = $user->aclroles->delete($user, $role_id);
-            fwrite($this->log, "\n" . "status after deleting role : " . $status);
+            $this->logger_case_assign_role->log('debug', "status after deleting role : " . $status);
             $return_status = $return_status and $status;
         }
-        fwrite($this->log, "\n" . "Final return status after deleting role : " . $return_status); 
+        $this->logger_case_assign_role->log('debug', "Final return status after deleting role : " . $return_status); 
         return $return_status;
     }
 
@@ -194,7 +203,7 @@ class Cases_functions{
             SELECT id FROM acl_roles
             WHERE name = '$role_name'
         ";
-        fwrite($this->log, "\n" . "Role ID fetch query : " . $query);
+        $this->logger_case_assign_role->log('debug', "Role ID fetch query : " . $query);
         $role_id = "";
         $results = $db->query($query);
         while ($row = $db->fetchByAssoc($results)) {
@@ -202,7 +211,7 @@ class Cases_functions{
                 $role_id = $row['id'];
             }
         }
-        fwrite($this->log, "\n" . "Fetched Role ID : " . $role_id);
+        $this->logger_case_assign_role->log('debug', "Fetched Role ID : " . $role_id);
         return $role_id;
     }
     /**
@@ -217,10 +226,11 @@ class Cases_functions{
         $api_response_code = "";
         $api_key = getenv("SCRM_OZONTEL_API_KEY");
         $url = "http://api1.cloudagent.in/cloudAgentRestAPI/index.php/AddCampaignBulkData/addBulkData/format/json";
-        $log = fopen("Logs/AutoScheduleCallsUpload.log", "a");
-        fwrite($log, "\n-------------uploadOzontelAutoScheduleCalls() starts------------\n");
-        fwrite($log, "\n--------------" . $timedate->now() . "-----------\n");
-        global $db;
+
+        $logger = new CustomLogger('AutoScheduleCallsUpload');
+	    $logger->log('debug', "--- START In uploadOzontelAutoScheduleCalls at ".date('Y-m-d h:i:s')."---");
+
+        global $db, $sugar_config;
         //inserted time to sent is IST, now is GMT
         $fetch_query = "
             SELECT id, type, request_body
@@ -233,31 +243,30 @@ class Cases_functions{
         // echo "$fetch_query<br>";
         $result = $db->query($fetch_query);
         $id = "";
-        $type = "";
         $bulkData = "";
         $request_body = array();
         while ($row = $db->fetchByAssoc($result)) {
             $id = $row['id'];
             $type = $row['type'];
             $bulkData = $row['request_body'];
-             print_r(json_decode($row['request_body'], true)); echo "<br><hr>";
+            print_r(json_decode($row['request_body'], true)); echo "<br><hr>";
         }
         if(empty($id)){
-            fwrite($log, "\nNo reports to send to ozontel, Ending the job");
+            $logger->log('debug', "No reports to send to ozontel, Ending the job");
             return true;    
         }
         $bulkData_array = array();
         $bulkData_array = unserialize(base64_decode($bulkData));
         // print_r($bulkData_array);echo "<br><hr>";
-        fwrite($log, "\nFetched ID : $id");
+        $logger->log('debug', "Fetched ID : $id");
         $request_body["api_key"] = $api_key;
-        $request_body["campaign_name"] = "Outbound_912262587414";
+        $request_body["campaign_name"] = $sugar_config['ScheduleCalls_campaign_name'];
         $request_body["bulkData"] = json_encode($bulkData_array);
         // print_r($request_body); echo "<br>";
         $request_body_http_query = http_build_query($request_body);
         // print_r($request_body_http_query); echo "<br>";
         if(empty($request_body_http_query)){
-            fwrite($log, "\nerror while forming request_body_http_query : id=> $id");
+            $logger->log('debug', "error while forming request_body_http_query : id=> $id");
             return false;
         }
         // die();
@@ -269,31 +278,30 @@ class Cases_functions{
         $api_response_code = "";
         if(!empty($api_response_arr["message"]["Status"]) 
             && $api_response_arr["message"]["Status"] == "SuccessFully Updated"){
-            fwrite($log, "API call success"); 
+                $logger->log('debug', "API call success"); 
             $api_response_code = 200;
         }
         else{
-            fwrite($log, "API call failed recieved failure message");   
-            fwrite($log, "\api_response : $api_response");
+            $logger->log('debug', "API call failed recieved failure message");   
+            $logger->log('debug', "api_response : $api_response");
         }
         // echo "Response :: ";print_r($api_response);echo "<br>";
         // echo "Response array :: ";print_r($arr);echo "<br>";
         $update_query = "
-        UPDATE auto_schedule_calls
-        SET is_sent = 1,
-            response = '$api_response',
-            response_code = '$api_response_code',
-            date_modified = NOW()
-        WHERE id = '$id'
-        ";
+            UPDATE auto_schedule_calls
+            SET is_sent = 1,
+                response = '$api_response',
+                response_code = '$api_response_code',
+                date_modified = NOW()
+            WHERE id = '$id'
+            ";
         $update_result = $db->query($update_query);
         if($update_result){
-            fwrite($log, "API response update to db: Success");
+            $logger->log('debug', "API response update to db: Success - Query : $update_query");
         }
         else{
-            fwrite($log, "API response update to db: Failed");
+            $logger->log('debug', "API response update to db: Failed - Query : $update_query");
         }
-        fclose($log);
         return $response;        
     }
     /**
@@ -302,35 +310,33 @@ class Cases_functions{
      */
     function notificationForCasesAssignedToAdmin(){
         $response = true;
-        global $timedate;
-        fwrite($this->log, "\n-------------notificationForCasesAssignedToAdmin() starts------------\n");
-        fwrite($this->log, "\n--------------" . $timedate->now() . "-----------\n");
-        global $db;
+        global $timedate, $db, $sugar_config;
+        $this->logger_case_assigned_to_admin->log('debug', "-----Start in notificationForCasesAssignedToAdmin starts at " . $timedate->now() . "-----");
+
         $query = "
             SELECT COUNT(*) as 'count'
             FROM cases c
             WHERE state != 'Closed'
-            AND assigned_user_id = '1'
-        ";
+            AND assigned_user_id = '1'";
+
         $results = $db->query($query);
         $count = 0;
         while ($row = $db->fetchByAssoc($results)) {
            $count = $row['count'];
         }
         if(empty($count)){
-            fwrite($this->log, "\nNo cases assigned to the admin right now");
+            $this->logger_case_assigned_to_admin->log('debug', "No cases assigned to the admin right now");
             return $response;
         }
-        fwrite($this->log, "\nNumber of cases assigned to the admin right now : $count");
+        $this->logger_case_assigned_to_admin->log('debug', "Number of cases assigned to the admin right now : $count");
         $to_email = array();
         $to_email_str = getenv("SCRM_CASE_EXCESS_ASSIGNMENT_NOTIFICATION");
         $to_email = explode(",", $to_email_str);
-        fwrite($this->log, "\nmail sent to " . print_r($to_email,true));
+        fwrite($this->log, "\n mail sent to " . print_r($to_email,true));
         if(empty($to_email_str) || empty($to_email)){
-            array_push($to_email, "mangal.sarang@neogrowth.in");
-            array_push($to_email, "dipali.londhe@neogrowth.in");
+            array_push($to_email, $sugar_config['ng_mangal_sarang']);
+            array_push($to_email, $sugar_config['ng_dipali_londhe']);
             // array_push($to_email, "balayeswanth.b@neogrowth.in");
-            // Mangal Sarang <mangal.sarang@neogrowth.in>; Dipali Londhe <dipali.londhe@neogrowth.in>
         }
         require_once('custom/include/SendEmail.php');
         $email = new SendEmail();
@@ -340,7 +346,14 @@ class Cases_functions{
         $body = "Hi Team, <br> No. of cases assigned to Admin at $now is $count <br>
         <br/>You may review this at:<br/><a href='".$url."'>".$url."</a>
         <hr>";
-        $email_response = $email->send_email_to_user($sub,$body,$to_email,null,null,null,1);
+        $email_response = $email->send_email_to_user(   $sub,
+                                                        $body,
+                                                        $to_email,
+                                                        null,
+                                                        null,
+                                                        null,
+                                                        1
+                                                    );
         if(empty($email_response)){
             $response = false;
         }
