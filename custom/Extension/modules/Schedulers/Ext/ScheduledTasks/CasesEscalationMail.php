@@ -94,8 +94,9 @@ function CasesEscalationMail(){
                     $level = $email_count-1;
                 }
                 // echo "new level is ".$level;
-                $to = array($ccemails[$level]);
-                $to_name = $ccnames[$level];
+                $name = $user->first_name . ' ' . $user->last_name;
+                $to = array($ccemails[$level], $user->email1); // user email as per level and assigned user
+                $to_name = $ccnames[$level] ." and $name";
                 unset($ccemails[$level]);
                 unset($ccnames[$level]);
                 $cc = $ccemails;
@@ -114,7 +115,7 @@ function CasesEscalationMail(){
                         $results[] = $row;
                     }
                     $url = (getenv('SCRM_SITE_URL')."/index.php?module=Cases&action=DetailView&record=".$item->id);
-                    $user = getUser($item->assigned_user_id);
+                    // $user = getUser($item->assigned_user_id); // Pallavi not required
                     $case_category = $GLOBALS['app_list_strings']['case_category_c_list'][$item->case_category_c];
                     $case_subcategory = $GLOBALS['app_list_strings']['case_subcategory_c_list'][$item->case_subcategory_c];
                     $case_status = $GLOBALS['app_list_strings']['case_state_dom'][$item->state];
@@ -237,14 +238,13 @@ function CasesEscalationMail(){
                 echo "Email will be sent to: " ; print_r($to);echo "<br>";
                 print_r($cc);
                 echo "<br><br>";
-                $email->send_email_to_user($sub,$desc,$to, $cc,$item);
+                $email->send_email_to_user($sub,$desc,$to, $cc,$item); 
 
                 // Pallavi : Send sms logic added
                 $cc = getCCListFromTable($item,$user,true); // For SMS
                 $ccmobiles = $cc[0];
                 //$ccnames = $cc[1];
                 $to = $ccmobiles[$level];
-                //$to_name = $ccnames[$level];
                 require_once 'custom/include/SendSMS.php';
                 $send = new SendSMS();
                 $send->send_sms_to_user($tag_name="Cust_CRM_ESC_SMS", 
@@ -252,7 +252,12 @@ function CasesEscalationMail(){
                                         $sub,
                                         $item
                                     );
-
+                if(isset($user->phone_mobile))
+                    $send->send_sms_to_user($tag_name="Cust_CRM_ESC_SMS", 
+                                            $user->phone_mobile,
+                                            $sub,
+                                            $item
+                                        );
                 $logger->log('debug', "------------------function::CasesEscalationMail() Ends--------------");
             }
         }
