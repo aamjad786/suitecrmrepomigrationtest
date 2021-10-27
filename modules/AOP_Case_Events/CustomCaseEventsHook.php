@@ -154,8 +154,8 @@ class CustomCaseEventsHook {
             'display_name' => 'Status'
         ),
         array(
-            'field' => 'description', 
-            'display_field' => 'description', 
+            'field' => 'name', 
+            'display_field' => 'name', 
             'display_name' => 'Subject'
         ),
         array(
