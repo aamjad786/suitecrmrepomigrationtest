@@ -216,7 +216,7 @@ function constructTable($row_col_values, $onboardingData){
 function sendCallReminderToServiceManager() {
     $userBean = new User();
     $emailObj = new Email();
-    global $db;
+    global $db, $sugar_config;
 
     $todaysData = date("Y-m-d");
     $todaysData = '2018-04-11';
@@ -274,7 +274,7 @@ function sendCallReminderToServiceManager() {
                 $mail->Subject = $subject;
                 $mail->Body = $body;
                 $mail->prepForOutbound();
-                $mail->AddAddress('gowthami.gk@neogrowth.in');
+                $mail->AddAddress($sugar_config['ng_gowthami_gk']);
                 @$mail->Send();
                 die();
             }

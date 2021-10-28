@@ -167,8 +167,8 @@ class CallBackFlow {
 													);
             $to = $case_bean->merchant_contact_number_c;
         } else{
-            $email_result = $email->send_email_to_user($sub,$body,array('balayeswanth.b@neogrowth.in'),null,$case_bean,array(),1);
-            $to = "9743473424";
+            $email_result = $email->send_email_to_user($sub,$body,array($sugar_config['non_prod_merchant_email']),null,$case_bean,array(),1);
+            $to = $sugar_config['not_prod_netcore_number'];
             $reponse = $sms->send_sms_to_user($tag_name="Cust_CRM_10", $to, $message, $case_bean);
         }
         $this->logger->log('debug', "Sending Mail status :: " . $email_result);
@@ -213,7 +213,7 @@ class CallBackFlow {
 	 *	@param case_bean, call_back_time_range, assigned_user, assigned_user_manager
 	 */
 	function sendMails($case_bean,$call_back_time_range,$assigned_user=null,$assigned_user_manager=null,$subject_arg=""){
-		global $timedate;
+		global $timedate, $sugar_config;
         $this->logger->log('debug', "-------------sendMails() starts at " . $timedate->now() . "------------");
 		require_once('custom/include/SendEmail.php');
         $email = new SendEmail();
@@ -226,7 +226,7 @@ class CallBackFlow {
         $this->logger->log('debug', "Subject : " . $subject);
         $to_email = array();
         $to_email = $this->getToMailArray($case_bean, $assigned_user, $assigned_user_manager);
-        $cc_email = array('sumeet.thanekar@neogrowth.in','mangal.sarang@neogrowth.in','dipali.londhe@neogrowth.in');    
+        $cc_email = $sugar_config['callbackflow_cc_emails'];    
         // $cc_email = array('balayeswanth.b@neogrowth.in', 'gowthami.gk@neogrowth.in');
         if(!empty($to_email)){
         	$this->logger->log('debug', "Sending Mail from sendMails() ......" . "\n");
@@ -395,6 +395,7 @@ class CallBackFlow {
 	 *	@return email to array
 	 */
 	function getToMailArray($case_bean, $assigned_user = null, $assigned_user_manager = null){
+		global $sugar_config;
 		$to_email = array();
 		$env = getenv('SCRM_ENVIRONMENT');
 		$this->logger->log('debug', "env: ". $env);
@@ -407,7 +408,7 @@ class CallBackFlow {
 	        }
         }
         else{
-        	array_push($to_email, "balayeswanth.b@neogrowth.in");
+        	array_push($to_email, $sugar_config['non_prod_merchant_email']);
         }
         $this->logger->log('debug', "to_email: ".print_r($to_email,true));
         return $to_email;

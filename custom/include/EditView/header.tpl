@@ -82,7 +82,7 @@
 
 <input type="hidden" value='{$CURRENT_USER_NAME}' id='current_user_name'>
 <input type="hidden" value='{$CURRENT_USER}' id='current_user_full_name'>
-<input type="hidden" value='{$CURRENT_USER_DEPARTMENT}' id='current_user_department'>
+<input type="hidden" value='{$CURRENT_USER_DEPARTMENT}' id='current_user_department_c'>
 
 {{if empty($form.button_location) || $form.button_location == 'top'}}
 {{if !empty($form) && !empty($form.buttons)}}

@@ -16,8 +16,9 @@ $hook_array['before_save'][] = Array(3, 'Fetch Processor Name from AS API', 'cus
 $hook_array['before_save'][] = Array(3, 'Check weather to auto classify email or not', 'custom/modules/Cases/data_sync.php', 'DataSync', 'classify'); //added
 $hook_array['before_save'][] = Array(4, 'Assign date attained', 'custom/modules/Cases/data_sync.php', 'DataSync', 'assignDateAction'); //added
 
-$hook_array['before_save'][] = Array(10, 'Save case updates', 'custom/modules/AOP_Case_Updates/CustomCaseUpdatesHook.php','CustomCaseUpdatesHook', 'saveUpdate'); 
-$hook_array['before_save'][] = Array(11, 'Save case events', 'modules/AOP_Case_Events/CaseEventsHook.php','CaseEventsHook', 'saveUpdate'); 
+$hook_array['before_save'][] = Array(10, 'Save case updates', 'custom/modules/AOP_Case_Updates/CustomCaseUpdatesHook.php','CustomCaseUpdatesHook', 'saveUpdate'); // modified
+//$hook_array['before_save'][] = Array(11, 'Save case events', 'modules/AOP_Case_Events/CaseEventsHook.php','CaseEventsHook', 'saveUpdate');
+$hook_array['before_save'][] = Array(11, 'Save custom case events', 'modules/AOP_Case_Events/CustomCaseEventsHook.php','CustomCaseEventsHook', 'saveUpdate'); 
 $hook_array['before_save'][] = Array(12, 'Case closure prep', 'custom/modules/AOP_Case_Updates/CustomCaseUpdatesHook.php','CustomCaseUpdatesHook', 'closureNotifyPrep'); 
 $hook_array['before_save'][] = Array(77, 'updateGeocodeInfo', 'modules/Cases/CasesJjwg_MapsLogicHook.php','CasesJjwg_MapsLogicHook', 'updateGeocodeInfo'); 
 

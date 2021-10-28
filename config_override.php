@@ -102,11 +102,15 @@ $sugar_config['category_change_notification_emails'] = array('manisha.agarwal@ne
 // sendNotificationToDevs
 $sugar_config['DEVs_emails'] = array('balayeswanth.b@neogrowth.in','nikhil.kumar@neogrowth.in','gowthami.gk@neogrowth.in');
 
+// AOPInboundEmail arrayOfMineFieldElements and listOfEmailsListedUnderMineField
+$sugar_config['arrayOfMineFieldElements'] = array('CXO', 'Legal', 'Media', 'Newspaper', 'Press', 'Court', 'lawyers', 'Grievance Redressal Officer', 'Ombudsman');
+$sugar_config['listOfEmailsListedUnderMineField'] = array('pk@khaitan.in', 'dk@khaitan.in', 'ravi.kumar@neogrowth.in', 'sumit.mukherjee@neogrowth.in', 'arun.nayyar@neogrowth.in', 'vivek.r@neogrowth.in', 'rajan.pundhir@neogrowth.in', 'sorabh.malhotra@neogrowth.in', 'sachin.bawari@neogrowth.in', 'gkshettigar@neogrowth.in', 'yogesh.nakhwa@neogrowth.in', 'tanushri.yewale@neogrowth.in', 'sanjay.kapse@neogrowth.in');
+
 // notificationForCasesAssignedToAdmin
 $sugar_config['ng_mangal_sarang'] = 'mangal.sarang@neogrowth.in';
 $sugar_config['ng_dipali_londhe'] = 'dipali.londhe@neogrowth.in';
 
-// InterimResponseToCustomer, SendingCallbackReminderEmail
+// InterimResponseToCustomer, SendingCallbackReminderEmail, sendCallReminderToServiceManager in serviceManagerAdmin and onboarding 
 $sugar_config['ng_gowthami_gk'] = 'gowthami.gk@neogrowth.in';
 
 // custom\modules\scrm_Custom_Reports\views\view.assign_user.php - SendSuccessEmail
@@ -126,7 +130,17 @@ $sugar_config['esc_mat_prod_sms_name2'] = 'NG637 Sumeet Thanekar 7666855666';
 $sugar_config['esc_mat_prod_sms_no2'] = '7666855666';
 
 $sugar_config['esc_mat_prod_emails'] = array("manisha.agarwal@neogrowth.in","sumeet.thanekar@neogrowth.in");
-$sugar_config['esc_mat_prod_emails_names'] = 'manisha.agarwal@neogrowth.in, sumeet.thanekar@neogrowth.in';
+$sugar_config['esc_mat_prod_emails_names'] = array('manisha.agarwal@neogrowth.in, sumeet.thanekar@neogrowth.in');
+
+// CallBackFlow CC emails
+$sugar_config['callbackflow_cc_emails'] = array('sumeet.thanekar@neogrowth.in','mangal.sarang@neogrowth.in','dipali.londhe@neogrowth.in');
+
+// Renewals_Functions CC emails
+$sugar_config['RF_non_prod_TATUsers_emails'] = array('nikhil.kumar@neogrowth.in','balayeswanth.b@neogrowth.in');
+
+// CallBackFlow non prod merchant email, crm api create user
+$sugar_config['non_prod_merchant_email'] = 'balayeswanth.b@neogrowth.in';
+$sugar_config['non_prod_merchant_CC_email'] = 'v.gopi@neogrowth.in';
 
 // CasesEscalationMail
 $sugar_config['ng_sachin_bawari'] = 'sachin.bawari@neogrowth.in';

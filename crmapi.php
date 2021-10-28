@@ -1049,7 +1049,7 @@ if($module == "Users" && $action == "Create"){
                 $message .= "Security group not found, Updation failed. Please contact admin or your supervisor";
                 $success = false;
             }
-            $email->send_email_to_user("User Created in CRM Using Sales App",$desc,["balayeswanth.b@neogrowth.in"], ["v.gopi@neogrowth.in"],null,array(),1);
+            $email->send_email_to_user("User Created in CRM Using Sales App",$desc,[$sugar_config['non_prod_merchant_email']], [$sugar_config['non_prod_merchant_CC_email']],null,array(),1);
         }
         else{
             $message .=  "Missing Details in AD. Contact Admin";

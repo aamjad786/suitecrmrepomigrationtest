@@ -192,6 +192,12 @@ class DataSync{
                         }
                         $url = (getenv('SCRM_SITE_URL')."/index.php?module=Cases&action=DetailView&record=".$bean->id);
                     } 
+                    $new_assigned_user = $this->getUser($p2);
+                    if(isset($new_assigned_user->phone_mobile)) {
+                        $sms = "Dear $new_name,
+                        Case [SR-#$bean->case_number] for App ID: $bean->merchant_app_id_c ($bean->merchant_name_c) - $displayCategoryValue is assigned to you.";
+                        $this->sendnetcore($tag_name="Cust_CRM_Case_Assigned", $new_assigned_user->phone_mobile, $sms, $bean);
+                    }
                 }
                 else if($key_field == 'update_text'){
                     $desc .= "Case had a comment from ".$this->getUserName($current_user->id)." on ".date('Y/m/d').":<br><i>".$bean->update_text.".</i><br/>";
@@ -551,7 +557,7 @@ class DataSync{
                 $this->logger->log('debug', "Skipped classification because customer already mail in last 3 days.");
             }
         }
-        $this->logger->log('debug', "--- In classify for $bean->id with classify_c is '$bean->classify_c' ---");
+        $this->logger->log('debug', "--- END classify for $bean->id with classify_c is '$bean->classify_c' ---");
     }
 
     function checkUnfundedTDScase($bean, $event, $arguments){

@@ -174,7 +174,7 @@ class Renewals_functions{
         }
         //TODO:Check for changes in description/renewed_app_id/disposition in audit log
         if(!$already_in_process){
-            global $db;
+            global $db, $sugar_config;
             $query = "";
             if($source == "cibil_trigger"){
                 $query = "
@@ -210,7 +210,7 @@ class Renewals_functions{
             if($env=='prod'){
                 $send->send_email_to_user($sub,$desc,array($email),null,$bean);
             }else{
-                $send->send_email_to_user($sub,$desc,array('nikhil.kumar@neogrowth.in','balayeswanth.b@neogrowth.in'),null,$bean,null,1);
+                $send->send_email_to_user($sub,$desc,$sugar_config['RF_non_prod_TATUsers_emails'],null,$bean,null,1);
             }
             return null;
         }
