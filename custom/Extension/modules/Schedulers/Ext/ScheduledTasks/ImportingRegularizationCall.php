@@ -1,18 +1,18 @@
 <?php
-
+require_once 'custom/CustomLogger/CustomLogger.php';
 $job_strings[] = 'ImportingRegularizationCall';
+global $logger;
+$logger= new CustomLogger('Regularization');
 date_default_timezone_set('Asia/Kolkata');
 
 function ImportingRegularizationCall() {
+global $db,$logger;
+$logger= new CustomLogger('Regularization');
+$previousDayDate = date('Y-m-d', strtotime('-1 day'));
 
-    global $db;
+  $url = getenv('SCRM_AS_API_BASE_URL')."/crm/get_regularised_details";
 
-    $previousDayDate = date('Y-m-d', strtotime('-1 day'));
-
-    $url = getenv('SCRM_AS_API_BASE_URL')."/crm/get_regularised_details";
-
-
-    $cSession = curl_init();
+$cSession = curl_init();
     $requestHeaders = array();
     $requestHeaders[] = 'Authorization: Basic bmVvZ3Jvd3RoOmNSbUBuZTBnUjB3dGg=';
     curl_setopt($cSession, CURLOPT_URL, $url);
@@ -31,13 +31,9 @@ function ImportingRegularizationCall() {
     $ResponseHeader = explode("\n", trim(mb_substr($result, 0, $curlHeaderSize)));
     unset($ResponseHeader[0]);
 //Parsing response
-    
-    $myfile = fopen("Logs/importingRegularizationError.log", "a");
-    $newfile = fopen("Logs/RegularizationDetails.log", "a");
-    $testfile=fopen("Logs/Regularization.log", "a");
-    fwrite($myfile, "\n".date('Y-m-d h:i:s'));
-    fwrite($myfile, $url);
-    fwrite($myfile, var_export($result, true));
+    $logger->log('debug', "\n".date('Y-m-d h:i:s'));
+    $logger->log('debug', $url);
+    $logger->log('debug', var_export($result, true));
     
     $responseArray = json_decode($sBody, true);
     if (!empty($responseArray) && $responseArray['status'] != "failed") {
@@ -87,7 +83,7 @@ function ImportingRegularizationCall() {
                     //$getApplicationDetailsApi = $applicationApis->getAppData($applicationId, "/crm/get_regularised_details?app_id=");
                     $json_response = json_decode($sBody, true);
 
-                    fwrite($newfile, print_r($json_response,true));
+                    $logger->log('debug', print_r($json_response,true));
                     //$json_response = json_decode($url2, true);
 
                     if(!empty($json_response) && count($json_response)>0){
@@ -129,7 +125,7 @@ function ImportingRegularizationCall() {
 
                     $regularizationBean->terminal_maker = $terminal_maker;
 
-                    fwrite($testfile, print_r($regularizationBean->app_id,true));
+                    $logger->log('debug', print_r($regularizationBean->app_id,true));
                         
 
                 
