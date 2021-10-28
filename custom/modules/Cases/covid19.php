@@ -1,5 +1,5 @@
 <?php
-require_once('CurlReq.php');
+require_once('custom/include/CurlReq.php');
 
 $curl_req = new CurlReq();
 

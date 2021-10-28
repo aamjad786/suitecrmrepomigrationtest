@@ -41,7 +41,7 @@ class Neo_CustomersViewupfront_deduction_update extends SugarView {
 					fwrite($log,"\nApps = $upfront_deduction_app_list");
 					foreach($apps_list as $app){
 						// http://182.72.61.150:85/api/Renewal/GetRenewalQueueForCRM?ApplicationId=1001279
-						require_once('CurlReq.php');
+						require_once('custom/include/CurlReq.php');
 						$CurlReq = new CurlReq();
 						$headers  = [
 			                    'Content-Type: application/json'

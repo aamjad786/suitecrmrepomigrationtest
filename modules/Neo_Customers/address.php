@@ -7,7 +7,7 @@ $num = 0;
 $as_api_base_url = getenv('SCRM_AS_API_BASE_URL');
 // die('here');
 require_once('include/entryPoint.php');
-require_once('CurlReq.php');
+require_once('custom/include/CurlReq.php');
 global $db;
 $body = "";
 

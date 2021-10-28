@@ -4,7 +4,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
     define('sugarEntry', true);
 }
 // require_once('include/entryPoint.php');
-require_once('CurlReq.php');
+require_once('custom/include/CurlReq.php');
 
 class ApplicationApi {
 

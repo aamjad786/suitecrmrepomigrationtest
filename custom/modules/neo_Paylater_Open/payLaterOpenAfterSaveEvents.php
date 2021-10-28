@@ -1,5 +1,5 @@
 <?php
-require_once('CurlReq.php');
+require_once('custom/include/CurlReq.php');
 require_once('custom/include/SendEmail.php');
 require_once('custom/include/SendSMS.php');
 global $current_user,$db;
@@ -46,7 +46,7 @@ class payLaterOpenAfterSaveEvents {
     function getEmailContent($bean) {
        
         $url = getenv('SCRM_AS_API_BASE_URL')."/get_application_basic_details?ApplicationID=".$bean->application_id;
-        require_once('CurlReq.php');
+        require_once('custom/include/CurlReq.php');
         $curl_req = new CurlReq();
         $response = $curl_req->curl_req($url);
         $address = '';
