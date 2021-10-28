@@ -724,7 +724,7 @@ array (
           ),
           1 => 
           array (
-            'name' => 'gst_registration_cv',
+            'name' => 'gst_registration_c',
             'label' => 'GST registration',
           ),
         ),

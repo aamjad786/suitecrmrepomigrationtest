@@ -1,0 +1,70 @@
+
+/*  body{background-color:white;} */
+#fbb_tbl {
+    background: #ffffff none repeat scroll 0 0;
+    border-radius: 5px;
+    box-shadow: 0 0 5px 5px #dddddd;
+    /* max-width: 500px; 
+    text-align: center; */
+}
+
+.tbl_main_style{
+	margin-top:10% !important;
+	margin-right:auto !important;
+	margin-bottom:22% !important;
+	margin-left:40% !important; 
+	background: #FFFFFF !important;
+	padding: 2% 1% 1% 1% !important;
+	padding-top: 1% !important;
+	font-size:12px !important;
+}
+
+.tbl_th_style{
+	font-size: 160% !important;
+	color:#3A5795 !important;
+}
+
+.tbl_td_label {
+ 	margin-left:20%;
+  	margin-top:7%; 
+  	color:#3A5795 !important;
+}
+
+.tbl_td_input {
+ 	width:95% !important;
+ 	padding:2% !important;
+}
+
+.action_td_style {
+	padding-top: 3% !important;
+	padding-left: 55% !important;
+}
+
+#cancel_btn {
+	background-color:#FF3737 !important; 
+	color:#FFFFFF !important;
+}
+
+#update_btn {
+	background-color:#85BA12 !important; 
+	color:#FFFFFF !important;
+}
+
+.msg_style {
+	margin-left:6%;
+	color:green !important;
+	font-weight:bold !important;
+	font-style:italic !important;
+}
+
+.txt_decoration{
+	text-decoration:none !important;
+}
+
+.color_style{
+	color:#FFFFFF !important;
+}
+
+.margin_style{
+	margin:2%;
+}

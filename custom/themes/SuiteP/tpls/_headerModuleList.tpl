@@ -900,6 +900,12 @@
                                 </a>
                             </li>
                             <li class="recentlinks" role="presentation">
+                                <a href="?module=Leads&action=leads_eos_dashboard"
+                                    class="recent-links-detail" target="_blank">
+                                    <span>EOS-CRM Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="recentlinks" role="presentation">
                                 <a href="?module=Cases&action=customer_application_profile"
                                     class="recent-links-detail" target="_blank">
                                     <span>Customer Application Profile</span>

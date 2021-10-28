@@ -168,19 +168,19 @@ class LeadsViewDetail extends SugarView
         </script>
 onload;
         
-      echo $js = <<<EOD
+      $js = <<<EOD
 	<script>
 	$(document).ready(function(){
 			
-			var disposition = $("#disposition_c").find("option:selected").val();
-
-			if(disposition == 'Call_back'){
+			var disposition = $("#disposition_c").val();
+			console.log('disposition: '+disposition);
+			if(disposition == 'call_back'){
 				$("#call_back_date_time_c_label").parent().show();
 				$("#pickup_appointment_c_label").parent().hide();
 				$("#call_back_date_time_c").parent().show();
 				$("#pickup_appointment_c").parent().hide();
 			}
-			if(disposition != 'Call_back'){
+			if(disposition != 'call_back'){
 				$("#call_back_date_time_c_label").parent().hide();
 				$("#call_back_date_time_c").parent().hide();
 			}

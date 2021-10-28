@@ -19,13 +19,11 @@ class OpportunitiesViewEdit extends ViewEdit {
 
 		$roleObj = new ACLRole();
 		$role = $roleObj->getUserRoleNames($current_user->id);
-
-		// Temperary comment for role level access;
-
-		// if(($role[0] == 'Customer Acquisition Manager' || $role[0] == 'Cluster Manager' || $role[0] == 'Regional Manager' || $role[0] == 'Functional Head') && empty($this->bean->fetched_row)){
-		// 	echo '<b style="color:red">You do not have access to this area. Contact your site administrator to obtain access.</b>';
-		// 	sugar_die();
-		// }
+		
+		if(($role[0] == 'Customer Acquisition Manager' || $role[0] == 'Cluster Manager' || $role[0] == 'Regional Manager' || $role[0] == 'Functional Head') && empty($this->bean->fetched_row)){
+			echo '<b style="color:red">You do not have access to this area. Contact your site administrator to obtain access.</b>';
+			sugar_die("");
+		}
 
 		if (!in_array('EditEOS', $role) && !$current_user->is_admin) {
 ?>

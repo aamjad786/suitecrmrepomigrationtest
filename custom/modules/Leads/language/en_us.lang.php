@@ -1,5 +1,5 @@
 <?php
-// created: 2021-10-11 16:36:31
+// created: 2021-10-26 15:26:57
 $mod_strings = array (
   'LBL_EDITVIEW_PANEL5' => 'Additional details',
   'LBL_EDITVIEW_PANEL6' => 'New Panel 6',
@@ -21,4 +21,5 @@ $mod_strings = array (
   'LBL_EOS_PANEL' => 'EOS Details',
   'LBL_FIRST_NAME' => 'First Name',
   'LBL_LAST_NAME' => 'Last Name',
+  'LBL_ACCEPT_ONLINE_C' => 'ACCEPT DEBIT/CREDIT/ONLINE PAYMENTS',
 );

@@ -88,10 +88,36 @@ if ($action == 'Audit') {
 }
 else if ($module == "Lead" && $action == 'Create') {
    
+    $logger->log('debug', 'Create Lead API Request =====>'.var_export($rawData, true));
+    
     $isDataValid=true;
 
-    $logger->log('debug', 'Create Lead API Request =====>'.var_export($rawData, true));
-
+    $first_name_regEx = "/^[A-Za-z]+$/";
+    $last_name_regEx = "/^[A-Za-z]+$/";
+    $business_vintage_years_c_regEx = "/^(18|19|20)\d{2}$/";
+    $sub_source_c_regEx = "/^[a-zA-Z ]*$/";
+    $loan_amount_c_regEx = "/^[0-9]*$/";
+    $product_type_c_regEx = "/^[a-zA-Z ]*$/";
+    $bank_account_name_c_regEx = "/^[a-zA-Z ]*$/";
+    $bank_account_count_c_regEx = "/^[0-9]{1,2}$/";
+    $bank_account_type_c_regEx = "/^[a-zA-Z ]*$/";
+    $fse_name_c_regEx = "/^[a-zA-Z ]*$/"; //Reference Name
+    $fse_number_c_regEx = "/^[0-9]*$/"; //Reference Number
+    $primary_address_street_regEx = "/^[#.0-9a-zA-Z\s,-]+$/";
+    $primary_address_postalcode_regEx = "/^[1-9][0-9]{5}$/";
+    $alt_address_street_regEx = "/^[#.0-9a-zA-Z\s,-]+$/";
+    $alt_address_postalcode_regEx = "/^[1-9][0-9]{5}$/";
+    $alt_landline_number_c_regEx = "/^[0-9]{10}$/";
+    $phone_work_regEx = "/^[0-9]{10}$/"; //Alternate Mobile Number
+    $average_total_monthly_sales_c_regEx = "/^[0-9]*$/";
+    $total_sales_per_month_c_regEx = "/(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/";
+    $dsa_code_c_regEx = "/^\d*[a-zA-Z][a-zA-Z \d]*$/";
+    $scheme_c_regEx = "/^\d*[a-zA-Z][a-zA-Z \d]*$/";
+    $turnover_c_regEx = "/^[0-9]*$/";
+    $residence_vintage_c_regEx = "/^\d{1,2}$/";
+    $business_vintage_c_regEx = "/^\d{1,2}$/";
+    $gst_registration_c_regEx = "/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/";
+    $average_settlements_c_regEx="/^[0-9]*$/";
     //  Mandatory Fields 
 
     if (validate_mobile(trim($rawData->phone_mobile)) != 1) {
@@ -109,6 +135,15 @@ else if ($module == "Lead" && $action == 'Create') {
         $msg = array(
             'Success' => false,
             'Message' => 'Mandatory field(s) are missing. Empty Lead Source'
+        );
+    }
+
+    if (empty($rawData->first_name)) {
+        $isDataValid=false;
+        $logger->log('error', 'Mandatory field(s) are missing.Empty First Name....!');
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Mandatory field(s) are missing. Empty First Name'
         );
     }
 
@@ -132,13 +167,281 @@ else if ($module == "Lead" && $action == 'Create') {
 
     //  Mandatory Fields END
 
+    // ==== Data Validation =====
+ 
+    // $logger->log('debug', 'firstcond: '.!empty($rawData->first_name) );
+    // $logger->log('debug', 'secondcond: '.!preg_match($first_name_regEx,$rawData->$first_name) );
+
+    if(!empty($rawData->first_name) && !preg_match($first_name_regEx,$rawData->first_name)){
+        
+        $isDataValid=false;
+        
+        $msg = array(
+            'Success' => false,
+            'Message' => 'First Name Should Contain Alphabets Only!'
+        );
+    }
+
+    if(!empty($rawData->last_name) && !preg_match($last_name_regEx,$rawData->last_name)){
+        
+        $isDataValid=false;
+        
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Last Name Should Contain Alphabets Only!'
+        );
+    }
+
+
+    if(!empty($rawData->business_vintage_years_c) && !preg_match($business_vintage_years_c_regEx,$rawData->business_vintage_years_c)){
+        
+        $isDataValid=false;
+        
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Business Vintage Year!'
+        );
+    }
+
+
+    if(!empty($rawData->sub_source_c) && !preg_match($sub_source_c_regEx,$rawData->sub_source_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Sub Source!'
+        );
+    }
+
+    if(!empty($rawData->loan_amount_c) && !preg_match($loan_amount_c_regEx,$rawData->loan_amount_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Loan Amount!'
+        );
+    }
+
+    if(!empty($rawData->product_type_c) && !preg_match($product_type_c_regEx,$rawData->product_type_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Product Type!'
+        );
+    }
+
+    if(!empty($rawData->bank_account_name_c) && !preg_match($bank_account_name_c_regEx,$rawData->bank_account_name_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Bank Account Name!'
+        );
+    }
+
+    if(!empty($rawData->bank_account_count_c) && !preg_match($bank_account_count_c_regEx,$rawData->bank_account_count_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Bank Account Count!'
+        );
+    }
+
+    if(!empty($rawData->bank_account_type_c) && !preg_match($bank_account_type_c_regEx,$rawData->bank_account_type_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Bank Account Type!'
+        );
+    }
+
+    if(!empty($rawData->fse_name_c) && !preg_match($fse_name_c_regEx,$rawData->fse_name_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Reference Name!'
+        );
+    }
+
+    if(!empty($rawData->fse_number_c) && !preg_match($fse_number_c_regEx,$rawData->fse_number_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Reference Number!'
+        );
+    }
+
+    if(!empty($rawData->primary_address_street) && !preg_match($primary_address_street_regEx,$rawData->primary_address_street)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Primary Address Street!'
+        );
+    }
+
+    if(!empty($rawData->primary_address_postalcode) && !preg_match($primary_address_postalcode_regEx,$rawData->primary_address_postalcode)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Primary Address Postal Code!'
+        );
+    }
+    
+    if(!empty($rawData->alt_address_street) && !preg_match($alt_address_street_regEx,$rawData->alt_address_street)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Alternative Address Street!'
+        );
+    }
+
+    if(!empty($rawData->alt_address_postalcode) && !preg_match($alt_address_postalcode_regEx,$rawData->alt_address_postalcode)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Alternative Address Postal Code!'
+        );
+    }
+
+    if(!empty($rawData->alt_landline_number_c) && !preg_match($alt_landline_number_c_regEx,$rawData->alt_landline_number_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Alternative Landline Number!'
+        );
+    }
+
+
+    if(!empty($rawData->phone_work) && !preg_match($phone_work_regEx,$rawData->phone_work)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Alternative Mobile Number!'
+        );
+    }
+
+    if(!empty($rawData->average_total_monthly_sales_c) && !preg_match($average_total_monthly_sales_c_regEx,$rawData->average_total_monthly_sales_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Average Total Monthly Sales!'
+        );
+    }
+
+    if(!empty($rawData->total_sales_per_month_c) && !preg_match($total_sales_per_month_c_regEx,$rawData->total_sales_per_month_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Average Total Sales Per Month!'
+        );
+    }
+
+    if(!empty($rawData->dsa_code_c) && !preg_match($dsa_code_c_regEx,$rawData->dsa_code_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid DSA Code !'
+        );
+    }
+
+    if(!empty($rawData->scheme_c) && !preg_match($scheme_c_regEx,$rawData->scheme_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Scheme Name !'
+        );
+    }
+
+    if(!empty($rawData->turnover_c) && !preg_match($turnover_c_regEx,$rawData->turnover_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Turnover !'
+        );
+    }
+
+    if(!empty($rawData->residence_vintage_c) && !preg_match($residence_vintage_c_regEx,$rawData->residence_vintage_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Residence Vintage !'
+        );
+    }
+
+    if(!empty($rawData->business_vintage_c) && !preg_match($business_vintage_c_regEx,$rawData->business_vintage_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Business Vintage !'
+        );
+    }
+
+    if(!empty($rawData->gst_registration_c) && !preg_match($gst_registration_c_regEx,$rawData->gst_registration_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid GST Registration Number !'
+        );
+    }
+
+    if(!empty($rawData->average_settlements_c) && !preg_match($average_settlements_c_regEx,$rawData->average_settlements_c)){
+        
+        $isDataValid=false;
+
+        $msg = array(
+            'Success' => false,
+            'Message' => 'Invalid Average Settlements!'
+        );
+    }
+
     if($isDataValid){
 
         // Dedup Check
 
         $isDuplicate=false;
 
-        if (!$rawData->is_renewal_c) {
+        if (!$rawData->is_renewal_c || $rawData->dwh_sync_c) {
             $lead_id = checkDuplicateLead($rawData->phone_mobile, $rawData->scheme_c);
         }
 
@@ -206,35 +509,87 @@ else if ($module == "Lead" && $action == 'Update') {
     
         $logger->log('debug', 'Update Lead API Request =====>'.var_export($rawData, true));
         
-        $leadId = $rawData->lead_id;
+        // Data Validation
+        global $app_list_strings;
+        $isDataValid=true;
 
-        if (isset($leadId) and !empty($leadId)) {
-
-            $leadBean = new Lead();
-            $leadBeanData=$leadBean->retrieve($leadId);
-
-            $leadBeanData->eos_disposition_c = $rawData->eos_disposition_c;
-            $leadBeanData->eos_sub_disposition_c = $rawData->eos_sub_disposition_c;
-            $leadBeanData->eos_opportunity_status_c = $rawData->eos_opportunity_status_c;
-            $leadBeanData->eos_sub_status_c = $rawData->eos_sub_status_c;
-            $leadBeanData->eos_remark_c = $rawData->eos_remark_c;
-            $leadBeanData->date_updated_by_eos_c = date("Y-m-d H:i:s", strtotime($rawData->date_updated_by_eos_c)-(330*60));
-
-            $leadBeanData->save();
-
-            $msg = array(
-                'Success' => true,
-                'Message' => 'Lead Updated Successfully'
-            );
-        }
-        else {
-
+       if(!array_key_exists($rawData->eos_disposition_c,$app_list_strings['eos_disposition_list'])) {
+            $isDataValid=false;
             $msg = array(
                 'Success' => false,
-                'Message' => 'Mandatory field(s) are missing. Lead ID Is Empty'
+                'Message' => 'Invalid EOS Disposition!'
             );
+       }
+
+       if(!array_key_exists($rawData->eos_sub_disposition_c,$app_list_strings['eos_sub_disposition_list'])) {
             
+            $isDataValid=false;
+            $msg = array(
+                'Success' => false,
+                'Message' => 'Invalid EOS Sub Disposition!'
+            );
         }
+
+        if(!array_key_exists($rawData->eos_opportunity_status_c,$app_list_strings['eos_opp_status_list'])) {
+            
+            $isDataValid=false;
+            $msg = array(
+                'Success' => false,
+                'Message' => 'Invalid EOS Opportunity Status!'
+            );
+        }
+
+        if(!array_key_exists($rawData->eos_opportunity_sub_status_c,$app_list_strings['eos_opp_substatus_list'])) {
+            
+            $isDataValid=false;
+            $msg = array(
+                'Success' => false,
+                'Message' => 'Invalid EOS Opportunity Sub Status!'
+            );
+        }
+       
+
+       if($isDataValid){
+
+           $leadId = $rawData->lead_id;
+   
+           if (isset($leadId) && !empty($leadId)) {
+   
+               $leadBean = new Lead();
+               $leadBeanData=$leadBean->retrieve($leadId);
+               
+               if($leadBeanData){
+
+                   $leadBeanData->eos_disposition_c = $rawData->eos_disposition_c;
+                   $leadBeanData->eos_sub_disposition_c = $rawData->eos_sub_disposition_c;//$app_list_strings['eos_sub_disposition_list']
+                   $leadBeanData->eos_opportunity_status_c = $rawData->eos_opportunity_status_c;//$app_list_strings['eos_opp_status_list']
+                   $leadBeanData->eos_sub_status_c = $rawData->eos_opportunity_sub_status_c;//$app_list_strings['eos_opp_substatus_list']
+                   $leadBeanData->eos_remark_c = $rawData->eos_remark_c;
+                   $leadBeanData->date_updated_by_eos_c = date("Y-m-d H:i:s", strtotime($rawData->date_updated_by_eos_c)-(330*60));
+       
+                   $leadBeanData->save();
+       
+                   $msg = array(
+                       'Success' => true,
+                       'Message' => 'Lead Updated Successfully'
+                   );
+
+               }else{
+                    $msg = array(
+                        'Success' => false,
+                        'Message' => 'Unable To Find Lead With Given'
+                    );
+               }
+           }
+           else {
+   
+               $msg = array(
+                   'Success' => false,
+                   'Message' => 'Mandatory field(s) are missing. Lead ID Is Empty'
+               );
+               
+           }
+       }
 }
 else if ($module == "Lead" && $action == 'Fetch') {
     (isset($rawData->status) ? $status = $rawData->status : '');

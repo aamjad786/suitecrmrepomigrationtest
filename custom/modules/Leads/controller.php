@@ -11,5 +11,9 @@ class CustomLeadsController extends LeadsController {
     function action_sales_dashboard(){
     	$this->view = 'sales_dashboard'; 
     }
+
+    function action_leads_eos_dashboard(){
+    	$this->view = 'leads_eos_dashboard'; 
+    }
    
 }

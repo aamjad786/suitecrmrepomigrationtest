@@ -5,4 +5,16 @@ $dictionary['Lead']['fields']['average_total_monthly_sales_c']['duplicate_merge_
 $dictionary['Lead']['fields']['average_total_monthly_sales_c']['merge_filter']='disabled';
 $dictionary['Lead']['fields']['average_total_monthly_sales_c']['labelValue']='Average total monthly sales';
 
+$dictionary['Lead']['fields']['average_total_monthly_sales_c']['validation'] = array (
+    'type' => 'callback',
+    'callback' => 'function(formname, nameIndex) {
+        var regEx=/^[0-9]*$/;
+        var value=$("#" + nameIndex).val();
+        if (value != "" && regEx.test(value)== false) {
+            add_error_style(formname, nameIndex, "Please Enter Only Digits!");
+            return false;
+        };
+        return true;
+    }',
+);
  ?>

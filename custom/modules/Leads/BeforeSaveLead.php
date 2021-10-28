@@ -63,7 +63,21 @@ class BeforeSaveLead {
 	public function fieldSanity(&$bean, $event, $args){
 
 		$bean->stored_fetched_row_c = $bean->fetched_row;
+
 		$bean->primary_address_city = strtoupper($bean->primary_address_city);
+
+		$cities = array(
+            'BENGALURU' => 'BANGALORE',
+            'BHUBANESWAR' => 'BHUBANESHWAR',
+            'VADODARA' => 'BARODA',
+            'VIJAYAWADA' => 'VIJAYWADA',
+            'VISAKHAPATNAM' => 'VIZAG'
+        );
+        
+        if (array_key_exists($bean->primary_address_city, $cities)) {
+            $bean->primary_address_city = $cities[$bean->primary_address_city];
+        }
+
 
 		$this->logger->log('debug', 'BeforeSaveLead fieldSanity completed');
 	}

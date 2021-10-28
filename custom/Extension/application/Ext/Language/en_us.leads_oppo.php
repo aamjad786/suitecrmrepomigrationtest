@@ -1,34 +1,33 @@
 <?php 
 $app_list_strings['cstm_cities_list'] = array (
   '' => '',
-  'Ahmedabad' => 'Ahmedabad',
-  'Bengaluru' => 'Bangalore',
-  'Bengaluru Tech Center' => 'Bangalore',
-  'Bhubaneswar' => 'Bhubaneswar',
-  'Chandigarh' => 'Chandigarh',
-  'Chennai' => 'Chennai',
-  'Delhi' => 'Delhi',
-  'Hyderabad' => 'Hyderabad',
-  'Jaipur' => 'Jaipur',
-  'Jalandhar' => 'Jalandhar',
-  'Jamshedpur' => 'Jamshedpur',
-  'Rajkot' => 'Rajkot',
-  'Ranchi' => 'Ranchi',
-  'Kolkata' => 'Kolkata',
-  'Lucknow' => 'Lucknow',
-  'Mumbai' => 'Mumbai',
-  'Mysore' => 'Mysore',
+  'BANGALORE' => 'Bangalore',
+  'AHMEDABAD' => 'Ahmedabad',
+  'BHUBANESHWAR' => 'Bhubaneswar',
+  'CHANDIGARH' => 'Chandigarh',
+  'CHENNAI' => 'Chennai',
+  'DELHI' => 'Delhi',
+  'HYDERABAD' => 'Hyderabad',
+  'JAIPUR' => 'Jaipur',
+  'JALANDHAR' => 'Jalandhar',
+  'JAMSHEDPUR' => 'Jamshedpur',
+  'RAJKOT' => 'Rajkot',
+  'RANCHI' => 'Ranchi',
+  'KOLKATA' => 'Kolkata',
+  'LUCKNOW' => 'Lucknow',
+  'MUMBAI' => 'Mumbai',
+  'MYSORE' => 'Mysore',
   'Nagpur' => 'Nagpur',
-  'Nashik' => 'Nashik',
-  'Pune' => 'Pune',
-  'Surat' => 'Surat',
-  'Vadodara' => 'Vadodara',
-  'Vijayawada' => 'Vijayawada',
-  'Vizag' => 'Vizag',
-  'Indore' => 'Indore',
-  'Coimbatore' => 'Coimbatore',
-  'Ludhiana' => 'Ludhiana',
-  'Madurai' => 'Madurai',
+  'NAGPUR' => 'Nashik',
+  'PUNE' => 'Pune',
+  'SURAT' => 'Surat',
+  'BARODA' => 'Vadodara',
+  'VIJAYWADA' => 'Vijayawada',
+  'VIZAG' => 'Vizag',
+  'INDORE' => 'Indore',
+  'COIMBATORE' => 'Coimbatore',
+  'LUDHIANA' => 'Ludhiana',
+  'MADURAI' => 'Madurai',
 );$app_list_strings['cstm_states_list'] = array (
   0 => '',
   'Chandigarh' => 'Chandigarh',
@@ -421,7 +420,7 @@ $app_list_strings['cstm_cities_list'] = array (
   'connected' => 'Connected',
   'not_connected' => 'Not Connected',
   'deal_generated' => 'Customer Deal Generated',
-  'aadhar_not_linked_with_phno' => 'Aadhaar not linked with Phone Number',
+  'aadhar_not_linked_with_phone' => 'Aadhaar not linked with Phone Number',
   'digital_journey_kyc_doc_unavailable' => 'Digital Journey - Unavailability of KYC doc',
   'rejected_incorrect_doc' => 'Rejected  - Incorrect documents',
 );$app_list_strings['eos_sub_disposition_list'] = array (
@@ -489,3 +488,83 @@ $app_list_strings['hear_about_us_c'] = array(
  
 );
 
+$app_list_strings['zone_list'] = array(
+  '' => '',
+  'North' => 'North',
+  'East' => 'East',
+  'Gujarat' => 'Gujarat',
+  'West' => 'West ',
+  'South' => 'South',
+
+);
+
+$app_list_strings['zone_city_mapping'] = array(
+
+  'North' => array(
+    'Delhi',
+    'Indore',
+    'Jaipur',
+    'Ludhiana',
+    'Chandigargh',
+    'Lucknow'
+  ),
+
+  'East' => array(
+    'Kolkata',
+    'Bhubaneshwar',
+    'Jamshedpur'
+  ),
+
+  'Gujarat' => array(
+    'Rajkot',
+    'Surat',
+    'Ahmedabad',
+    'Baroda'
+  ),
+
+  'West' => array(
+    'Mumbai',
+    'Pune',
+    'Nagpur',
+    'Nashik'
+  ),
+
+  'South' => array(
+    'Bangalore',
+    'Chennai',
+    'Hyderabad',
+    'Coimbatore',
+    'Madurai',
+    'Mysore',
+    'Vijaywada',
+    'Vizag'
+  ),
+
+  $app_list_strings['dsa_code_list'] = array(
+      '' => '',
+      'EARNWEALTH SOLUTIONS PVT LTD' => 'EARNWEALTH SOLUTIONS PVT LTD',
+      'MSWIPE TECHNOLOGIES PVT LTD' => 'MSWIPE TECHNOLOGIES PVT LTD',
+      'SODEXO SVC INDIA PVT LTD' => 'SODEXO SVC INDIA PVT LTD',
+      'C Connect Market India Pvt Ltd' => 'C Connect Market India Pvt Ltd',
+      'PAISABAZAAR MARKETING AND CONSULTING PVT LTD' => 'PAISABAZAAR MARKETING AND CONSULTING PVT LTD',
+      'COINTRIBE TECHNOLOGIES PRIVATE LIMITED' => 'COINTRIBE TECHNOLOGIES PRIVATE LIMITED',
+      'SAHAS TECHNOLOGIES PVT LTD' => 'SAHAS TECHNOLOGIES PVT LTD',
+      'ALPHARUBIX INFOTECH SOLUTIONS PVT LTD' => 'ALPHARUBIX INFOTECH SOLUTIONS PVT LTD',
+      'NOMISMA MOBILE SOLUTIONS PVT LTD' => 'NOMISMA MOBILE SOLUTIONS PVT LTD',
+      'MINIONS VENTURES PRIVATE LIMITED' => 'MINIONS VENTURES PRIVATE LIMITED',
+      'SUBK IMPACT SOLUTIONS LIMITED' => 'SUBK IMPACT SOLUTIONS LIMITED',
+      'BAJAJ FINSERV DIRECT LIMITED' => 'BAJAJ FINSERV DIRECT LIMITED',
+      'AR ASSOCIATES' => 'AR ASSOCIATES',
+      'NOWFLOATS TECHNOLOGIES PRIVATE LIMITED' => 'NOWFLOATS TECHNOLOGIES PRIVATE LIMITED',
+      'FINTRANXECT DIGITAL SOLUTIONS PRIVATE LIMITED' => 'FINTRANXECT DIGITAL SOLUTIONS PRIVATE LIMITED',
+      'NINEROOT TECHNOLOGIES PRIVATE LIMITED' => 'NINEROOT TECHNOLOGIES PRIVATE LIMITED',
+      'CREDIT SURE' => 'CREDIT SURE',
+      'ONE97 COMMUNICATIONS LTD PAYTM' => 'ONE97 COMMUNICATIONS LTD PAYTM',
+      'FINLEAD FINANCIAL ADVISORY PVT LTD' => 'FINLEAD FINANCIAL ADVISORY PVT LTD',
+      'PIXERA MEDIA LABS' => 'PIXERA MEDIA LABS',
+      'UENI BUSINESS SOLUTIONS' => 'UENI BUSINESS SOLUTIONS',
+      'DS FINWORLD PRIVATE LIMITED' => 'DS FINWORLD PRIVATE LIMITED',
+      'RECULTA SOLUTIONS PRIVATE LIMITED' => 'RECULTA SOLUTIONS PRIVATE LIMITED',
+
+  )
+);

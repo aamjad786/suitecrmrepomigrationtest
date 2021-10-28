@@ -19,10 +19,10 @@ function PushLeads()
 										   (leads_cstm.control_program_c!='NeoCash Insta' or leads_cstm.control_program_c is null) and 
 										   (leads_cstm.pushed_lead_c=0 or leads_cstm.pushed_lead_c is null) and 
 										   (leads_cstm.push_count_c<=5 or leads_cstm.push_count_c is null)");
-	
-	// $lead_list = $bean->get_full_list("", "leads.date_entered>'2021-02-15'");
 
 	// $logger->log('debug', '');
+	// push_count  => retries
+
 	$logger->log('debug', 'Total Leads Fetched To Process: ' . count($lead_list));
 
 	foreach ($lead_list as $lead) {

@@ -1,6 +1,6 @@
 <?php
 // created: 2021-10-08 15:19:54
-$mod_strings = array (
+$mod_strings = array(
   'EOS DISPOSITION' => 'EOS DISPOSITION',
   'EOS SUB-DISPOSITION' => 'EOS SUB-DISPOSITION',
   'EOS OPPORTUNITY STATUS' => 'EOS OPPORTUNITY STATUS',
@@ -8,5 +8,7 @@ $mod_strings = array (
   'LBL_PICKUP_APPOINTMENT_CITY' => 'Pickup/ appointment city',
   'OPPORTUNITY SUB-STATUS' => 'OPPORTUNITY SUB-STATUS',
   'LBL_CAM_C' => 'CAM',
-  'LBL_CAM_AUTO_ASSIGN' => 'Auto Assign To CAM'
+  'LBL_CAM_AUTO_ASSIGN' => 'Auto Assign To CAM',
+  'LNK_SPOC_MAPPING' => 'Spoc Mapping Marketing',
+  'LNK_SPOC_MAPPING_ALLIANCE' => 'Spoc Mapping Alliance',
 );
