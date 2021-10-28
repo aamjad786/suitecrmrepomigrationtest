@@ -1165,6 +1165,425 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             }
         }
     }
+    else
+    if($module == "Neo_Customers" && $action == "Fetch"){
+        $logger->log('debug', 'Fetch Neo_Customers API Request =====>'.var_export($rawData, true));
+        (isset($rawData->application_id) ? $application_id = $rawData->application_id : '');
+        (isset($rawData->customer_id) ? $customer_id = $rawData->customer_id : '');
+        //print_r($application_id);print_r($customer_id);
+        if(empty($application_id) && empty($customer_id)){
+            $msg = array(
+                'Success' => false,
+                'Message' => 'Mandatory field(s) are missing'
+            );
+        }
+        else if(!empty($customer_id))
+        {
+            $bean = BeanFactory::getBean('Neo_Customers');
+            $query = "neo_customers.deleted=0 and neo_customers.customer_id = $customer_id";
+            $items = $bean->get_full_list('',$query);
+            $results = array();
+            if(!empty($items)){
+                $result = array();
+                foreach ($items as $item) {
+                    $result['id'] = $item->id;
+                    // $result['fresh_renewal'] = true;//$item->fresh_renewal;
+                    $result['fresh_renewal'] = $item->fresh_renewal;
+                    $result['renewal_eligible'] = $item->renewal_eligible;
+                    $result['name'] = $item->name;
+                    $result['mobile'] = $item->mobile;
+                    $result['location'] = $item->location;
+                    $result['scheme'] = $item->scheme;
+                }
+                $results[]=$result;
+            }
+            $msg = array(
+                'Success' => true,
+                'Message' => 'Customers',
+                'Customers' => $results
+            );
+        }
+        else if(!empty($application_id))
+        {
+            $bean = BeanFactory::getBean('Neo_Customers');
+            $query = "neo_customers.deleted=0 and neo_customers.app_id = $application_id";
+            
+            $items = $bean->get_full_list('',$query);
+            $results = array();
+            if(!empty($items)){
+                $result = array();
+                foreach ($items as $item) {
+                    $result['id'] = $item->id;
+                    // $result['fresh_renewal'] = true;//$item->fresh_renewal;
+                    $result['fresh_renewal'] = $item->fresh_renewal;
+                    $result['renewal_eligible'] = $item->renewal_eligible;
+                    $result['name'] = $item->name;
+                    $result['mobile'] = $item->mobile;
+                    $result['location'] = $item->location;
+                    $result['scheme'] = $item->scheme;
+                }
+                $results[]=$result;
+            }
+           // $results = getNeoCustomer($session_id, 'Neo_Customers', $application_id, $url);
+            $msg = array(
+                'Success' => true,
+                'Message' => 'Customers',
+                'Customers' => $results
+            );
+        }
+    }
+    else if($module == "Users" && $action == "Create"){
+        $logger->log('debug', 'Create Users API Request =====>'.var_export($rawData, true));
+        try{
+        // print_r($rawData->nguid);
+        $result = json_decode(json_encode($rawData), TRUE);
+        $message = "";
+        $loginUserId = $result['nguid'];
+        $loginUserId = array_keys($loginUserId);
+        $user = new User;
+        if(!empty($loginUserId)){
+            $user->retrieve($loginUserId[0]);
+        }
+    
+        if(empty($user->date_entered)) {
+          //save for first time
+            if(!empty($loginUserId) && !empty($result['cn'])&& !empty($result['username']) 
+            && !empty($result['firstname'])){
+                $user->new_schema = true;
+                $user->new_with_id = true;
+                $user->id = $loginUserId[0];
+                $user->name = $result['cn'];
+                $user->user_name = $result['username'];
+    
+                $user->first_name = $result['firstname'];
+                $user->last_name = $result['lastname'];
+                $user->email1 = $result['email'];
+                // $user->department = $result['department'];
+                //creating users by sales app request - department will be sales
+                $user->department = 'SALES';
+                $user->is_admin = stripos($result['description'], 'crm') > -1;
+                $user->authenticated = true;
+                $user->description = $result['memberOf'];
+                $user->team_exists = false;
+                $user->table_name = "users";
+                $user->module_dir = 'Users';
+                $user->object_name = "User";
+                $user->status = "Active";
+    
+                $user->importable = true;
+                $user->encodeFields = Array ("first_name", "last_name", "description");
+                $user->save();
+                $message .=  $result['sAMAccountName'][0]." user saved\n";
+                $success = true;
+                require_once('custom/include/SendEmail.php');
+                $email = new SendEmail();
+                $desc = json_encode($rawData);
+                require_once('custom/include/SendEmail.php');
+                // Updating CAM Role
+                require_once('custom/include/ng_utils.php');
+                $ng_utils = new Ng_utils();
+                $roleID = $ng_utils->fetchRoleIdFromName('Customer Acquisition Manager');
+                if (empty($roleID)) {
+                  $message .= "Roles not found, Updation failed. Please contact admin or your supervisor";
+                  $success = false;
+                }
+                $user->load_relationship('aclroles');
+                $status = $user->aclroles->add($roleID);
+                if($status){
+                    $logger->log('debug', 'Added '.$user->id.' to '.$roleID);
+                }
+                else{
+                    $message .= "Unable add user to the given role. Some error. $user->id";
+                    $success = false;
+                }
+                //Assigning to sales security group
+                global $db;
+                $query = "select id from securitygroups where name = 'Sales Team'";
+                $results = $db->query($query);
+                $add_sg_id = '';
+                while($row = $db->fetchByAssoc($results)){
+                    $add_sg_id = $row['id'];
+                }
+                $user->load_relationship('SecurityGroups');
+                if(!empty($add_sg_id)){
+                    $status = $user->SecurityGroups->add($add_sg_id);
+                    if($status){
+                        $logger->log('debug','Added '.$user->id.' to '.$add_sg_id);
+                    }
+                    else{
+                        $message .= "Unable add User to the given Security Group. Some error.";
+                        $success = false;
+                    }
+                }
+                else{
+                    $message .= "Security group not found, Updation failed. Please contact admin or your supervisor";
+                    $success = false;
+                }
+                $email->send_email_to_user("User Created in CRM Using Sales App",$desc,[$sugar_config['non_prod_merchant_email']], [$sugar_config['non_prod_merchant_CC_email']],null,array(),1);
+            }
+            else{
+                $message .=  "Missing Details in AD. Contact Admin";
+                $success = false;
+            }
+        }
+        else{
+            $message .=  "User already exit in CRM";
+            $success = true;
+        }
+        
+    }catch(Exception $e){
+        $message .= "Exception in saving $nguid".$e->getMessage();
+        $success = false;
+    }
+    $msg = array(
+        'Success' => $success,
+        'Message' => $message,
+    );
+    }
+    else if($module == "Users" && $action == "Create_ETL"){
+        $logger->log('debug', 'Create Users through ETL API Request =====>'.var_export($rawData, true));
+        global $db;
+        try{
+        // print_r($rawData);
+        $user = new User;
+        if(!empty($rawData->nguid)){
+            $user->retrieve($rawData->nguid);
+        }
+        if(empty($user->date_entered)) {
+          //save for first time
+            if(!empty($rawData->nguid) && !empty($rawData->cn)&& !empty($rawData->username) 
+             && !empty($rawData->firstname) && !empty($rawData->status)){
+                $user->new_schema = true;
+                $user->new_with_id = true;
+                $user->id = $rawData->nguid;
+                $user->name = $rawData->cn;
+                $user->user_name = $rawData->username;
+                $user->phone_mobile=$rawData->mobile;
+                $user->first_name = $rawData->firstname;
+                $user->last_name = $rawData->lastname;
+                $user->email1 = $rawData->email;
+                $user->department = $rawData->department;
+                $user->is_admin = stripos($rawData->description, 'crm') > -1;
+                $user->authenticated = true;
+                $user->description = $rawData->memberOf;
+                $user->team_exists = false;
+                $user->table_name = "users";
+                $user->module_dir = 'Users';
+                $user->object_name = "User";
+                $user->status = $rawData->status;
+                $user->importable = true;
+                $user->encodeFields = Array ("first_name", "last_name", "description");
+                $user->save();
+                $message .=  $rawData->username . " user saved\n";
+                $success = true;
+            }
+            else{
+                $message .=  "Missing Details in AD. Contact Admin";
+                $success = false;
+            }
+        }
+        else{
+            $message .=  " User already exist in CRM. ";
+            if(!empty($rawData->status) && $user->status != $rawData->status){
+                $user->status = $rawData->status;
+                $message .=  " Status is updated to $rawData->status ";
+            }
+            if(!empty($rawData->mobile) && $user->phone_mobile != $rawData->mobile){
+                $user->phone_mobile = $rawData->mobile;
+                $message .=  " Mobile is updated to $rawData->mobile ";
+            }
+            if(!empty($rawData->joining_date) && $user->joining_date_c != $rawData->joining_date){
+                $user->joining_date_c = $rawData->joining_date;
+                $message .=  " joining_date is updated to $rawData->joining_date ";
+            }
+            if(!empty($rawData->designation) && $user->designation_c != $rawData->designation){
+                $user->designation_c = $rawData->designation;
+                $message .=  " designation is updated to $rawData->designation ";
+            }
+            if(!empty($rawData->email) && $user->email1 != $rawData->email){
+                $user->email1 = $rawData->email;
+                $message .=  " email is updated to $rawData->email ";
+            }
+            $user->save();
+    
+            $query="update  user_preferences SET contents = 'YTo0OntzOjEwOiJ1c2VyX3RoZW1lIjtzOjY6IlN1aXRlUiI7czo4OiJ0aW1lem9uZSI7czoxMjoiQXNpYS9Lb2xrYXRhIjtzOjI6InV0IjtpOjE7czo2OiJDYWxsc1EiO2E6MTE6e3M6NjoibW9kdWxlIjtzOjU6IkNhbGxzIjtzOjY6ImFjdGlvbiI7czo1OiJpbmRleCI7czoxMzoic2VhcmNoRm9ybVRhYiI7czoxMjoiYmFzaWNfc2VhcmNoIjtzOjU6InF1ZXJ5IjtzOjQ6InRydWUiO3M6Nzoib3JkZXJCeSI7czowOiIiO3M6OToic29ydE9yZGVyIjtzOjA6IiI7czoxMDoibmFtZV9iYXNpYyI7czoxMToiOTEyMjYyNTg3NDAiO3M6MjM6ImN1cnJlbnRfdXNlcl9vbmx5X2Jhc2ljIjtzOjE6IjAiO3M6MjA6ImZhdm9yaXRlc19vbmx5X2Jhc2ljIjtzOjE6IjAiO3M6MTU6Im9wZW5fb25seV9iYXNpYyI7czoxOiIwIjtzOjY6ImJ1dHRvbiI7czo2OiJTZWFyY2giO319' WHERE assigned_user_id='".$user->id."' and category='global'";
+            
+            $db->query($query);        
+            
+            $designations=array(strtolower("Associate Manager - Customer Acquisition"),strtolower("Senior Associate Manager - Customer Acquisition"),strtolower("Area Sales Manager"),strtolower("Senior Area Sales Manager"));
+                if (in_array(strtolower($user->designation),$designations)){
+                    $q="select count(*) as count from  acl_roles_users where role_id='978da784-78e3-5c78-ff7a-57e10a137412' and user_id='$user->id' and deleted=0";
+                    $result=$db->query($q);
+                    $count=0;
+                    while (($row = $db->fetchByAssoc($result)) != null) {
+                        $count=$row['count'];
+                    }
+                    if(empty($count) || $count==0 || !isset($count))
+                    {
+                        $roleid=create_guid();
+                        $query="insert into acl_roles_users values('$roleid','978da784-78e3-5c78-ff7a-57e10a137412','$user->id','','0')";
+                        $db->query($query);
+                    }
+                }
+            $success = true;
+        }
+        
+    }catch(Exception $e){
+        $message .= "Exception in saving $nguid".$e->getMessage();
+        $success = false;
+    }
+    $msg = array(
+        'Success' => $success,
+        'Message' => $message,
+    );
+    } 
+    else if($module == "Paylater_Open" && $action == 'Create') {
+        $logger->log('debug', 'Create Paylater_open API Request =====>'.var_export($rawData, true));
+        $paylaterOpen = new neo_Paylater_Open();
+        $name_value_list = array();
+        $logger->log('debug', "\n".date('Y-m-d h:i:s'));
+        $logger->log('debug', var_export($rawData, true));
+        $productType = "";
+        if(isset($rawData) && !empty($rawData)){
+            foreach ($rawData as $key => $value) {
+                if ($key == "application_id") {
+                    $applicationId = $value;
+                }
+                if ($key == "product") {
+                    $env = getenv('SCRM_ENVIRONMENT');
+                    if (in_array($env, array('prod'))) {
+                        if ($value == 3) {
+                            $productType = "paylater_open";
+                        } else if ($value == 4) {
+                            $productType = "purchase_finance";
+                        }
+                    } else {
+                        if ($value == 2) {
+                            $productType = "paylater_open";
+                        } else if ($value == 4) {
+                            $productType = "purchase_finance";
+                        }
+                    }
+                } else {
+                    $paylaterOpen->{$key} = $value;
+                }
+            }
+            $paylaterOpen->status ='IN_PROGRESS';
+            $paylaterOpen->product = $productType;
+    
+    //        require_once 'modules/Cases/Case.php';
+    //        $objCase = new aCase();
+    //        $userToAssign = $objCase->getUserToAssign();
+    //        $name_value_list[] = array('name'=>'assigned_user_id','value'=>$userToAssign);
+    
+    $logger->log('debug', "Data going to be saved in Neo Paylater Open");
+    $logger->log('debug', var_export($name_value_list, true));  
+                    
+            if(!empty($paylaterOpen)) {
+                $queryToGetPaylaterOpen = "select id from neo_paylater_open where application_id = '$applicationId'";
+                $results = $db->query($queryToGetPaylaterOpen);
+                $numberOfRows = $results->num_rows;
+    
+                if($numberOfRows <= 0){
+                    $id =  $paylaterOpen->save();
+                    if($id){
+                        $msg = array(
+                            'Success' => true,
+                            'Message' => 'Paylater Open application Created Successfully',
+                            'Paylater Open ID' => $id
+                        );
+                    }else{
+                        $msg = array(
+                            'Success' => false,
+                            'Message' => 'Paylater Open application is Not Created',
+                            'Paylater Open ID' => $id
+                        );
+                    } 
+                } else {
+                    $msg = array(
+                        'Success' => false,
+                        'Message' => 'Application ID '.$applicationId.' already exists in CRM',
+                        'Paylater Open ID' => $id
+                    );
+                }
+            } 
+        }
+    } else if($module == "Paylater_Open" && $action == 'Update'){
+        $logger->log('debug', 'Update Paylater_open API Request =====>'.var_export($rawData, true));
+        print_r("INSIDE PAYLATER OPEN");
+        $logger->log('debug', "\n".date('Y-m-d h:i:s'));
+        $logger->log('debug', var_export($rawData, true));
+        foreach($rawData as $key=>$value){
+            $name_value_list[] = array('name'=>$key,'value'=>$value);
+            if($key=='application_number'){
+                $applicationNumber = $value;
+            }
+            if($key=='email'){
+               $email = $value;
+            }
+        }
+        
+        $logger->log('debug', "\n Application $applicationNumber");
+        $logger->log('debug', "\n EMail  $email");
+    
+        if(!empty($applicationNumber) && !empty($email)){
+            $queryToGetId = "select id from neo_paylater_open where application_id = '$applicationNumber' AND ((email_id = '$email') OR (alternate_email_id = '$email'))";
+            $results = $db->query($queryToGetId);
+            while($row = $db->fetchByAssoc($results)){
+                if(!empty($row['id'])){
+                    $paylaterOpenId = $row['id'];
+                }
+            }
+            if(!empty($paylaterOpenId)){
+                $queryToUpdateEmailVerification = "UPDATE neo_paylater_open 
+                SET is_primary_email_verified = CASE  
+                    WHEN email_id = '$email' THEN 1
+                    else
+                     is_primary_email_verified
+                  END,
+                is_secondary_email_verified = CASE  
+                    WHEN alternate_email_id = '$email' THEN 1
+                    else
+                     is_secondary_email_verified
+                  END,
+                email_verification_status = '1'
+                where id = '$paylaterOpenId'";
+                $response = $db->query($queryToUpdateEmailVerification);
+            } else {
+                $message = "Record not found";
+            }        
+            print_r($response);
+        }    
+    }else if($module == "Paylater_Open" && $action == 'Transacting'){
+            global $db;
+            $query = "update neo_paylater_open set transaction_status='' where transaction_status='not_transacting'";
+            $db->query($query);
+            $applications = $rawData->paylater_accounts;
+            $applicationIds = '';
+            foreach ($applications as $key => $value) {
+                if($key != 0){
+                    $applicationIds .= ",$value";
+                } else {
+                    $applicationIds .= "$value";
+                }
+            }
+            $queryToUpdate = "update neo_paylater_open set transaction_status='not_transacting' where application_id IN ($applicationIds)";
+            $response = $db->query($queryToUpdate);
+            if($response){
+                $msg = array(
+                    'Success' => true,
+                    'Message' => 'Application updated successfully',
+                );
+            } else {
+                 $msg = array(
+                    'Success' => false,
+                    'Message' => 'Application update failed',
+                );
+            }
+            echo json_encode($msg);
+            exit;
+        }
+    }    
     else {
         $msg = array(
             'Success' => false,
