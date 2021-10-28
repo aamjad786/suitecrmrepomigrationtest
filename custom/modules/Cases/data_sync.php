@@ -7,7 +7,7 @@ class DataSync{
      * the method that we'll want to call in the logic_hooks.php file.
      */
     public function __construct() {
-		$this->logger = new CustomLogger('casesLogicHooks');
+		$this->logger = new CustomLogger('casesLogicHooks-'.date('Y-M-d'));
 	}
     function CheckUpdatedFields($bean, $event, $arguments){
         $this->logger->log('debug', "---Inside data sync CheckUpdatedFields for case $bean->id---");

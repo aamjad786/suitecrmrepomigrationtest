@@ -8,7 +8,7 @@ function process_call_details() {
 	$query = "select * from call_details where processed=0 and retry_count<5";
 	$results = $db->query($query);
 
-	$logger = new CustomLogger('process_call_details_Request');
+	$logger = new CustomLogger('process_call_details_Request-'.date('Ymd'));
 	$logger->log('debug', "--- START In process_call_details in ScheduledTasks at ".date('Y-m-d h:i:s')."---");
     
 	while($row=$db->fetchByAssoc($results)){
@@ -139,7 +139,7 @@ function process_call_details() {
 }
 
 function uploadDocToS3ApiAudio($tmpfile, $filename, $path, $application, $bucket){
-	$logger = new CustomLogger('process_call_details_request');
+	$logger = new CustomLogger('process_call_details_request-'.date('Ymd'));
 	
 	$filePath = curl_file_create($tmpfile, "audio/mpeg", $filename);
     if (!empty($filePath)) {
@@ -166,7 +166,7 @@ function postDataToAS($input_array, $s3_file_url){
 	if(empty($s3_file_url)) 
 		return 0;
 
-	$logger = new CustomLogger('process_call_details_request');
+	$logger = new CustomLogger('process_call_details_request-'.date('Ymd'));
 	$logger->log('debug', "------- Inside postDataToAS() -------");
 	// echo "<br>inside end";
 	$s3_file_url_arr = parse_url($s3_file_url);
