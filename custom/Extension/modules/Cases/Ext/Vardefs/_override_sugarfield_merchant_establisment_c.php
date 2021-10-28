@@ -5,7 +5,7 @@ $dictionary['Case']['fields']['merchant_establisment_c']['labelValue']='Merchant
 $dictionary['Case']['fields']['merchant_establisment_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        var regEx=/^[A-Z-/]*$/;
+        var regEx=/^[a-zA-Z ]*$/;
         var value=$("#" + nameIndex).val();
         //console.log("field value"+value);
         if (regEx.test(value)== false) {
