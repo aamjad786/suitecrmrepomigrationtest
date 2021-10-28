@@ -444,7 +444,7 @@ array_push($job_strings, 'custompollMonitoredInboxesAOP');
 function custompollMonitoredInboxesAOP()
 {
     require_once 'custom/modules/InboundEmail/AOPInboundEmail.php';
-	$logger = new CustomLogger('custompollMonitoredInboxesAOP');
+	$logger = new CustomLogger('custompollMonitoredInboxesAOP-'.date('Ymd'));
     $logger->log('info', '----->Custom Scheduler fired job of type custompollMonitoredInboxesAOP() ' . date('Y-M-d H:i:s'));
     $GLOBALS['log']->info('----->Custom Scheduler fired job of type custompollMonitoredInboxesAOP()');
     global $dictionary;
