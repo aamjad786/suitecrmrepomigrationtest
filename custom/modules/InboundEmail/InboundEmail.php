@@ -6309,42 +6309,49 @@ class InboundEmail extends SugarBean
      * @return array Array of messageNumbers (mail server's internal keys)
      */
     public function getNewMessageIds() {
-        $this->logger->log('debug', "In getNewMessageIds in customInboundEmail");
+		$this->logger->log('debug', "In getNewMessageIds in customInboundEmail");
 
-        $storedOptions = sugar_unserialize(base64_decode($this->stored_options));
+		$storedOptions = sugar_unserialize(base64_decode($this->stored_options));
+        
+		$this->logger->log('debug', print_r($storedOptions,true));
 
-        //TODO figure out if the since date is UDT
-        if (!is_bool($storedOptions) && $storedOptions['only_since']) {// POP3 does not support Unseen flags
-            if (!isset($storedOptions['only_since_last']) && !empty($storedOptions['only_since_last'])) {
-                $q = "SELECT last_run FROM schedulers WHERE job = '{$this->job_name}'";
-                $r = $this->db->query($q, true);
-                $a = $this->db->fetchByAssoc($r);
+		//TODO figure out if the since date is UDT
+		if (!is_bool($storedOptions) && $storedOptions['only_since']) {// POP3 does not support Unseen flags
+			if (!isset($storedOptions['only_since_last']) && !empty($storedOptions['only_since_last'])) {
+				$q = "SELECT last_run FROM schedulers WHERE job = \'function::custompollMonitoredInboxesAOP\'";
+				$r = $this->db->query($q, true);
+				$a = $this->db->fetchByAssoc($r);
 
-                $date = date('r', strtotime($a['last_run']));
-                $this->logger->log('debug', "-----> getNewMessageIds() executed query: {$q}");
-            } else {
-                $date = $storedOptions['only_since_last'];
-            }
-            $ret = $this->getImap()->search('SINCE "' . $date . '" UNDELETED');
-            // $ret = $this->getImap()->search('UNDELETED'); // Pallavi temp commented since date
-            $check = $this->getImap()->check();
-            $storedOptions['only_since_last'] = $check->Date;
-            $storedOptions['only_since'] = 1;
-            $this->stored_options = base64_encode(serialize($storedOptions));
-            $this->save();
-        } else {
+				$date = date('r', strtotime($a['last_run']));
+				$this->logger->log('debug', "In stored options date is not set, using scheduler date $date executed query: {$q}");
+			} 
+            else {
+				$date = $storedOptions['only_since_last'];
+				$this->logger->log('debug', "In else found the date $date");
+			}
+            
+			$ret = $ret = $this->getImap()->search($this->conn, 'SINCE "'.$date.'" UNDELETED');
+			
+			$check = $this->getImap()->check();
+			$storedOptions['only_since_last'] = $check->Date;
+			$storedOptions['only_since'] = 1;
+			$this->stored_options = base64_encode(serialize($storedOptions));
+			$this->save();
+		} 
+        else {
             if (!is_resource($this->conn)) {
                 LoggerManager::getLogger()->fatal('Inbound Email Connection is not valid resource for getting New Message Ids.');
 
                 return false;
             }
-            $ret = $this->getImap()->search('UNDELETED UNSEEN');
-        }
+            $ret = $ret = $this->getImap()->search($this->conn, 'UNDELETED');
+		}
 
-        $this->logger->log('debug', '-----> getNewMessageIds() got ' . count($ret) . ' new Messages');
+		$this->logger->log('debug', '-----> getNewMessageIds() got '.count($ret).' new Messages');
+		$GLOBALS['log']->debug('-----> getNewMessageIds() got '.count($ret).' new Messages');
 
-        return $ret;
-    }
+		return $ret;
+	}
 
     /**
      * Constructs the resource connection string that IMAP needs

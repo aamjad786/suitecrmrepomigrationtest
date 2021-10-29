@@ -190,7 +190,6 @@ class DataSync{
                         if(!empty($call_remainder_subject)){
                             $sub = $call_remainder_subject;
                         }
-                        $url = (getenv('SCRM_SITE_URL')."/index.php?module=Cases&action=DetailView&record=".$bean->id);
                     } 
                     $new_assigned_user = $this->getUser($p2);
                     if(isset($new_assigned_user->phone_mobile)) {
@@ -232,6 +231,7 @@ class DataSync{
                 }
             }
         }
+        $url = (getenv('SCRM_SITE_URL')."/index.php?module=Cases&action=DetailView&record=".$bean->id);
         $this->format_and_send_email_to_user($bean, $sub, $desc, $url, $to_mail_webcallback);
         $this->logger->log('debug', "edit_case end");
     }
@@ -246,7 +246,7 @@ class DataSync{
             $send = new SendEmail();
             $primary_email = $this->getEmailForUser($bean->assigned_user_id);
 
-            $desc = "Hello ".$email.",<br><br>Following Case changes have happened for Case #[".$bean->case_number."] ".$bean->name.":<br>".$desc;
+            $desc = "Hello ".$primary_email.",<br><br>Following Case changes have happened for Case #[".$bean->case_number."] ".$bean->name.":<br>".$desc;
             $desc .= "<br/>You may review this Case at:<br/><a href='".$url."'>".$url."</a>";
             $desc .= "<br/><br/><b>Disclaimer:</b><i>This is an auto generated email, please do not reply.
             All replies will automatically bounce. Kindly review the case and update your remarks in CRM update text box and assign it back to the user.</i><br/><br/>";
@@ -627,7 +627,7 @@ class DataSync{
             $bean->fi_business_c = 'no';
         }
 
-        $this->logger->log('debug', "--- END checkAmbit for $bean->id and fi_business_c bean->fi_business_c ---");
+        $this->logger->log('debug', "--- END checkAmbit for $bean->id and fi_business_c [ $bean->fi_business_c ] ---");
 
         return;
     }
