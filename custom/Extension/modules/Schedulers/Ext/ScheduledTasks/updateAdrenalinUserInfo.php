@@ -1,18 +1,14 @@
 <?php
 
 require_once 'custom/CustomLogger/CustomLogger.php';
-
-array_push($job_strings, 'updateAdrenalinUserInfotest');
-
-
+array_push($job_strings, 'updateAdrenalinUserInfo');
 global $logger;
 $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
-
 //Scheculer Main Function
 function updateAdrenalinUserInfo($override_last_run_date=null)
 {
-
     global $logger;
+    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $results = false;
 
     $logger->log('debug', '<======================STARTED==========================>');
@@ -23,8 +19,6 @@ function updateAdrenalinUserInfo($override_last_run_date=null)
 
     $last_run_date = DateTime::createFromFormat('Y-m-d H:i:s', $last_run_date);
     $last_run_date = $last_run_date->format('YmdHis');
-
-
     // $last_run = "2008-05-05 01:01:01";
     //Comment below line if we dont want to fetch full user list
     //$override_last_run_date = "20080505010101";
@@ -36,8 +30,6 @@ function updateAdrenalinUserInfo($override_last_run_date=null)
         $last_run_date = $override_last_run_date;
     }
     $logger->log('debug', "Last run date formated:: " . $last_run_date);
-
-
     // Actual Fetching started
     $userInfo = fetchUserInfoFromAdrenalin($last_run_date);
 
@@ -51,7 +43,6 @@ function updateAdrenalinUserInfo($override_last_run_date=null)
     
     $results = updateUserDetails($userInfo);
 
-    
     //=======================================Need to uncomment ==================================================== 
     
     //job running for the first time, fetch all user details
@@ -59,7 +50,6 @@ function updateAdrenalinUserInfo($override_last_run_date=null)
     // if ($last_run_date == "20180505010101") {
     //     $userInfo = fetchUserInfoFromAdrenalin("20080505010101");
     // }
-
     updateAdrenalinCacheTable($userInfo, $last_run_date);
 
     $logger->log('debug', '<======================END==========================>');
@@ -68,9 +58,8 @@ function updateAdrenalinUserInfo($override_last_run_date=null)
 }
 
 function fetchLastRunDate($function_name){
-    
     global $db, $logger;
-
+    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $logger->log('debug',  'fetchLastRunDate called');
 
     $last_run_query = "select last_run from schedulers where job = '$function_name' and deleted = 0 and status = 'Active'";
@@ -89,17 +78,15 @@ function fetchLastRunDate($function_name){
 }
 
 function fetchUserInfoFromAdrenalin($last_run_date){
-
-    global $logger;
+    global $logger,$sugar_config;;
+    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $logger->log('debug', 'fetchUserInfoFromAdrenalin Called....!');
-
     try {
-
         $curl = curl_init();
-
+        $url=$sugar_config['Adrenalin Api'];
         curl_setopt_array($curl, array(
             CURLOPT_PORT => "",
-            CURLOPT_URL => "http://localhost:3001/WebAPI/NEOGROWTH/D26E59DDF39740B2B6789C26A1BBFBC5/DT_668/API0001/20080505010101" . $last_run_date . "?type=json",
+            CURLOPT_URL => "$url" . $last_run_date . "?type=json",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -133,8 +120,8 @@ function fetchUserInfoFromAdrenalin($last_run_date){
 }
 
 function updateUserDetails($userInfo){
-    
     global $logger;
+    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
 	$results = true;
 	
     foreach ($userInfo as $user) {
@@ -149,8 +136,8 @@ function updateUserDetails($userInfo){
 }
 
 function updateUserDetailsUtil($user_info){
-    
     global $db, $logger;
+    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     
     $user_info=array_change_key_case($user_info,CASE_LOWER);
     
@@ -332,9 +319,8 @@ function updateUserDetailsUtil($user_info){
 }
 
 function getUserBean($user_name){
-    
     global $logger;
-
+    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $bean = BeanFactory::getBean('Users');
 
     $query = 'users.deleted=0 and users.user_name = "'.$user_name.'"';
@@ -354,8 +340,8 @@ function getUserBean($user_name){
 
 // Functions Realted to User Role Assignment
 function updateRoleForNewUser($user, $userInfo) {
-    
     global $logger;
+    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $user = getUserBean($userInfo[strtolower('EMPLOYEE CODE')]);
     $logger->log('debug', "updateRoleForNewUser: " . $userInfo['EMPLOYEE CODE'] );
 
@@ -457,9 +443,8 @@ function updateRoleForNewUser($user, $userInfo) {
 }
 
 function fetchRoleIdFromName($role_name){
-
     global $db, $logger;
-
+    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $query = "select id from acl_roles where name = '$role_name'";
     $results = $db->query($query);
 
@@ -477,9 +462,8 @@ function fetchRoleIdFromName($role_name){
 
 // Functions Realted to Security Group Assignment
 function updateSecurityGroupForNewUser($user_bean, $userInfo){
-    
     global $db, $logger;
-    
+    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $query = "select securitygroup_id from securitygroups_users where user_id = '$user_bean->id'";
     $results = $db->query($query);
 
@@ -521,8 +505,8 @@ function updateSecurityGroupForNewUser($user_bean, $userInfo){
 }
 
 function fetchSgId($department_name){
-
     global $db, $logger;
+    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $sg_id = "";
 
     $departmentToSgMap = array(
@@ -548,9 +532,8 @@ function fetchSgId($department_name){
 }
 
 function updateAdrenalinCacheTable($userInfo,$last_run_date=null){
-    
-	global $db ,$logger;
-
+    global $db ,$logger;
+    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $logger->log('debug','UpdateAdrenalinCacheTable Started: ');
 
     try {
@@ -562,22 +545,18 @@ function updateAdrenalinCacheTable($userInfo,$last_run_date=null){
             $reporting_manager = trim($user['REPORTING MANAGER']);
             $designation_name = trim($user['DESIGNATION NAME']);
             $department_name = trim($user['DEPARTMENT NAME']);
-            $modified_on = DateTime::createFromFormat('YmdHis',$last_run_date);
-  			//$modified_on = $modified_on->format('Y-m-d H:i:s');
-//$modified_on = DateTime::createFromFormat('Y-m-d H:i:s', $last_run_date);
-             //$modified_on = $modified_on->format('YmdHis');
-
-          
+             //$modified_on = $modified_on->format('Y-m-d H:i:s');
+            // $modified_on = DateTime::createFromFormat('YmdHis', $last_run_date)->format('Y-m-d h:i:s'); 
             $query = "insert into adrenalin_user_info 
                       (employee_code, company_name, mail_id, reporting_manager, designation_name, department_name, modified_on) 
-			          values('$employee_code','$company_name','$mail_id','$reporting_manager', '$designation_name', '$department_name','$modified_on')
+			          values('$employee_code','$company_name','$mail_id','$reporting_manager', '$designation_name', '$department_name',CURRENT_TIMESTAMP())
 			          ON DUPLICATE KEY UPDATE 
 				        company_name='$company_name',
 				        mail_id='$mail_id',
 				        reporting_manager='$reporting_manager',
 				        designation_name='$designation_name',
                         department_name='$department_name',
-				        modified_on='$modified_on'
+				        modified_on=CURRENT_TIMESTAMP()
 				    ";
                     $logger->log('debug','Insert Query: '.$query);
             $result = $db->query($query);
