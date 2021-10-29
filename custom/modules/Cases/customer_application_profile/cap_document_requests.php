@@ -43,7 +43,7 @@ if($full_view){
 
 function getStatus($refer){
 	$url = getenv('AWS_API_UTILITY_URL')."/documents/$refer";
-	require_once('CurlReq.php');
+	require_once('custom/include/CurlReq.php');
 	$curl = new CurlReq();
 	$res = $curl->curl_req($url);
 	$decoded_res = json_decode($res);

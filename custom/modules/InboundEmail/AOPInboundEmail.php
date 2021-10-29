@@ -32,7 +32,7 @@ class AOPInboundEmail extends InboundEmail
 
     public function __construct() {
         parent::__construct();
-		$this->logger =new CustomLogger('custompollMonitoredInboxesAOP');
+		$this->logger =new CustomLogger('custompollMonitoredInboxesAOP-'.date('Ymd'));
 	}
 
     /**

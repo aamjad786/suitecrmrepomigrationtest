@@ -7,7 +7,7 @@ class DataSync{
      * the method that we'll want to call in the logic_hooks.php file.
      */
     public function __construct() {
-		$this->logger = new CustomLogger('casesLogicHooks');
+		$this->logger = new CustomLogger('casesLogicHooks-'.date('Y-M-d'));
 	}
     function CheckUpdatedFields($bean, $event, $arguments){
         $this->logger->log('debug', "---Inside data sync CheckUpdatedFields for case $bean->id---");
@@ -562,7 +562,7 @@ class DataSync{
 
     function checkUnfundedTDScase($bean, $event, $arguments){
         $this->logger->log('debug', "--- In checkUnfundedTDScase for $bean->id ---");
-        require_once('CurlReq.php');
+        require_once('custom/include/CurlReq.php');
         $curl_req = new CurlReq();
         $appid=$bean->merchant_app_id_c;
         $url=getenv('SCRM_AS_API_BASE_URL')."/get_application_basic_details?ApplicationID=$appid";
@@ -602,7 +602,7 @@ class DataSync{
     function checkAmbit($bean, $event, $arguments){
         $this->logger->log('debug', "--- In checkAmbit for $bean->id ---");
 
-        require_once('CurlReq.php');
+        require_once('custom/include/CurlReq.php');
 
         $curl_req = new CurlReq();
 
@@ -636,7 +636,7 @@ class DataSync{
 
         $this->logger->log('debug', "--- In processorName for $bean->id ---");
 
-        require_once('CurlReq.php');
+        require_once('custom/include/CurlReq.php');
 
         $curl_req = new CurlReq();
 

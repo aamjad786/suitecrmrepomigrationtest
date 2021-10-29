@@ -241,7 +241,7 @@ HTMLFORM;
 			
 			echo "<br/><hr>	<h2>Data sent to AS:</h2><br/>";
 			$renewals->printJson(($encoded_data));
-			require_once('CurlReq.php');
+			require_once('custom/include/CurlReq.php');
 			$CurlReq = new CurlReq();
 			$output = $CurlReq->curl_req(getenv('SCRM_AS_URL').'/api/Renewal/PostSaveRenewalQueueForCRMAPI','post',$encoded_data);
 

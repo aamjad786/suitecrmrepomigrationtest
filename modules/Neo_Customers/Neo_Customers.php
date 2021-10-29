@@ -195,7 +195,7 @@ class Neo_Customers extends Neo_Customers_sugar {
             $item = $this;
             $application_id = $item->app_id;
             fwrite($this->log,"application_id=$application_id");
-            require_once('CurlReq.php');
+            require_once('custom/include/CurlReq.php');
             $curl_req = new CurlReq();
 
             $as_api_url = getenv('SCRM_AS_API_BASE_URL'); 

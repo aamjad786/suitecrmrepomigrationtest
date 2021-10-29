@@ -8,7 +8,7 @@ include_once('include/SugarPHPMailer.php');
 include_once('modules/Administration/Administration.php');
 require_once('custom/include/SendEmail.php');
 require_once('modules/EmailTemplates/EmailTemplate.php');
-require_once('CurlReq.php');
+require_once('custom/include/CurlReq.php');
 
 $curl_req = new CurlReq();
 

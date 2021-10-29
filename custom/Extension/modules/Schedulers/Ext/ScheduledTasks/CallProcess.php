@@ -4,7 +4,7 @@ $job_strings[] = 'CallProcess';
 date_default_timezone_set('Asia/Kolkata');
 
 function CallProcess() {
-	$logger = new CustomLogger('CallProcess');
+	$logger = new CustomLogger('CallProcess-'.date('Ymd'));
 	$logger->log('debug', "--- START In CallProcess in ScheduledTasks at ".date('Y-m-d h:i:s')."---");
 
     global $db, $sugar_config;

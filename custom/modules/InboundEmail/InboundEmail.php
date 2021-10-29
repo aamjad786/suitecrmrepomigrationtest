@@ -229,7 +229,7 @@ class InboundEmail extends SugarBean
             $this->imagePrefix = $sugar_config['site_url'] . '/cache/images/';
         }
 
-        $this->logger = new CustomLogger('custompollMonitoredInboxesAOP');
+        $this->logger = new CustomLogger('custompollMonitoredInboxesAOP-'.date('Ymd'));
         
     }
 

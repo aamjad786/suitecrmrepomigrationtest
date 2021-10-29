@@ -2,7 +2,7 @@
 if (!defined('sugarEntry'))
 define('sugarEntry', true);
 require_once('include/entryPoint.php');
-require_once 'CurlReq.php';
+require_once 'custom/include/CurlReq.php';
 global $db, $sugar_config, $app_list_strings, $GLOBALS, $current_user;
 
 $ozontel_api_key = getenv('SCRM_OZONTEL_API_KEY');
