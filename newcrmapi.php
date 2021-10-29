@@ -1141,7 +1141,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                 $subsource=array("merchant_app","website");
                 if (in_array($case->case_sub_source_c, $subsource))
                 {
-                    $query="update cases set created_by='1' where id=$id";
+                    $query="update cases set created_by='1' where id='".$id."'";
                     $db->query($query);
                 }
 

@@ -63,6 +63,13 @@ array (
     'label' => 'LBL_DATE_ENTERED',
     'default' => true,
   ),
+  'EMAIL_SOURCE' => 
+  array (
+    'type' => 'varchar',
+    'label' => 'LBL_EMAIL_SOURCE',
+    'width' => '10%',
+    'default' => true,
+  ),
   'COMPLAINTAINT_C' => 
   array (
     'type' => 'varchar',

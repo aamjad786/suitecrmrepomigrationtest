@@ -26,8 +26,8 @@ class DataSync{
                 $bean->current_user_department_c = $userDepartment;
             }
 
-            $attended_by_c = $bean->attended_by_c;
-            $this->logger->log('debug', " $bean->id start attended_by  $attended_by_c");
+            // $attended_by_c = $bean->attended_by_c;
+            // $this->logger->log('debug', " $bean->id start attended_by  $attended_by_c");
 
             if($bean->case_subcategory_c == "financial_live_restructure"){
                 $bean->type = "request";
@@ -59,7 +59,7 @@ class DataSync{
                 $this->create_case($bean);
             }
 
-            $attended_by_c = $bean->attended_by_c;
+            // $attended_by_c = $bean->attended_by_c;
 
             if($bean->state == 'Closed'){
                 $bean->date_attended_c = $bean->date_entered;
@@ -67,7 +67,7 @@ class DataSync{
             else if($bean->state == 'Resolved'){
                 $bean->date_attended_c =  $bean->date_modified;
             }
-            $this->logger->log('debug', "end attended_by_c  $attended_by_c");
+            // $this->logger->log('debug', "end attended_by_c  $attended_by_c");
         }
         //$bean->call_sns();
         $this->logger->log('debug', "---END data sync CheckUpdatedFields for case $bean->id---");
@@ -88,9 +88,9 @@ class DataSync{
             //Set to null if its not a call back request from website, coz calling from api with admin credentials
             $bean->assigned_user_id = NULL;
         }
-        else{
-            $bean->attended_by_c = $this->getUserName($bean->created_by);
-        }
+        // else{
+        //     $bean->attended_by_c = $this->getUserName($bean->assigned_user_id);
+        // }
 
         $this->logger->log('debug', "Assigned user id before : $bean->assigned_user_id");
 
@@ -101,7 +101,7 @@ class DataSync{
             else{
                 $bean->assigned_user_id = $bean->getUserToAssign();
             }
-            $bean->attended_by_c = $this->getUserName($bean->assigned_user_id);
+            // $bean->attended_by_c = $this->getUserName($bean->assigned_user_id);
 
             $this->logger->log('debug', "Assigned user id after : $bean->assigned_user_id");
 
@@ -121,7 +121,7 @@ class DataSync{
         if($bean->state == 'Closed'){
             $bean->date_closed_c = $bean->date_entered;
             $bean->date_resolved_c = $bean->date_entered;
-            $bean->attended_by_c = $this->getUserName($bean->assigned_user_id);
+            // $bean->attended_by_c = $this->getUserName($bean->assigned_user_id);
             $bean->closed_by_c = $this->getUserName($GLOBALS['current_user']->id);
         }
         $this->logger->log('debug', "create_case end");
@@ -203,8 +203,8 @@ class DataSync{
                 }
                 else if($key_field == 'state'){
                     if ($p2 == 'Closed'){
-                        if (empty($bean->attended_by_c))
-                            $bean->attended_by_c = $this->getUserName($bean->assigned_user_id);
+                        // if (empty($bean->attended_by_c))
+                        //    $bean->attended_by_c = $this->getUserName($bean->assigned_user_id);
                         if (empty($bean->date_resolved_c))
                             $bean->date_resolved_c = $bean->date_modified;
                         $bean->date_closed_c = $bean->date_modified;
@@ -676,44 +676,40 @@ class DataSync{
             $user = BeanFactory::getBean('Users');
             $query = "users.deleted=0 and users.designation='Chief Financial Officer'";
             $old_user = $bean->stored_fetched_row_c['assigned_user_id'];
-
-            $this->logger_susp_mail->log('info', "[SR-#$bean->case_number] Query :: " . $query);
-
+            $this->logger_susp_mail->log('info', "Query :: " . $query);
             $items = $user->get_full_list('',$query);
             $id=$items[0]->id;
-            if(($bean->assigned_user_id==$id) && strcmp($old_user,$bean->assigned_user_id)!=0){
+            if(($bean->assigned_user_id == $id) && strcmp($old_user, $bean->assigned_user_id)!=0) {
                 $to=$items[0]->email1;
                 $sub= "Consent on Suspicious Transaction Case [SR-#$bean->case_number] App ID: $bean->merchant_app_id_c, $bean->merchant_establisment_c";
                 $desc="<pre>
-                Hello,
-                $current_user->full_name has assigned case to you for Suspicious transaction consent.
-
-                Dear Sir,
-
-                This case is created under suspicious transaction category.
-                The customer has shared declaration form. Kindly refer attached declaration and confirm if this transaction to be tagged as Normal or Suspicious.
-                Just add your comment stating Suspicious or Normal Transaction in the comment box.</pre>";
-                //$receipt_date = date_format(date_create($bean->date_entered), 'd/m/Y h:i:s a');
+                    Hello,
+                    $current_user->full_name has assigned case to you for Suspicious transaction consent.
+                    Dear Sir,
+                    This case is created under suspicious transaction category.
+                    The customer has shared declaration form. Kindly refer attached declaration and confirm if this transaction to be tagged as Normal or Suspicious.
+                    Just add your comment stating Suspicious or Normal Transaction in the comment box.</pre>";
+                $receipt_date = date_format(date_create($bean->date_entered), 'd/m/Y h:i:s a');
                 $desc .= "<pre><b>Case History:</b>
-                <table border='1' style='border-collapse: collapse;'>
-                <tr>
-                    <td><b>Case Number</b></td>
-                    <td colspan=2>$bean->case_number</td>
-                    <td><b>Case Login Date</b></td>
-                    <td colspan=2>$bean->date_entered</td>
-                </tr>
-                <tr>
-                    <td><b>Issue Category (SubCategory)</b></td>
-                    <td colspan=2>$bean->case_category_c- $bean->case_subcategory_c</td>
-                    <td><b>Case Status</b></td>
-                    <td colspan=2>$bean->state</td>
-                </tr></table>";
+                    <table border='1' style='border-collapse: collapse;'>
+                        <tr>
+                            <td><b>Case Number</b></td>
+                            <td colspan=2>$bean->case_number</td>
+                            <td><b>Case Login Date</b></td>
+                            <td colspan=2>$bean->date_entered</td>
+                        </tr>
+                        <tr>
+                            <td><b>Issue Category (SubCategory)</b></td>
+                            <td colspan=2>$bean->case_category_c- $bean->case_subcategory_c</td>
+                            <td><b>Case Status</b></td>
+                            <td colspan=2>$bean->state</td>
+                        </tr></table>";
                 $url = (getenv('SCRM_SITE_URL')."/index.php?module=Cases&action=DetailView&record=".$bean->id);
                 $desc.= "<pre>You may review this Case at:
                     <a href='$url'>$url</a></pre>";
                 $email = new SendEmail();
-                //$user=BeanFactory::getBean($bean->assigned_user_id);
-                $email->send_email_to_user($sub, $desc, $to, array(), $bean);
+                $user = BeanFactory::getBean($bean->assigned_user_id);
+                $email->send_email_to_user($sub,$desc,$to,array(),$bean);
             }
         }
         $this->logger->log('debug', "---End suspicioustrans $bean->id ---");
@@ -804,5 +800,117 @@ class DataSync{
 
         }
         $this->logger->log('debug', "--- End tempCategoryStore $bean->id ---");
+    }
+    public function caseTypeSave($bean,$event, $arguments){
+        global $sugar_config;
+        $details = $sugar_config['case_types'];
+        $subcat = $bean->case_subcategory_c;
+        
+        $index=$this->getdetail($details,$subcat);
+        $detail=$details[$index];
+        $type=$detail['qrc'];
+  
+        if(!empty($type)){
+            global $db;
+            $query = "update cases set type='".$type."' where id='".$bean->id."'";
+           
+            $db->query($query);
+        }
+      
+   }
+
+    public function getdetail($a,$subcat) {
+        foreach($a as $key => $i)
+        {
+            if(array_search($subcat,$i))
+            {
+                return $key;
+            }
+        }
+    }
+
+
+    public function caseOwnerSave($bean,$event, $arguments){
+
+        global $db,$current_user;
+
+	    $file=fopen('Logs/caseOwnerLog.log','a');
+
+        $created_by_user = $bean->created_by;
+        
+        if(empty($this->checkCaseOwnerIsExist($bean,$event, $arguments)) &&
+          !empty($case_owner = $this->CheckIsCsExecutive($bean,$event, $arguments))){
+
+            $query = "update cases_cstm set attended_by_c='".$case_owner."' where id_c='".$bean->id."'";
+		    fwrite($file,"\n Inside the update query -  $query\n");
+            $db->query($query);
+
+        } 
+        
+    }
+
+    //Check if its executive
+    public function CheckIsCsExecutive($bean,$event, $arguments){
+
+        global $db;
+        
+        $this->loggerCaseOwner = new CustomLogger('caseOwnerLog');
+
+        $created_by_user = $bean->created_by;
+        
+        $query='SELECT au.user_id as user_id FROM acl_roles ar LEFT JOIN acl_roles_users au ON ar.id=au.role_id WHERE ar.name = "Customer support executive Assignment Dynamic" and user_id= "'.$created_by_user.'" and au.deleted=0';
+
+	    $this->loggerCaseOwner->log('debug', "Inside Check Is Cs Executive - case id   $bean->id");
+
+        $this->loggerCaseOwner->log('debug', "Inside Check Is Cs Executive -  $query");
+
+        $row = $db->fetchOne($query);
+        
+        if(!empty($row['user_id'])){
+
+            return $this->getUserName($row['user_id']);
+
+        } 
+        else {
+	
+	        $this->loggerCaseOwner->log('debug', "Else Inside Check Is Cs Executive - case id   $bean->id");
+
+            $this->loggerCaseOwner->log('debug', "Else Inside Check Is Cs Executive -  $bean->assigned_user_id");
+
+            if(!empty($bean->assigned_user_id)){
+
+                return $this->getUserName($bean->assigned_user_id);
+
+            }
+
+        }
+    }
+
+    public function checkCaseOwnerIsExist($bean,$event, $arguments){
+        
+        global $db;
+
+	    $this->loggerCaseOwner = new CustomLogger('caseOwnerLog');
+
+        $query='SELECT attended_by_c from cases_cstm where id_c="'.$bean->id.'"';
+
+	    $this->loggerCaseOwner->log('debug', "Inside check Case Owner Is Exist -  $query");
+
+        $row = $db->fetchOne($query);
+
+        $check_user_role='SELECT au.user_id as user_id FROM acl_roles ar LEFT JOIN acl_roles_users au ON ar.id=au.role_id WHERE ar.name = "Customer support executive Assignment Dynamic" and user_id LIKE "%'.$row['attended_by_c'].'%" and au.deleted=0';
+        
+        $this->loggerCaseOwner->log('debug', "Inside check Case Owner role -  $check_user_role");
+        $user_role = $db->fetchOne($check_user_role);
+
+        if(empty(trim($row['attended_by_c']))|| $row['attended_by_c']=='Administrator' || $row['attended_by_c']=='' || empty($user_role['user_id'])) {
+
+            return NULL;
+
+	    } 
+        else {
+
+            return $row['attended_by_c'];
+        }
     }
 }

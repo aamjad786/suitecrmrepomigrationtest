@@ -345,9 +345,9 @@ EOQ1;
         $isAdmin            = $current_user->is_admin;
         $access=in_array($current_user->user_name,array('Roshni.Shaikh','NG866','NG478','Rohan.Supugade','hamza.thariya','Rohit.Ghag','NG722','bhargav.boda','sudhir.manwada','saajan.simon','NG887','Gaurav.Bavkar'));
         $case_created_by    = $this->bean->attended_by_c;
-        $old_category       = $this->bean->fetched_row->case_category_c;
+        $old_category       = !empty($this->bean->fetched_row->case_category_c)?$this->bean->fetched_row->case_category_c:'';
         
-        $old_subcategory    = $this->bean->fetched_row->case_subcategory_c;
+        $old_subcategory    = !empty($this->bean->fetched_row->case_subcategory_c)?$this->bean->fetched_row->case_subcategory_c:'';
         $new_category       = $this->bean->case_category_c;
         //echo $old_category;exit;
         $new_sub_categoty   = $this->bean->case_subcategory_c;
@@ -913,7 +913,7 @@ EOQ1;
                 function validateMinefield(){
                   var username = $('#current_user_name').val().toLowerCase();
                   var priority = $('#priority').val();
-                  if(priority=='P4' && $.inArray(username,['ng690','ng866','ng478','ng1962','ng1647','ng2029','ng2054','ng2064'])==-1){
+                  if(priority=='P4' && $.inArray(username,['ng1647','ng2155','ng2054','ng887'])==-1){// ['ng690','ng866','ng478','ng1962','ng1647','ng2029','ng2054','ng2064'])==-1){
                     alert('This is a minefield case and cannot be saved by you');
                     disableSave();
                     console.log("validateMinefield failed");
@@ -1044,7 +1044,7 @@ EOQ1;
                     if(env =='prod'){
                         maker =['ng478','ng866','ng887','sudhir.manwada','saajan.simon', 'ng2029','ng2054','Gaurav.Bavkar'];
                     } else {
-                        maker = ['ng1273','ng1274', 'nucsoft1'];
+                        maker = ['ng1273','ng1274', 'ng2054','ng2155','nucsoft4', 'nucsoft1'];
                     }
                   
                     var username = $('#current_user_name').val().toLowerCase();
@@ -1090,7 +1090,7 @@ EOQ1;
                     if(env =='prod'){
                         maker =['ng478','ng866','ng887', 'saajan.simon','sudhir.manwada','ng2029','ng2054','Gaurav.Bavkar'];
                     } else {
-                        maker = ['ng1273','ng1274','nucsoft1'];
+                        maker = ['ng1273','ng1274','ng2054','ng2155','nucsoft4','nucsoft1'];
                     }
                     var cat="<?php echo $this->bean->case_category_c?>";
                     var sub_cat="<?php echo $this->bean->case_subcategory_c?>";
@@ -1126,7 +1126,7 @@ EOQ1;
                     if(env =='prod'){
                         maker =['ng478','ng866','ng887','sudhir.manwada', 'saajan.simon','ng2029','ng2054','Gaurav.Bavkar'];
                     } else {
-                        maker = ['ng1273','ng1274', 'nucsoft1'];
+                        maker = ['ng1273','ng1274','ng2054','nucsoft1','nucsoft4'];
                     }
                     var username = $('#current_user_name').val().toLowerCase();
                     if(jQuery.inArray(username, maker) != -1) {

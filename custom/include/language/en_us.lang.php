@@ -1001,32 +1001,62 @@ $GLOBALS['app_list_strings']['cstm_opp_disposition_list']=array (
   'appointment_done_cam_to_visit_customer' =>'Appointment Done- CAM to visit Customer',
   'connected_language_barrier_tamil'=>'Appointment Not Done - Language Barrier - Tamil',
   'connected_language_barrier_telugu'=>'Appointment Not Done - Language Barrier - Telugu',
-
-
-  ''=>''
+  'rejected_incorrect_doc'=>'Rejected  - Incorrect documents',
+  'customer_not_proceeding'=>'Customer- Not ready to proceed',
+  'techincal_issue'=>'Technical issue',
+  'call_dropped'=>'Call Dropped',
+  'appointment_not_done_number_busy'=>'Appointment not done-Number Busy',
+  'appointment_not_done_service_unavailable'=>'Appointment not done-Service Unavailable',
+  'application_completed'=>'Appointment Done - Already completed the application/Requirement fulfilled',
+  'logged_in' => 'Logged In'
 );
 
 $GLOBALS['app_list_strings']['opp_eos_disposition_list']=array (
   ''=>'',
   'connected'=>'Connected',
   'not_connected'=>'Not Connected',
-  'deal_generated'=>'Customer Deal Generated'
+  'deal_generated'=>'Customer Deal Generated',
+  'aadhar_not_linked_with_phno' =>'Aadhaar not linked with Phone Number',
+  'digital_journey_kyc_doc_unavailable'=>'Digital Journey - Unavailability of KYC doc',
+  'rejected_incorrect_doc'=>'Rejected  - Incorrect documents',
+  'landing_page_biz_pincode_mismatch'=>'Shop/store pin code mismatch pin code on landing page',
+  'unavailability_curr_add_proof'=>'Unavalability of Current address proof',
+  'unavailability_biz_kyc'=>'Unavalability of Business KYC',
+  'unavailability_bank_stat'=>'Unavailability of Bank statements'
 );
 
 $GLOBALS['app_list_strings']['opp_eos_sub_disposition_list']=array (
   ''=>'',
   'connected_requirement_postponed'=>'Requirement Postponed',
-  'connected_not_proceeding'=>'Don’t want to proceed further',
+  'connected_not_proceeding'=>'Customer- Not ready to proceed',
+  'connected_techincal_issue'=>'Technical Issue',
+  'connected_customer_issue'=>'Customer Issue',
   'connected_language_barrier'=>'Language Barrier',
+  'connected_application_completed'=>'Already completed the application/Requirement fulfilled',
   'connected_call_dropped'=>'Call Disconnected/Dropped',
   'connected_call_back'=>'Call-back',
   'connected_not_available'=>'Right Party not available',
   'connected_application_complete'=>'Application Completed',
   'connected_application_approved'=>'Application Completed--Approved',
   'connected_application_rejected'=>'Application Completed--Rejected',
+  'connected_already_approved'=>'Already Approved',
   'not_connected_no_answer'=>'Ringing but no answer',
+  'not_connected_service_unavailabler'=>'Service Unavailable',
   'not_connected_busy'=>'Busy',
-  'not_connected_unconnected'=>'Call Disconnected before connected'
+  'not_connected_unconnected'=>'Call Disconnected before connected',
+  'aadhar_not_linked_with_phno_eligible'=>'Eligible',
+  'aadhar_not_linked_with_phno_ineligible'=>'Ineligible',
+  'digital_journey_kyc_doc_unavailable_business_kyc_unavailable' =>'Business KYC not available',
+  'digital_journey_kyc_doc_unavailable_curr_add_proof_unavailable'=>'Current Address Proof not available',
+  'digital_journey_kyc_doc_unavailable_curr_add_aadhar_mismatch'=>'Current Address Proof not match with Aadhaar',
+  'rejected_incorrect_doc_business_kyc'=>'Business KYC',
+  'rejected_incorrect_doc_curr_address_proof'=>'Current Address proof',
+  'rejected_incorrect_doc_both'=>'Business KYC / Current Address proof',
+  'landing_page_biz_pincode_mismatch_eligible'=>'Eligible',
+  'landing_page_biz_pincode_mismatch_ineligible'=>'Ineligible',
+  'unavailability_curr_add_proof_ineligible'=>'Ineligible',
+  'unavailability_biz_kyc_ineligible'=>'Ineligible',
+  'unavailability_bank_stat_ineligible'=>'Ineligible'
 );
 
 $GLOBALS['app_list_strings']['opp_substatus_list']=array (
@@ -1058,7 +1088,7 @@ $GLOBALS['app_list_strings']['opp_substatus_list']=array (
   'appointment_not_done_customer_called_and_said_not_interested_highROI'=>'ROI High',
   'appointment_not_done_customer_called_and_said_not_interested_postponed'=>'Requirement postponed',
   'appointment_not_done_customer_called_and_said_not_interested_no_reason'=>'No reason given',
-  'appointment_not_done_customer_called_and_said_not_interested_already_postponed'=>'Requirement already postponed',
+  'appointment_not_done_customer_called_and_said_not_interested_already_postponed'=>'Requirement already postponed'
 
 );
 
@@ -1787,7 +1817,6 @@ $GLOBALS['app_list_strings']['paylater_products_list'] = array(
     
 );
 $GLOBALS['app_list_strings']['neo_cash_status'] = array(
-    '' => '',
     'IN_PROGRESS' => 'In Progress',
     'NON_CONTACTABLE' => 'Non Contactable',
     'CLOSED' => 'Closed'
@@ -1924,6 +1953,12 @@ $app_list_strings['moduleListSingular']['scrm_Cases']='Case Escalation';
 
 $app_list_strings['moduleList']['neo_Paylater_Open']='Paylater';
 $app_list_strings['moduleListSingular']['neo_Paylater_Open']='Paylater';
+
+$GLOBALS['app_list_strings']['digital_c_list']=array (
+  '' => '',
+  'yes' => 'Yes',
+  'no' => 'No',
+);
 
 $app_strings['LBL_GROUPTAB5_1631783180'] = 'Cases';
 

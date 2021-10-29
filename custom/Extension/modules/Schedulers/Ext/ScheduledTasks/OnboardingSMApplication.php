@@ -1,16 +1,17 @@
 <?php
 
-require_once('custom/include/CurlReq.php');
+require_once('CurlReq.php');
 require_once 'custom/CustomLogger/CustomLogger.php';
 
 $curl_req = new CurlReq();
 
-$job_strings[] = 'ImportingSMApplications';
+$job_strings[] = 'OnboardingSMApplication';
 date_default_timezone_set('Asia/Kolkata');
 
-function ImportingSMApplications() {
-
+function OnboardingSMApplication() {
+    
     $previousDayDate = date('Y-m-d', strtotime('-1 day'));
+    
     $url = getenv('SCRM_AS_API_BASE_URL')."/crm/get_disbursed_loans?date=$previousDayDate";
 
     $cSession = curl_init();
@@ -31,13 +32,12 @@ function ImportingSMApplications() {
     $sBody = trim(mb_substr($result, $curlHeaderSize));
     $ResponseHeader = explode("\n", trim(mb_substr($result, 0, $curlHeaderSize)));
     unset($ResponseHeader[0]);
-//Parsing response
+    //Parsing response
     
     $logger = new CustomLogger('importingSmApplicationsError');
-    $logger->log('debug', "--- START In importingSmApplication in ScheduledTasks at ".date('Y-m-d h:i:s')."---");
-
-    $logger->log('debug', "URL : $url");
-    $logger->log('debug', "Result : " . var_export($result, true));
+    $logger->log('debug', date('Y-m-d h:i:s'));
+    $logger->log('debug', $url);
+    $logger->log('debug', var_export($result, true));
     
     $responseArray = json_decode($sBody, true);
     if (!empty($responseArray) && $responseArray['status'] != "failed") {
@@ -76,9 +76,6 @@ function ImportingSMApplications() {
                     $repaymentFrequency = $data['RepaymentFrequency'];
                     $processingFees = $data['ProcessingFee'];
                     $gstOnProcessingFee = $data['GSTOnProcessingFee'];
-                    $isBalanceTransfer = $data['IsBalanceTransfer'];
-                    $scheme = $data['Scheme'];
-                    $subScheme = $data['SubScheme'];
 
                     $explodeFundingDate = explode("T", $fundingDateWithTime, 2);
                     $fundingDate = $explodeFundingDate[0];
@@ -119,9 +116,9 @@ function ImportingSMApplications() {
                     $fundingDateWithTimeFormatted = $dateFormat->format('Y-m-d H:i:s'); 
                    
                     
-                    $logger->log('debug', "Funded date ---> " . $fundingDateWithTimeFormatted ."\n");
-                    $logger->log('debug', "Processing Fee --> ". $processingFees . "\n");
-                    $logger->log('debug', "GST on Processing Fee --> ". $gstOnProcessingFee . "\n");
+                    $logger->log('debug', "Funded date ---> " . $fundingDateWithTimeFormatted);
+                    $logger->log('debug', "Processing Fee --> ". $processingFees);
+                    $logger->log('debug', "GST on Processing Fee --> ". $gstOnProcessingFee);
 
                     $smAccountBean = BeanFactory::newBean('SMAcc_SM_Account');
                     $smAccountBean->app_id = $applicationId;
@@ -149,22 +146,19 @@ function ImportingSMApplications() {
                     $smAccountBean->funded_date = $fundingDateWithTimeFormatted;
                     $smAccountBean->processing_fee = $processingFees+$gstOnProcessingFee;
                     $processing_fees = $processingFees+$gstOnProcessingFee;
-                    $smAccountBean->isbalancetransfer = $isBalanceTransfer;
-                    $smAccountBean->scheme=$scheme;
-                    $smAccountBean->sub_scheme=$subScheme;
 
     
-                    // $url4 = getenv('SCRM_AS_API_BASE_URL')."/get_merchant_details?ApplicationID=".$applicationId;
-                    // $json_response = json_decode($url4, true);
-				    // if(!empty($json_response) && count($json_response)>0){
-                    //     $applicant_scheme = $json_response[0]['Scheme'];
-                    //     $sub_scheme = $json_response[0]['Sub Scheme'];
-                    //     $first_app_id = $json_response[0]['First Application Id'];
-                    //     $isbalancetranfer = $json_response[0]['Is Balance Transfer'];
-                    // }
-                    // $smAccountBean->scheme=$applicant_scheme;
-                    // $smAccountBean->sub_scheme=$sub_scheme;
-                    // $smAccountBean->isbalancetransfer=$isbalancetranfer;
+                    $url4 = getenv('SCRM_AS_API_BASE_URL')."/get_merchant_details?ApplicationID=".$applicationId;
+                    $json_response = json_decode($url4, true);
+				    if(!empty($json_response) && count($json_response)>0){
+                        $applicant_scheme = $json_response[0]['Scheme'];
+                        $sub_scheme = $json_response[0]['Sub Scheme'];
+                        $first_app_id = $json_response[0]['First Application Id'];
+                        $isbalancetranfer = $json_response[0]['Is Balance Transfer'];
+                        }
+                        $smAccountBean->scheme=$applicant_scheme;
+                        $smAccountBean->sub_scheme=$sub_scheme;
+                        $smAccountBean->isbalancetransfer=$isbalancetranfer;
                         
 
                     # ONBOARDING RESTRUCTURE CONDITION - CSI - 648 
@@ -182,14 +176,19 @@ function ImportingSMApplications() {
                     $is_ambit = 0;
 
                     if(!empty($json_response) && count($json_response)>0){
+
                         if($json_response['is_bc_app_id'] == 1){
+
                             $is_ambit=1;
+                            
                         } 
                     }
 
-                    if($control_program!="restructure" && $applicant_scheme!="COVID 19" && $is_ambit != 1){
+                    if($control_program!="restructure" && $applicant_scheme!="COVID 19" && $is_ambit != 1)
+                    {
                         $smAccountBean->save();
                     }
+                   
                 }
             }
         }

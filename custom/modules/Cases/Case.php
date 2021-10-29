@@ -402,7 +402,8 @@ class aCase extends Basic {
             checker_comment_c,
             maker_id_c,
             scheme_c,
-            concat(first_name,' ',last_name) as created_by_user,
+            //concat(first_name,' ',last_name) as created_by_user,
+			(select concat(u.first_name,' ',u.last_name) from users u where u.id=cases.created_by) as  created_by_user,
             processor_name_c,
             fi_business_c,	
             partner_name_c
