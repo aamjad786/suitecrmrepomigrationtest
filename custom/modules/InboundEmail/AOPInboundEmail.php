@@ -23,6 +23,8 @@
  * @author Salesagility Ltd <support@salesagility.com>
  */
 
+use Api\Core\Loader\CustomLoader;
+
 require_once 'custom/modules/InboundEmail/InboundEmail.php';
 require_once 'include/clean.php';
 require_once 'custom/CustomLogger/CustomLogger.php';
@@ -136,6 +138,29 @@ class AOPInboundEmail extends InboundEmail
                 return;
             }
         }
+        // Adding condition for skipping the cases coming from namaste@fullertonindia.com and more conditions
+        //Added for Ticket CSI-1167
+        $this->loggerTesting = new CustomLogger('TestingCases1');
+
+        $GLOBALS['log']->fatal(print_r($email->name,true));
+        if((strcasecmp($email->from_addr, $sugar_config['ng_khatal_jay']) == 0) && (strpos($email->name, $sugar_config['skip_handleCreateCase_email_name']) !== false)) {
+            $this->loggerTesting->log('info', "Skipping the case creation for [$email->name] as its mail from $email->from_addr AND subject starts with Re : Auto Acknowledgement for Service");
+            return;
+        }
+       
+        $skip_email =$this->extract_emails($email->from_addr);
+        
+        if($skip_email[0]==$sugar_config['helpdesk_email'] || strpos($email->from_addr,$sugar_config['helpdesk_email']) !== false){
+
+            $this->loggerTesting->log('info', "Inside skiping  automatic email case creation for [$email->from_addr] as its mail");
+            return;
+        }
+        
+        if((strpos($email->from_addr,"consumer.support@in.experian.com") !== false || $skip_email[0]=='consumer.support@in.experian.com') && strpos($email->name ,"Automatic reply") !== false){
+
+            $this->loggerTesting->log('info', "Skipping the automatic email case creation for [$email->name] as its mail from");
+            return;
+        }
         if ($email->name == "Detractor Response") {
             require_once('ApplicationApi.php');
             require_once('custom/modules/Calls/CreateCall.php');
@@ -170,6 +195,7 @@ class AOPInboundEmail extends InboundEmail
             $c->merchant_email_id_c = $email->from_addr;
             $c->case_source_c = 'internal';
             $c->assigned_user_id = $userId;
+            $c->attended_by_c = $this->getUserName($userId);
             $c->name = $email->name;
             $c->description = $email->description;
 
@@ -275,6 +301,24 @@ class AOPInboundEmail extends InboundEmail
         }   
         echo "End of handle create case\n";
     } // fn
+
+    function extract_emails($str){
+
+        $regexp = '/([a-z0-9_\.\-])\@(([a-z0-9\-])\.)([a-z0-9]{2,4})/i';
+        preg_match_all($regexp, $str, $m);
+
+        return isset($m[0]) ? $m[0] : array();
+    }
+
+    function getUserName($user_id) {   
+        $user = BeanFactory::getBean('Users',$user_id);
+      
+        if($user){
+
+            return $user->first_name." ".$user->last_name;
+        } 
+        return "";
+    }
 
     function getAppidFromEmailCase($email_name, $case_description, $email_from_addr) {
         $app_id = $this->getAPPID($email_name);

@@ -30,7 +30,7 @@ if($full_view){
 ?>
 
 
-<form id='dateform' name='dateform' action="<?= $_SERVER[REQUEST_URI]; ?>" method="post">
+<form id='dateform' name='dateform' action="<?= $_SERVER['REQUEST_URI']; ?>" method="post">
 <b>From Date:</b><input type='date' id='fromdate' name='fromdate'/>
 <br/><br/>
 <b>To Date:</b><input type='date' id='todate' name='todate' />

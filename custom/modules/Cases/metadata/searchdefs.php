@@ -257,6 +257,14 @@ array (
         'default' => true,
         'name' => 'description',
       ),
+      'email_source' => 
+      array (
+        'type' => 'enum',
+        'label' => 'LBL_EMAIL_SOURCE',
+        'width' => '10%',
+        'default' => true,
+        'name' => 'email_source',
+      ),
     ),
   ),
   'templateMeta' => 

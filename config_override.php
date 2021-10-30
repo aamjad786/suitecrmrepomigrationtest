@@ -28,6 +28,8 @@ $sugar_config['verify_client_ip'] = false;
 $sugar_config['Adrenalin Api']="http://192.168.11.186:3001/WebAPI/NEOGROWTH/D26E59DDF39740B2B6789C26A1BBFBC5/DT_668/API0001/20080505010101";
 $sugar_config['AS_CRM_Domain'] = 'crm.advancesuite.in';
 
+$sugar_config['ng_khatal_jay'] = 'khataljay@gmail.com';
+
 // Maker checker history permitted users
 $sugar_config['maker_checker_h_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG536","NG2029","NG2064","NG2054");
 
@@ -35,13 +37,13 @@ $sugar_config['maker_checker_h_permitted_user'] = array("NG377", "NG855", "NG950
 $sugar_config['maker_checker_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG536","NG2029","NG2054","NG2064");
 
 // Maker checker menu permitted users
-$sugar_config['maker_checker_menu_permitted_user'] = array('ng1647','ng1273','ng619','ng478','ng866','ng1273','ng1274','ng2054','ng2064');
+$sugar_config['maker_checker_menu_permitted_user'] = array('ng1647','ng1273','ng619','ng478','ng866','ng1273','ng1274','ng2054','ng2064','ng2155','ng2054','nucsoft5','nucsoft4');
 
 // Macker_checker PROD checkers
-$sugar_config['prod_checker_user'] = array('ng1647','ng536'); // Manisha,Yogesh
+$sugar_config['prod_checker_user'] = array('ng1647','ng536','ng478'); // Manisha,Yogesh
 
 // Macker_checker NON PROD checkers
-$sugar_config['non_prod_checker_user'] = array('ng1273','ng619','ng1275'); // Nikhil, GOPI
+$sugar_config['non_prod_checker_user'] = array('ng1273','ng619','ng1275','ng2155','ng1647','ng536','nucsoft5'); // Nikhil, GOPI
 
 // agent_attendance_upload permitted users
 $sugar_config['agent_attendance_up_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG2029","NG2054","NG2064");
@@ -79,12 +81,13 @@ $sugar_config['skip_handleCreateCase_from_addrs'][1] = 'mis@neogrowth.in';
 $sugar_config['skip_handleCreateCase_from_addrs'][2] = 'info@cibil.com';
 $sugar_config['skip_handleCreateCase_from_addrs'][3] = 'bpo-dipika.vala@neogrowth.in';
 $sugar_config['skip_handleCreateCase_from_domain'] = '@neogrowth.onmicrosoft.com';
+$sugar_config['skip_handleCreateCase_email_name'] = 'Re : Auto Acknowledgement for Service';
 
 // data_sync edit_case closed state
 $sugar_config['not_prod_user_email'] = array('nikhil.kumar@neogrowth.in');
 $sugar_config['not_prod_netcore_number'] = '9743473424';
 
-$sugar_config['helpdesk_email'] = 'Helpdesk@neogrowth.in';
+$sugar_config['helpdesk_email'] = 'helpdesk@neogrowth.in';
 $sugar_config['helpdesk_email_arr'] = array('helpdesk@neogrowth.in');
 $sugar_config['neogrowth_in_domain'] = 'neogrowth.in';
 
@@ -104,7 +107,7 @@ $sugar_config['DEVs_emails'] = array('balayeswanth.b@neogrowth.in','nikhil.kumar
 
 // AOPInboundEmail arrayOfMineFieldElements and listOfEmailsListedUnderMineField
 $sugar_config['arrayOfMineFieldElements'] = array('CXO', 'Legal', 'Media', 'Newspaper', 'Press', 'Court', 'lawyers', 'Grievance Redressal Officer', 'Ombudsman');
-$sugar_config['listOfEmailsListedUnderMineField'] = array('pk@khaitan.in', 'dk@khaitan.in', 'ravi.kumar@neogrowth.in', 'sumit.mukherjee@neogrowth.in', 'arun.nayyar@neogrowth.in', 'vivek.r@neogrowth.in', 'rajan.pundhir@neogrowth.in', 'sorabh.malhotra@neogrowth.in', 'sachin.bawari@neogrowth.in', 'gkshettigar@neogrowth.in', 'yogesh.nakhwa@neogrowth.in', 'tanushri.yewale@neogrowth.in', 'sanjay.kapse@neogrowth.in');
+$sugar_config['listOfEmailsListedUnderMineField'] = array('pk@khaitan.in', 'dk@khaitan.in', 'deepak.goswami@neogrowth.in', 'ravi.kumar@neogrowth.in', 'sumit.mukherjee@neogrowth.in', 'arun.nayyar@neogrowth.in', 'vivek.r@neogrowth.in', 'rajan.pundhir@neogrowth.in', 'sorabh.malhotra@neogrowth.in', 'sachin.bawari@neogrowth.in', 'gkshettigar@neogrowth.in', 'yogesh.nakhwa@neogrowth.in', 'tanushri.yewale@neogrowth.in', 'sanjay.kapse@neogrowth.in', 'grievanceofficer@neogrowth.in', 'nodalofficer@neogrowth.in');
 
 // notificationForCasesAssignedToAdmin
 $sugar_config['ng_mangal_sarang'] = 'mangal.sarang@neogrowth.in';

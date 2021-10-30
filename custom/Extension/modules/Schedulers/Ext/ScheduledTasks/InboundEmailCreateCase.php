@@ -2,8 +2,7 @@
 
     $job_strings[]='InboundEmailCreateCase';
 
-    function InboundEmailCreateCase()
-    {
+    function InboundEmailCreateCase() {
         require_once('custom/modules/InboundEmail/AOPInboundEmail.php');
         
         $emailBean = BeanFactory::getBean('Emails'); 
