@@ -1,6 +1,6 @@
 <?php
-// created: 2021-10-08 15:19:54
-$mod_strings = array(
+// created: 2021-10-28 14:54:21
+$mod_strings = array (
   'EOS DISPOSITION' => 'EOS DISPOSITION',
   'EOS SUB-DISPOSITION' => 'EOS SUB-DISPOSITION',
   'EOS OPPORTUNITY STATUS' => 'EOS OPPORTUNITY STATUS',
@@ -11,4 +11,6 @@ $mod_strings = array(
   'LBL_CAM_AUTO_ASSIGN' => 'Auto Assign To CAM',
   'LNK_SPOC_MAPPING' => 'Spoc Mapping Marketing',
   'LNK_SPOC_MAPPING_ALLIANCE' => 'Spoc Mapping Alliance',
+  'SCHEME' => 'SCHEME',
+  'LBL_OPPORTUNITY_NAME' => 'Opportunity Name:',
 );
