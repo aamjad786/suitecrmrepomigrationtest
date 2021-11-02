@@ -1,6 +1,6 @@
 <?php
- // created: 2021-08-27 17:12:57
-$dictionary['Lead']['fields']['digital_c']['inline_edit']=1;
-$dictionary['Lead']['fields']['digital_c']['merge_filter']='enabled';
+ // created: 2021-11-01 15:19:02
+$dictionary['Lead']['fields']['digital_c']['inline_edit']='1';
+$dictionary['Lead']['fields']['digital_c']['labelValue']='Digital:';
 
  ?>

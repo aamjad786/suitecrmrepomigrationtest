@@ -8,6 +8,10 @@ $hook_array['before_save'] = Array();
 $hook_array['after_save'] = Array(); 
 
 $hook_array['before_save'][] = Array(0, 'Preserving old bean data', 'custom/modules/Opportunities/BeforeSave.php','BeforeSaveOpportunity', 'store_assigned');
+$hook_array['before_save'][] = Array(1, 'Change an Insta Opp to Normal Marketing Opp', 'custom/modules/Opportunities/BeforeSave.php','BeforeSaveOpportunity', 'convertInstaOpp');//CSI-1147
+$hook_array['before_save'][] = Array(2, 'Change Opp Status to Logged In when App ID is Added', 'custom/modules/Opportunities/BeforeSave.php','BeforeSaveOpportunity', 'changeOppStatus');//CSI-1147
+$hook_array['before_save'][] = Array(3, 'Alliance opportunities status Sync', 'custom/modules/Opportunities/BeforeSave.php','BeforeSaveOpportunity', 'opportunitiesStatusUpdate');// CSI-1131
+$hook_array['before_save'][] = Array(4, 'Update Sales Stage Based On Opp Status (Rejected)', 'custom/modules/Opportunities/BeforeSave.php','BeforeSaveOpportunity', 'updateSalesStage');//CSI-1153 
 
 
 $hook_array['after_save'][] = Array(1,'Assigning The Cluster Manager Of The Corresponding City To The Opportunity','custom/modules/Opportunities/AfterSaveOpportunity.php','AfterSaveOpportunity','assignOpportunity');

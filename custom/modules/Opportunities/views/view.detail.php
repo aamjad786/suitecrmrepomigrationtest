@@ -54,6 +54,8 @@ echo $Currency_comma_sep_script=<<<EOQ
 	<script>
 	
 	$(document).ready(function(){
+		$('#leads_description_c').html($('#leads_description_c').text());
+		$('#sub_source_c').closest('td').append($('#sub_source_c').val());
 		//var username = $('#current_user_name').val().toLowerCase();
 		$('#loan_amount_c').after('<br/>');
 		test_skill();

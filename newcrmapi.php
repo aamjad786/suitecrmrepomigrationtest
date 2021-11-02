@@ -793,7 +793,8 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                     if (!empty($rawData->Address_Street)) $oppBean->pickup_appointment_address_c = $rawData->Address_Street;
                     if (!empty($rawData->reject_reason_c)) $oppBean->reject_reason_c = $rawData->reject_reason_c;
                     if (!empty($rawData->is_eligible)) $oppBean->is_eligible_c = $rawData->is_eligible;
-                    
+                    if (!empty($rawData->alliance_opportunities_status)) $oppBean->alliance_opp_status_c = $rawData->alliance_opportunities_status;
+                   
                     $oppId=$oppBean->save();
                     
                     if(!empty($oppId)){

@@ -1,5 +1,5 @@
 <?php
-// created: 2021-10-26 15:26:57
+// created: 2021-11-01 15:19:02
 $mod_strings = array (
   'LBL_EDITVIEW_PANEL5' => 'Additional details',
   'LBL_EDITVIEW_PANEL6' => 'New Panel 6',
@@ -22,4 +22,11 @@ $mod_strings = array (
   'LBL_FIRST_NAME' => 'First Name',
   'LBL_LAST_NAME' => 'Last Name',
   'LBL_ACCEPT_ONLINE_C' => 'ACCEPT DEBIT/CREDIT/ONLINE PAYMENTS',
+  'LBL_CAMPAIGN_ID' => 'Campaign Id',
+  'LBL_CAMPAIGN_SOURCE' => 'Campaign Source',
+  'LBL_CAMPAIGN_MEDIUM' => 'Campaign Medium',
+  'LBL_CAMPAIGN_NAME' => 'Campaign Name',
+  'LBL_CAMPAIGN_TERM' => 'Campaign Term',
+  'LBL_CAMPAIGN_CONTENT' => 'Campaign Content',
+  'LBL_DIGITAL' => 'Digital:',
 );

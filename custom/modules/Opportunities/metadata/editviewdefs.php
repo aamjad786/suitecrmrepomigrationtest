@@ -159,11 +159,22 @@ array (
         ),
         9 => 
         array (
-          0 => array (
+          0 => 
+          array (
+            'name' => 'leads_description_c',
+            'studio' => 'visible',
+            'label' => 'LBL_LEAD_DESCRIPTION',
+          ),
+        ),
+        10 => 
+        array (
+          0 => 
+          array (
             'name' => 'cam_c',
             'label' => 'LBL_CAM_C',
           ),
-          1 => array (
+          1 => 
+          array (
             'name' => 'cam_auto_assign',
             'label' => 'LBL_CAM_AUTO_ASSIGN',
           ),
@@ -191,7 +202,7 @@ array (
           ),
           1 => 
           array (
-            'name' => 'alliance_opportunities_status',
+            'name' => 'alliance_opp_status_c',
             'comment' => 'Alliance Portal opportunities status',
             'label' => 'Alliance Opportunities Status',
           ),
@@ -329,6 +340,45 @@ array (
           array (
             'name' => 'escalation_to_c',
             'label' => 'LBL_ESCALATION_TO',
+          ),
+        ),
+        13 => 
+        array (
+          0 => 
+          array (
+            'name' => 'campaignid_c',
+            'label' => 'LBL_CAMPAIGN_ID',
+          ),
+          1 => 
+          array (
+            'name' => 'campaign_name_c',
+            'label' => 'LBL_CAMPAIGN_NAME',
+          ),
+        ),
+        14 => 
+        array (
+          0 => 
+          array (
+            'name' => 'campaign_medium_c',
+            'label' => 'LBL_CAMPAIGN_MEDIUM',
+          ),
+          1 => 
+          array (
+            'name' => 'campaign_content_c',
+            'label' => 'LBL_CAMPAIGN_CONTENT',
+          ),
+        ),
+        15 => 
+        array (
+          0 => 
+          array (
+            'name' => 'campaign_source_c',
+            'label' => 'LBL_CAMPAIGN_SOURCE',
+          ),
+          1 => 
+          array (
+            'name' => 'campaign_term_c',
+            'label' => 'LBL_CAMPAIGN_TERM',
           ),
         ),
       ),

@@ -203,12 +203,13 @@ array (
         array (
           0 => 
           array (
-            'name' => 'banking',
-            'label' => 'LBL_BANKING',
+            'name' => 'digital_c',
+            'studio' => 'visible',
+            'label' => 'LBL_DIGITAL',
           ),
           1 => 
           array (
-            'name' => 'alliance_opportunities_status',
+            'name' => 'alliance_opp_status_c',
             'comment' => 'Alliance Portal opportunities status',
             'label' => 'Alliance Opportunities Status',
           ),
@@ -217,7 +218,7 @@ array (
         array (
           0 => 
           array (
-            'name' => 'leads_description',
+            'name' => 'leads_description_c',
             'comment' => 'Lead Description',
             'label' => 'LBL_LEAD_DESCRIPTION',
           ),
@@ -316,6 +317,16 @@ array (
         ),
         7 => 
         array (
+          0 => '',
+          1 => 
+          array (
+            'name' => 'sub_source_c',
+            'studio' => 'visible',
+            'label' => 'LBL_SUB_SOURCE',
+          ),
+        ),
+        8 => 
+        array (
           0 => 
           array (
             'name' => 'advanced_suite_id_c',
@@ -327,7 +338,7 @@ array (
             'label' => 'LBL_APPLICATION_ID',
           ),
         ),
-        8 => 
+        9 => 
         array (
           0 => 
           array (
@@ -342,7 +353,7 @@ array (
             'label' => 'Reject Reason',
           ),
         ),
-        9 => 
+        10 => 
         array (
           0 => 
           array (
@@ -355,7 +366,7 @@ array (
             'label' => 'Seller&#039;s Customer Rating on Online Marketplace /Platform',
           ),
         ),
-        10 => 
+        11 => 
         array (
           0 => 
           array (
@@ -368,7 +379,7 @@ array (
             'label' => 'Settlement Cycle',
           ),
         ),
-        11 => 
+        12 => 
         array (
           0 => 
           array (
@@ -381,7 +392,7 @@ array (
             'label' => 'Doing business with Online Marketplace /Platform since ? (no.of months)',
           ),
         ),
-        12 => 
+        13 => 
         array (
           0 => 
           array (
@@ -394,7 +405,7 @@ array (
             'label' => 'Average monthly sales for last 3 months',
           ),
         ),
-        13 => 
+        14 => 
         array (
           0 => 
           array (
@@ -407,7 +418,7 @@ array (
             'label' => 'LBL_ESCALATION_NAME',
           ),
         ),
-        14 => 
+        15 => 
         array (
           0 => 
           array (
@@ -420,8 +431,48 @@ array (
             'label' => 'LBL_ESCALATION_TO',
           ),
         ),
+        16 => 
+        array (
+          0 => 
+          array (
+            'name' => 'campaignid_c',
+            'label' => 'LBL_CAMPAIGN_ID',
+          ),
+          1 => 
+          array (
+            'name' => 'campaign_name_c',
+            'label' => 'LBL_CAMPAIGN_NAME',
+          ),
+        ),
+        17 => 
+        array (
+          0 => 
+          array (
+            'name' => 'campaign_medium_c',
+            'label' => 'LBL_CAMPAIGN_MEDIUM',
+          ),
+          1 => 
+          array (
+            'name' => 'campaign_content_c',
+            'label' => 'LBL_CAMPAIGN_CONTENT',
+          ),
+        ),
+        18 => 
+        array (
+          0 => 
+          array (
+            'name' => 'campaign_source_c',
+            'label' => 'LBL_CAMPAIGN_SOURCE',
+          ),
+          1 => 
+          array (
+            'name' => 'campaign_term_c',
+            'label' => 'LBL_CAMPAIGN_TERM',
+          ),
+        ),
       ),
     ),
   ),
 );
+;
 ?>

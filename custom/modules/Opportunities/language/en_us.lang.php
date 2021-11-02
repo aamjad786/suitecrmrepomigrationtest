@@ -1,5 +1,5 @@
 <?php
-// created: 2021-10-28 14:54:21
+// created: 2021-11-01 18:59:58
 $mod_strings = array (
   'EOS DISPOSITION' => 'EOS DISPOSITION',
   'EOS SUB-DISPOSITION' => 'EOS SUB-DISPOSITION',
@@ -13,4 +13,13 @@ $mod_strings = array (
   'LNK_SPOC_MAPPING_ALLIANCE' => 'Spoc Mapping Alliance',
   'SCHEME' => 'SCHEME',
   'LBL_OPPORTUNITY_NAME' => 'Opportunity Name:',
+  'LBL_CAMPAIGN_ID' => 'Campaign Id',
+  'LBL_CAMPAIGN_SOURCE' => 'Campaign Source',
+  'LBL_CAMPAIGN_MEDIUM' => 'Campaign Medium',
+  'LBL_CAMPAIGN_NAME' => 'Campaign Name',
+  'LBL_CAMPAIGN_TERM' => 'Campaign Term',
+  'LBL_CAMPAIGN_CONTENT' => 'Campaign Content',
+  'LBL_DIGITAL' => 'Digital',
+  'LBL_ALLIANCE_OPP_STATUS_C' => 'Alliance Opportunities Status',
+  'LBL_LEAD_DESCRIPTION' => 'Lead Description',
 );
