@@ -75,7 +75,7 @@ class AfterSaveLead
 		$opportunity_bean->sales_stage = "Open";
 		$opportunity_bean->name = $bean->salutation . " " . $bean->first_name . " " . $bean->last_name;
 		$opportunity_bean->email1 = $bean->email1;
-		$opportunity_bean->description = $bean->description;
+		$opportunity_bean->leads_description_c = $bean->description;
 		$opportunity_bean->merchant_name_c = $bean->merchant_name_c;
 		$opportunity_bean->acspm_c = $bean->acspm_c;
 		$opportunity_bean->dsa_code_c = $bean->dsa_code_c;
@@ -100,6 +100,15 @@ class AfterSaveLead
 		$opportunity_bean->app_form_link_c = $bean->app_form_link_c;
 		$opportunity_bean->stage_drop_off_c = $bean->stage_drop_off_c;
 		$opportunity_bean->dsa_id_c = $bean->dsa_id_c;
+		
+		// CSI-1155 Parameters
+		$opportunity_bean->campaignid_c = $bean->campaignid_c;
+		$opportunity_bean->campaign_source_c = $bean->campaign_source_c;
+		$opportunity_bean->campaign_medium_c = $bean->campaign_medium_c;
+		$opportunity_bean->campaign_term_c = $bean->campaign_term_c;
+		$opportunity_bean->campaign_name_c = $bean->campaign_name_c;
+		$opportunity_bean->campaign_content_c = $bean->campaign_content_c;
+		//Ends Here
 
 		$opportunity_bean->digital_c = $this->first_val_if_present(strtolower($_REQUEST['digital_c']), $digital_c);
 		$opportunity_bean->loan_amount_c = $this->first_val_if_present(isset($_REQUEST['loan_amount_required_c']) ? $_REQUEST['loan_amount_required_c'] : "", $loan_amount_c);

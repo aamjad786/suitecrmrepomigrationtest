@@ -15,6 +15,7 @@ $hook_array['after_save'][] = Array(77, 'updateRelatedMeetingsGeocodeInfo', 'mod
 $hook_array['before_save'][] = Array(1, 'Check 10 Digit Mobile', 'custom/modules/Leads/BeforeSaveLead.php','BeforeSaveLead', 'checkMobileNumber');
 // $hook_array['before_save'][] = Array(2, 'Dedup Check For Lead', 'custom/modules/Leads/BeforeSaveLead.php','BeforeSaveLead', 'checkDuplicateLead'); 
 $hook_array['before_save'][] = Array(3, 'Sanity For Filed Values', 'custom/modules/Leads/BeforeSaveLead.php','BeforeSaveLead', 'fieldSanity');
+$hook_array['before_save'][] = Array(4, 'Update Opp fields if UTM fields are updated', 'custom/modules/Leads/BeforeSaveLead.php','BeforeSaveLead', 'utmFieldsUpdate');
 
 
 $hook_array['after_save'][] = Array(2, 'addToCallDisposition', 'custom/modules/Leads/AddCallDisposition.php','Disposition', 'saveDisposition'); 
