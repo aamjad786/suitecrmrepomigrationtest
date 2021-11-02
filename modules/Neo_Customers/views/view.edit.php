@@ -9,7 +9,7 @@ class Neo_CustomersViewEdit extends ViewEdit
 		$display = '<div style="padding-top:30px"><center><h2>You can\'t insert.</h2></center></div>';
         require_once 'modules/ACLRoles/ACLRole.php';
         $objACLRole = new ACLRole();
-        $roles = $objACLRole->getUserRoles($this->bean->assigned_user_id);
+        $roles = $objACLRole->getUserRoles($bean->assigned_user_id);
         $renewal_admin = false;
         if(in_array('Renewal Admin',$roles)) {
             $renewal_admin = true;

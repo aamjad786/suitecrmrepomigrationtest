@@ -7,7 +7,7 @@
                 <div class="form-group">
                     <label for="sheet">Select file name to upload :</label>
                     <p><b>Note:</b> Only spreadsheets(.xls or .csv) are accepted. Use the sample file to upload data</p><br>
-                    <input type="file" name="sheet" id="fileToUpload" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                    <input type="file" name="sheet" id="fileToUpload">
                     <br/><br/>
                     <input type='submit' value='Submit' id='excel_upload' name='excel_upload'/><br/><br/>
                 </div>

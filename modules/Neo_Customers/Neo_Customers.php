@@ -145,14 +145,14 @@ class Neo_Customers extends Neo_Customers_sugar {
             if($source!='merchant_app')return null;
             $loan_amount = $this->loan_amount;
             $city = $this->location;
-            $ticket_size = $this->getTicketSizeAmount($loan_amount);
+            $ticket_size = $this->getTicketSizeAmount($amount);
             global $db;
             $query  = "select * from renewal_users where role='Renewal Manager' and city like '%$city%' and ticket_size='%ticket_size%'";
             $result = $db->query($query);
             $emails = [];
             while ($row = $db->fetchByAssoc($result)) {
                 $ticket_size = $row['user_id'];
-                $user=BeanFactory::getBean('Users',$row['user_id']);  
+                $user=BeanFactory::getBean('Users',$user_id); renewals.php 
                 $primary_email=$user->emailAddress->getPrimaryAddress($user);
                 $emails[] = $primary_email;
             }

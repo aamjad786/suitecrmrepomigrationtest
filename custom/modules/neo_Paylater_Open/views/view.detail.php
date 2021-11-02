@@ -196,7 +196,7 @@ class neo_Paylater_OpenViewDetail extends SugarView {
                                 Bill till date:
                             </td>
                             <td class="" type="enum" field="bill_till_date" width="37.5%">
-                                <span class="sugar_field" id="bill_till_date"><a target="_blank" href="index.php?module=neo_Paylater_Open&action=paylater_open_bill_generator&application_id=<?php echo $applicationId; ?>">Generate Bill</a></span>
+                            <span class="sugar_field" id="bill_till_date"><a href="paylater_open_bill_generator.php?application_id=<?php echo $applicationId; ?>" target = "_blank">Generate Bill</a></span>
                             </td>
                         </tr>
                     </tbody>

@@ -680,37 +680,135 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         
             if(!empty($oppBean)) {
 
-                if (!empty($rawData->opportunity_stage)) $oppBean->sales_stage = $rawData->opportunity_stage;
-                if (!empty($rawData->amount)) $oppBean->amount = $rawData->amount;
-                if (!empty($rawData->feedback)) $oppBean->pickup_appointment_feedback_c = $rawData->feedback;
-                if (!empty($rawData->remarks_c)) $oppBean->remarks_c = $rawData->remarks_c;
-                if (!empty($rawData->source_type_c)) $oppBean->source_type_c = $rawData->source_type_c;
-                if (!empty($rawData->loan_amount_sanctioned_c)) $oppBean->loan_amount_sanctioned_c = $rawData->loan_amount_sanctioned_c;
-                if (!empty($rawData->user_id)) $oppBean->assigned_user_id = $rawData->user_id;
-                if (!empty($rawData->pickup_appointment_city_c)) $oppBean->pickup_appointment_city_c = $rawData->pickup_appointment_city_c;
-                if (!empty($rawData->application_id)) $oppBean->application_id_c = $rawData->application_id;
-                if (!empty($rawData->opportunity_status)) $oppBean->opportunity_status_c = $rawData->opportunity_status;
-                if (!empty($rawData->sub_status_c)) $oppBean->sub_status_c = $rawData->sub_status_c;
-                if (!empty($rawData->pickup_appointment_date_c)) $oppBean->pickup_appointment_date_c = $rawData->pickup_appointment_date_c;
-                if (!empty($rawData->control_program_c)) $oppBean->control_program_c = $rawData->control_program_c;
-                if (!empty($rawData->stage_drop_off_c)) $oppBean->stage_drop_off_c = $rawData->stage_drop_off_c;
-                if (!empty($rawData->app_form_link_c)) $oppBean->app_form_link_c = $rawData->app_form_link_c;
-                if (!empty($rawData->Address_pin)) $oppBean->pickup_appointment_pincode_c = $rawData->Address_pin;
-                if (!empty($rawData->Address_Street)) $oppBean->pickup_appointment_address_c = $rawData->Address_Street;
-                if (!empty($rawData->reject_reason_c)) $oppBean->reject_reason_c = $rawData->reject_reason_c;
-                if (!empty($rawData->is_eligible)) $oppBean->is_eligible = $rawData->is_eligible;
-                
-                $oppId=$oppBean->save();
-                
-                if(!empty($oppId)){
+                // Data Validation
+                $isDataValid=true;
+
+                $amount_regEx="/^[0-9]*$/";
+                $source_type_c_regEX="/^[a-zA-Z ]*$/";
+                $loan_amount_sanctioned_c_regEx="/^[0-9]*$/";
+                $application_id_c_regEx="/^[0-9]*$/";
+                $control_program_c_regEx ="/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/";
+                $stage_drop_off_c_regEx ="/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/";
+                $pickup_appointment_pincode_c_regEx="/^[1-9][0-9]{5}$/";
+                $pickup_appointment_address_c_regEX="/^[#.0-9a-zA-Z\s,-]+$/";
+
+                if(!empty($rawData->amount) && !preg_match($amount_regEx,$rawData->amount)){
+            
+                    $isDataValid=false;
+        
                     $msg = array(
-                        'Success' => true,
-                        'Message' => 'Opportunity Updated Successfully'
-                    );   
+                        'Success' => false,
+                        'Message' => 'Invalid Amount Should Be Digit Only !'
+                    );
                 }
-                else{
-                    $logger->log('error', 'Unable To Update Opportunity');
+
+                if(!empty($rawData->source_type_c) && !preg_match($source_type_c_regEX,$rawData->source_type_c)){
+            
+                    $isDataValid=false;
+        
+                    $msg = array(
+                        'Success' => false,
+                        'Message' => 'Invalid Source Type Should Not Contain Any Special Character !'
+                    );
                 }
+
+                if(!empty($rawData->loan_amount_sanctioned_c) && !preg_match($loan_amount_sanctioned_c_regEx,$rawData->loan_amount_sanctioned_c)){
+            
+                    $isDataValid=false;
+        
+                    $msg = array(
+                        'Success' => false,
+                        'Message' => 'Invalid Loan Amount Sanctioned Should Be Digit Only !'
+                    );
+                }
+
+                if(!empty($rawData->control_program_c) && !preg_match($control_program_c_regEx,$rawData->control_program_c)){
+            
+                    $isDataValid=false;
+        
+                    $msg = array(
+                        'Success' => false,
+                        'Message' => 'Invalid Control Program Should Not Contain Any Special Character !'
+                    );
+                }
+
+                if(!empty($rawData->stage_drop_off_c) && !preg_match($stage_drop_off_c_regEx,$rawData->stage_drop_off_c)){
+            
+                    $isDataValid=false;
+        
+                    $msg = array(
+                        'Success' => false,
+                        'Message' => 'Invalid Stage Drop Off Should Not Contain Any Special Character !'
+                    );
+                }
+                
+                if(!empty($rawData->Address_pin) && !preg_match($pickup_appointment_pincode_c_regEx,$rawData->Address_pin)){
+            
+                    $isDataValid=false;
+        
+                    $msg = array(
+                        'Success' => false,
+                        'Message' => 'Invalid Address PIN !'
+                    );
+                }
+
+                if(!empty($rawData->Address_Street) && !preg_match($pickup_appointment_address_c_regEX,$rawData->Address_Street)){
+            
+                    $isDataValid=false;
+        
+                    $msg = array(
+                        'Success' => false,
+                        'Message' => 'Invalid Street Address Shoud contain alphabets , numbers and these special character(#,-.) !'
+                    );
+                }
+
+                if(filter_var($rawData->app_form_link_c, FILTER_VALIDATE_URL) === FALSE){
+                    
+                    $isDataValid=false;
+        
+                    $msg = array(
+                        'Success' => false,
+                        'Message' => 'Invalid App Form Link!'
+                    );
+                }
+                
+                if($isDataValid){
+
+                    if (!empty($rawData->opportunity_stage)) $oppBean->sales_stage = $rawData->opportunity_stage;
+                    if (!empty($rawData->amount)) $oppBean->amount = $rawData->amount;
+                    if (!empty($rawData->feedback)) $oppBean->pickup_appointment_feedback_c = $rawData->feedback;
+                    if (!empty($rawData->remarks_c)) $oppBean->remarks_c = $rawData->remarks_c;
+                    if (!empty($rawData->source_type_c)) $oppBean->source_type_c = $rawData->source_type_c;
+                    if (!empty($rawData->loan_amount_sanctioned_c)) $oppBean->loan_amount_sanctioned_c = $rawData->loan_amount_sanctioned_c;
+                    if (!empty($rawData->user_id)) $oppBean->assigned_user_id = $rawData->user_id;
+                    if (!empty($rawData->pickup_appointment_city_c)) $oppBean->pickup_appointment_city_c = $rawData->pickup_appointment_city_c;
+                    if (!empty($rawData->application_id)) $oppBean->application_id_c = $rawData->application_id;
+                    if (!empty($rawData->opportunity_status)) $oppBean->opportunity_status_c = $rawData->opportunity_status;
+                    if (!empty($rawData->sub_status_c)) $oppBean->sub_status_c = $rawData->sub_status_c;
+                    if (!empty($rawData->pickup_appointment_date_c)) $oppBean->pickup_appointment_date_c = $rawData->pickup_appointment_date_c;
+                    if (!empty($rawData->control_program_c)) $oppBean->control_program_c = $rawData->control_program_c;
+                    if (!empty($rawData->stage_drop_off_c)) $oppBean->stage_drop_off_c = $rawData->stage_drop_off_c;
+                    if (!empty($rawData->app_form_link_c)) $oppBean->app_form_link_c = $rawData->app_form_link_c;
+                    if (!empty($rawData->Address_pin)) $oppBean->pickup_appointment_pincode_c = $rawData->Address_pin;
+                    if (!empty($rawData->Address_Street)) $oppBean->pickup_appointment_address_c = $rawData->Address_Street;
+                    if (!empty($rawData->reject_reason_c)) $oppBean->reject_reason_c = $rawData->reject_reason_c;
+                    if (!empty($rawData->is_eligible)) $oppBean->is_eligible_c = $rawData->is_eligible;
+                    if (!empty($rawData->alliance_opportunities_status)) $oppBean->alliance_opp_status_c = $rawData->alliance_opportunities_status;
+                   
+                    $oppId=$oppBean->save();
+                    
+                    if(!empty($oppId)){
+                        $msg = array(
+                            'Success' => true,
+                            'Message' => 'Opportunity Updated Successfully'
+                        );   
+                    }
+                    else{
+                        $logger->log('error', 'Unable To Update Opportunity');
+                    }
+                }
+
+                
 
             } else {
                 $msg = array(
@@ -1590,7 +1688,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             'Message' => 'Oops! Something went wrong'
         );
     }
-}
+
 
 echo json_encode($msg);
 exit;

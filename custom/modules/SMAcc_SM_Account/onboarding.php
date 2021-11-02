@@ -267,6 +267,7 @@ function sendCallReminderToServiceManager() {
                 $mail = new SugarPHPMailer();
                 $defaults = $emailObj->getSystemDefaultEmail();
                 $subject = "Testing";
+                $body = $body;
                 $mail->setMailerForSystem();
                 $mail->From = $defaults['email'];
                 $mail->FromName = $defaults['name'];

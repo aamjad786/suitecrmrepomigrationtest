@@ -29,7 +29,7 @@ function PushLeads()
 
 		//  Skipping Lead if 
 
-		if(trim($lead->dsa_code_c)=='Nine Group' || trim($lead->lead_source)=='Self Generated'){
+		if(trim($lead->dsa_code_c)=='Nineroot Technologies Private Limited' || trim($lead->dsa_code_c)=='NINEROOT TECHNOLOGIES PRIVATE LIMITED' ||  trim($lead->lead_source)=='Self Generated'){
 			$logger->log('debug', 'Skipping as lead source is ' . $lead->lead_source . ' or DSA Code is '.$lead->dsa_code_c);
 			$lead->push_count = 100;
 			$lead->save();

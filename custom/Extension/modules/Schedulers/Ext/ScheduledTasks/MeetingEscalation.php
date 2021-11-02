@@ -57,16 +57,25 @@ function MeetingEscalation()
 			$logger->log('debug', 'Sending Email To Cluster Manager: '.$clusterManagerData->first_name.' Email: '.$clusterManagerEmail);
         }
 
-		// Zonal Manager 
-		$zonalManagerData=$userBean->retrieve($clusterManagerData->reports_to_id);
-		$zonalManagerEmail=$zonalManagerData->email1;
+		// Regional Manager 
+		$regionalManagerData=$userBean->retrieve($clusterManagerData->reports_to_id);
+		$regionalManagerEmail=$regionalManagerData->email1;
 		
+		if (!empty($regionalManagerEmail)) {
+			$to = array($regionalManagerEmail);
+            $email->send_email_to_user($subject, $body, $to, $cc);
+			$logger->log('debug', 'Sending Email To Regional Manager: '.$regionalManagerData->first_name.' Email: '.$regionalManagerEmail);
+        }
+
+		// Zonal Manager
+		$zonalManagerData=$userBean->retrieve($regionalManagerData->reports_to_id);
+		$zonalManagerEmail=$zonalManagerData->email1;
+
 		if (!empty($zonalManagerEmail)) {
 			$to = array($zonalManagerEmail);
             $email->send_email_to_user($subject, $body, $to, $cc);
-			$logger->log('debug', 'Sending Email To Cluster Manager: '.$zonalManagerData->first_name.' Email: '.$zonalManagerEmail);
+			$logger->log('debug', 'Sending Email To Zonal Manager: '.$zonalManagerData->first_name.' Email: '.$zonalManagerEmail);
         }
-
 	}
 
 	return true;

@@ -41,6 +41,7 @@ class Escalation_Functions{
     	require_once('custom/include/SendEmail.php');
         //Send email to the service manager.
         $emailId = $userData->email1;
+        $emailId = $emailId;
         $subject = "Case Escalation Matrix Modified";
         $env = getenv('SCRM_ENVIRONMENT');
         if(in_array($env,array('prod'))){

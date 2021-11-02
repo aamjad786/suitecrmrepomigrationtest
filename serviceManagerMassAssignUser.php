@@ -73,7 +73,7 @@ if ($_REQUEST) {
             echo "</br>";
 
             //Send email to the service manager.
-            $emailId = $userData->email1;
+            $emailId = $emailId;
             $subject = "New accounts Assigned";
             $to = array($emailId);
             $email = new SendEmail();

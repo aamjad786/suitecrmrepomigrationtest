@@ -70,12 +70,7 @@ class UsersViewList extends ViewList
                         $this->where .= " (users.status !='Reserved' or users.status is null) ";
 			$this->lv->setup($this->seed, 'include/ListView/ListViewGeneric.tpl', $this->where, $this->params);
 			$savedSearchName = empty($_REQUEST['saved_search_select_name']) ? '' : (' - ' . $_REQUEST['saved_search_select_name']);
-			global $current_user;
-        if(!$current_user->is_admin)
-        {
-            echo "You are not authorized to access this page. Contact your administrator.";
-            die();
-        }
+			
 			echo $this->lv->display();
 		}
  	}
