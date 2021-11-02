@@ -6,7 +6,7 @@ $curl_req = new CurlReq();
 
 $app_id=$_REQUEST['app_id'];
 
-$url = "localhost:3033/crm/covid_app_details?new_app_id=$_REQUEST[app_id]";
+$url = "https://app.advancesuite.in::3033/crm/covid_app_details?new_app_id=$_REQUEST[app_id]";
 $response = $curl_req->curl_req($url);
 
     $responseArray = json_decode($response, true);

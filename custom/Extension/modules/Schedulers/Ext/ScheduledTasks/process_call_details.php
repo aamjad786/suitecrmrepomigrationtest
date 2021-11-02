@@ -109,7 +109,15 @@ function process_call_details() {
 			}
 			if($parent_type!='Calls'){
 			
-				$query2 = "insert into calls (id, name, date_entered, date_start, description, duration_hours, duration_minutes, status, direction, parent_id, parent_type, assigned_user_id, calls_action) values (UUID(), 'IVRS call: $CallerID',NOW(),'$StartTime','$url','$hour','$min','Held', '$Type','$parent_id','$parent_type','$assigned_user_id','$uui')";
+				$query2 = "insert into calls 
+				(id, name, date_entered, date_start, description, 
+				duration_hours, duration_minutes, status, direction, 
+				parent_id, parent_type, assigned_user_id, calls_action) 
+				
+				values 
+				(UUID(), 'IVRS call: $CallerID',NOW(),'$StartTime','$url',
+				'$hour','$min','Held', '$Type',
+				'$parent_id','$parent_type','$assigned_user_id','$uui')";
 
 				$logger->log('debug', "Calls Query:".$query2);
 				$as_res = $db->query($query2);

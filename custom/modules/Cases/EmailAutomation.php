@@ -1,4 +1,4 @@
-<?php
+<?php /*
 require ('aws/aws-autoloader.php');
 require_once('data/BeanFactory.php');
 use Aws\Sns\SnsClient; 
@@ -36,5 +36,5 @@ class EmailAutomation{
         }
     }
 
-}
+} */
 ?>

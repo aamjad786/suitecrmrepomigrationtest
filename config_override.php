@@ -34,16 +34,16 @@ $sugar_config['ng_khatal_jay'] = 'khataljay@gmail.com';
 $sugar_config['maker_checker_h_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG536","NG2029","NG2064","NG2054");
 
 // Maker checker permitted users
-$sugar_config['maker_checker_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG536","NG2029","NG2054","NG2064");
+$sugar_config['maker_checker_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG536", "nucsoft1");
 
 // Maker checker menu permitted users
 $sugar_config['maker_checker_menu_permitted_user'] = array('ng1647','ng1273','ng619','ng478','ng866','ng1273','ng1274','ng2054','ng2064','ng2155','ng2054','nucsoft5','nucsoft4');
 
 // Macker_checker PROD checkers
-$sugar_config['prod_checker_user'] = array('ng1647','ng536','ng478'); // Manisha,Yogesh
+$sugar_config['prod_checker_user'] = array('ng1647','ng536'); // Manisha,Yogesh
 
 // Macker_checker NON PROD checkers
-$sugar_config['non_prod_checker_user'] = array('ng1273','ng619','ng1275','ng2155','ng1647','ng536','nucsoft5'); // Nikhil, GOPI
+$sugar_config['non_prod_checker_user'] = array('ng1273','ng619','ng1275','ng2155','ng2054','ng1647','ng536','nucsoft1'); // Nikhil, GOPI
 
 // agent_attendance_upload permitted users
 $sugar_config['agent_attendance_up_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG2029","NG2054","NG2064");

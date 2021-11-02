@@ -438,40 +438,6 @@ class aCase extends Basic {
         return $query;
     }
 
-    function call_sns(){
-
-		try{
-        $date = date('Y-m-d H:i:s');
-        $myfile=fopen("Logs/snscall.log","a");
-        fwrite($myfile,"\n$date\n");
-            $SnSclient = new SnsClient([
-                //'profile' => 'SNS',
-                'region' => 'ap-south-1',
-                'version' => '2010-03-31'
-            ]);
-                $subject=$this->name;
-                $description=$this->description;
-                $number=$this->case_number;
-            $message='{"subject": "'.$subject.'","description": "","description_html": "'.$description.'","case_id": '.$number.'}';
-            $topic = 'arn:aws:sns:ap-south-1:854483613921:Invoke-CRM-Email-Automation-Lambda-UAT';
-
-                $result = $SnSclient->publish([
-                    'Message' => $message,
-                    'TopicArn' => $topic,
-                ]);
-                fwrite($myfile,print_r($result,true));
-            } catch (AwsException $e) {
-                // output error message if fails
-				error_log($e->getMessage());
-				fwrite($myfile,$e);
-		}
-		catch (Exception $e) {
-			// output error message if fails
-			error_log($e->getMessage());
-			fwrite($myfile,$e);
-	    }
-	}
-
     function listviewACLHelper(){
 		$array_assign = parent::listviewACLHelper();
 		$is_owner = false;

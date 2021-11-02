@@ -67,7 +67,7 @@ if(in_array(strtolower($current_user->user_name),$user) || $isAdmin==1){
 	$module_menu [] = Array("index.php?module=Cases&action=maker_checker_history", $mod_strings['LNK_MAKER_CHECKER_HISTORY'],"Maker Checker History");
 }
 
-$module_menu [] = Array("index.php?module=Cases&action=email_status","Email Delivery Status","Email Delivery Status");
+// $module_menu [] = Array("index.php?module=Cases&action=email_status","Email Delivery Status","Email Delivery Status");
 $module_menu [] = Array("index.php?module=Cases&action=social_impact_score_upload", $mod_strings['LNK_IMPORT_SOCIAL_IMPACT_SCORE'],"Import Social Impact Score");
 $module_menu [] = Array("index.php?module=scrm_Custom_Reports&action=DocumentRequestsReport", 'Document Requests',"Document Requests");
 $module_menu [] = Array("index.php?module=Cases&action=Upload_nps_csat", 'NPS AND CSAT',"NPS AND CSAT");

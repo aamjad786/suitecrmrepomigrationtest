@@ -14,7 +14,7 @@ $hook_array['before_save'][] = Array(1, 'Check is Ambit or not', 'custom/modules
 $hook_array['before_save'][] = Array(2, 'Cases push feed', 'modules/Cases/SugarFeeds/CaseFeed.php','CaseFeed', 'pushFeed'); 
 $hook_array['before_save'][] = Array(3, 'Fetch Processor Name from AS API', 'custom/modules/Cases/data_sync.php', 'DataSync', 'processorName'); //added
 // $hook_array['before_save'][] = Array(3, 'Check weather to auto classify email or not', 'custom/modules/Cases/data_sync.php', 'DataSync', 'classify'); //added
-// $hook_array['before_save'][] = Array(4, 'Assign date attained', 'custom/modules/Cases/data_sync.php', 'DataSync', 'assignDateAction'); //added
+$hook_array['before_save'][] = Array(4, 'Assign date attained', 'custom/modules/Cases/data_sync.php', 'DataSync', 'assignDateAction'); //added
 
 $hook_array['before_save'][] = Array(10, 'Save case updates', 'custom/modules/AOP_Case_Updates/CustomCaseUpdatesHook.php','CustomCaseUpdatesHook', 'saveUpdate'); // modified
 //$hook_array['before_save'][] = Array(11, 'Save case events', 'modules/AOP_Case_Events/CaseEventsHook.php','CaseEventsHook', 'saveUpdate');

@@ -61,9 +61,7 @@ class CustomCasesController extends CasesController {
     function action_Agent_attendance_upload() {
       $this->view = 'agent_attendance_upload';
     }
-    function action_email_status() {
-      $this->view = 'email_status';
-    }
+    
     function action_Maker_checker() {
       $this->view = 'maker_checker';
     }

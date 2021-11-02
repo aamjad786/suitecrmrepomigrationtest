@@ -360,7 +360,6 @@ function quick_edit_case_updates($case){
         $disabled = '';
     }
     $internalChecked = "checked='checked'";
-    $allowed_internal_toggle='';
     $html = <<< EOD
     <form id='case_updates' enctype="multipart/form-data">
 

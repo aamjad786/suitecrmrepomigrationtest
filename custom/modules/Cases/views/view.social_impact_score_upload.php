@@ -81,7 +81,7 @@ class CasesViewSocial_impact_score_upload extends SugarView {
             <div class="form-group">
                 <label for="sheet">Select file name to upload :</label>
                 <p><b>Note:</b> Only spreadsheets(.xlsx) are accepted. Use the sample file to upload data</p><br>
-                <input type="file" id="sheet" name="sheet" required accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/> 
+                <input type="file" id="sheet" name="sheet" required/> 
             </div>
             <input type="submit" value="Upload" name="upload"><br/><br/>
         </form>

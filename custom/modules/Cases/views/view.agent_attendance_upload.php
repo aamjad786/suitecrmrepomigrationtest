@@ -81,7 +81,7 @@ class CasesViewAgent_attendance_upload extends SugarView {
             <div class="form-group">
                 <label for="sheet">Select file name to upload :</label>
                 <p><b>Note:</b> Only spreadsheets(.xlsx) are accepted. Use the sample file to upload data</p><br>
-                <input type="file" id="sheet" name="sheet" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required/> 
+                <input type="file" id="sheet" name="sheet" required/> 
             </div>
             <input type="submit" value="Upload" name="upload"><br/><br/>
         </form>
@@ -91,7 +91,6 @@ class CasesViewAgent_attendance_upload extends SugarView {
 HTMLFORM;
     }
     function displayForm2(){
-        $cs_users_options = $this->getCustomerSupportAgents();
         echo $html = <<<HTMLFORM_2
         <hr/>
         <h1>Agent Attendance Update Form</h1><br/>
@@ -291,7 +290,6 @@ HTMLFORM_2;
     // [0] => Sr. No. [1] => Emp-ID [2] => Name [3] => Reporting To [4] => DOJ 
     // [5] => From this postion is date
     function array2Table($data) {
-        $myfile = fopen("Logs/agentAttedanceUpload.log", 'a');
         if (!empty($data)) {
             $header = array();
             $agent_leave_list_total = array();
@@ -346,7 +344,6 @@ HTMLFORM_2;
     }
 
     function insertIntoDb($agent_leave_list_total){
-        $myfile = fopen("Logs/agentAttedanceUpload.log", 'a');
         global $db;
         $insert_data_list = "";
         $insert_data_list   = implode(",", $agent_leave_list_total);
@@ -372,7 +369,6 @@ HTMLFORM_2;
     }
 
     function handleFormUpload(){
-        $myfile = fopen("Logs/agentAttedanceUpload.log", 'a');
         if (isset($_POST["submit_form"])) {
             $this->form_message = "";
             fwrite($this->log, "\n-------------agent_attendance_upload::handleFormUpload start ".date('Y-m-d H:i:s')."---------------\n");

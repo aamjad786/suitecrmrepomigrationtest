@@ -208,21 +208,6 @@ array (
         array (
           0 => 
           array (
-            'name' => 'auto_email_status_c',
-            'comment' => 'Automation Email Status',
-            'label' => 'LBL_BOT_REJECT_REASON',
-          ),
-          1 => 
-          array (
-            'name' => 'reassigned_user_id_c',
-            'studio' => 'visible',
-            'label' => 'LBL_RE_ASSIGNED_TO_NAME',
-          ),
-        ),
-        12 => 
-        array (
-          0 => 
-          array (
             'name' => 'financial_year_c',
             'label' => 'Financial Year',
           ),

@@ -343,7 +343,7 @@ EOQ1;
         $userId = $current_user->id;
 
         $isAdmin            = $current_user->is_admin;
-        $access=in_array($current_user->user_name,array('Roshni.Shaikh','NG866','NG478','Rohan.Supugade','hamza.thariya','Rohit.Ghag','NG722','bhargav.boda','sudhir.manwada','saajan.simon','NG887','Gaurav.Bavkar'));
+        $access=in_array($current_user->user_name,array('Roshni.Shaikh','NG866','NG478','Rohan.Supugade','hamza.thariya','Rohit.Ghag','NG722','bhargav.boda','NG887','Gaurav.Bavkar'));
         $case_created_by    = $this->bean->attended_by_c;
         $old_category       = !empty($this->bean->fetched_row->case_category_c)?$this->bean->fetched_row->case_category_c:'';
         
@@ -1042,9 +1042,9 @@ EOQ1;
                     var env = "<?php   echo getenv('SCRM_ENVIRONMENT') ?>";
                     var maker;
                     if(env =='prod'){
-                        maker =['ng478','ng866','ng887','sudhir.manwada','saajan.simon', 'ng2029','ng2054','Gaurav.Bavkar'];
+                        maker =['ng478','ng866','ng887', 'ng2029','ng2054'];
                     } else {
-                        maker = ['ng1273','ng1274', 'ng2054','ng2155','nucsoft4', 'nucsoft1'];
+                        maker = ['ng1273','ng1274', 'nucsoft1'];
                     }
                   
                     var username = $('#current_user_name').val().toLowerCase();
@@ -1088,9 +1088,9 @@ EOQ1;
                     var env = "<?php   echo getenv('SCRM_ENVIRONMENT') ?>";
                     var maker;
                     if(env =='prod'){
-                        maker =['ng478','ng866','ng887', 'saajan.simon','sudhir.manwada','ng2029','ng2054','Gaurav.Bavkar'];
+                        maker = ['ng478','ng866','ng887', 'ng2029','ng2054'];
                     } else {
-                        maker = ['ng1273','ng1274','ng2054','ng2155','nucsoft4','nucsoft1'];
+                        maker = ['ng1273','ng1274','nucsoft4','nucsoft1'];
                     }
                     var cat="<?php echo $this->bean->case_category_c?>";
                     var sub_cat="<?php echo $this->bean->case_subcategory_c?>";
@@ -1124,9 +1124,9 @@ EOQ1;
                     var len = $.trim(maker_remark).length;
                     var maker;
                     if(env =='prod'){
-                        maker =['ng478','ng866','ng887','sudhir.manwada', 'saajan.simon','ng2029','ng2054','Gaurav.Bavkar'];
+                        maker =['ng478','ng866','ng887', 'ng2029','ng2054'];
                     } else {
-                        maker = ['ng1273','ng1274','ng2054','nucsoft1','nucsoft4'];
+                        maker = ['ng1273','ng1274','nucsoft1','nucsoft4'];
                     }
                     var username = $('#current_user_name').val().toLowerCase();
                     if(jQuery.inArray(username, maker) != -1) {

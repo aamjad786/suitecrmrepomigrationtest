@@ -216,16 +216,6 @@ array (
         ),
         12 => 
         array (
-          0 => '',
-          1 => 
-          array (
-            'name' => 'reassigned_user_id_c',
-            'studio' => 'visible',
-            'label' => 'LBL_RE_ASSIGNED_TO_NAME',
-          ),
-        ),
-        13 => 
-        array (
           0 => 
           array (
             'name' => 'date_attended_c',
@@ -237,7 +227,7 @@ array (
             'label' => 'LBL_DATE_RESOLVED',
           ),
         ),
-        14 => 
+        13 => 
         array (
           0 => 
           array (
@@ -252,17 +242,7 @@ array (
             'label' => 'LBL_ESCALATION_LEVEL',
           ),
         ),
-        15 => 
-        array (
-          0 => 
-          array (
-            'name' => 'auto_email_status_c',
-            'comment' => 'Automation Email Status',
-            'label' => 'LBL_BOT_REJECT_REASON',
-          ),
-          1 => '',
-        ),
-        16 => 
+        14 => 
         array (
           0 => 
           array (
@@ -276,7 +256,7 @@ array (
             'label' => 'TID',
           ),
         ),
-        17 => 
+        15 => 
         array (
           0 => 
           array (
@@ -299,12 +279,7 @@ array (
             'name' => 'case_number',
             'label' => 'LBL_CASE_NUMBER',
           ),
-          1 => 
-          array (
-            'name' => 'bot_comment_c',
-            'comment' => 'Automation Bot comment',
-            'label' => 'Bot comment',
-          ),
+          1 => '',
         ),
         1 => 
         array (
@@ -374,21 +349,6 @@ array (
             'name' => 'date_modified',
             'label' => 'LBL_DATE_MODIFIED',
             'customCode' => '{$fields.date_modified.value} {$APP.LBL_BY} {$fields.modified_by_name.value}',
-          ),
-        ),
-        8 => 
-        array (
-          0 => 
-          array (
-            'name' => 'partner_name_c',
-            'comment' => 'Partner Name coming from AS',
-            'label' => 'LBL_PARTNER_NAME',
-          ),
-          1 => 
-          array (
-            'name' => 'fi_business_c',
-            'comment' => 'FI Business Coming from AS',
-            'label' => 'LBL_FI_BUSINESS',
           ),
         ),
       ),
