@@ -90,13 +90,6 @@ var $useForSubpanel = true;
 
     function display() {
         global $current_user, $app_list_strings;
-        if(!$current_user->is_admin)
-        {
-            echo "You are not authorized to access this page. Contact your administrator.";
-            die();
-        }
-       
-
 
         //lets set the return values
         if(isset($_REQUEST['return_module'])){

@@ -121,7 +121,7 @@ class Audit extends SugarBean {
                 sugar_die($app_strings['ERROR_NO_RECORD']);
             }
         }
-        $field_name = !empty($_REQUEST['field'])?$_REQUEST['field']:'';
+        $field_name = $_REQUEST['field'];
         // die($field_name);
 
         if($focus->is_AuditEnabled()){

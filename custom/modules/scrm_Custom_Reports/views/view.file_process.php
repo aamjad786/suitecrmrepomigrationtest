@@ -36,7 +36,7 @@ class scrm_Custom_ReportsViewfile_process extends SugarView {
 		<form action="$url/index.php?module=scrm_Custom_Reports&action=fileProcess" method="post" enctype="multipart/form-data">
     <div class="form-group">
     <label for="fileToUpload">Select CSV File to upload(Max 50 MB):</label>
-    <input type="file" name="fileToUpload" id="fileToUpload" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+	<input type="file" name="fileToUpload" id="fileToUpload">
     </div>
     <br>
     <input type="submit" value="Upload CSV File" name="submit"><br/><br/>

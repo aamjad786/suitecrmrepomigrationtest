@@ -762,7 +762,7 @@ JS;
 			<br>
 			<tr>
 				<td>File: </td>
-				<td><input type="file" name="sheet" id="sheet" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"></td>
+				<td><input type="file" name="sheet" id="sheet"></td>
 			</tr>
 			<tr>
 				<td></td><td colspan="1">

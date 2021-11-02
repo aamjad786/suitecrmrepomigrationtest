@@ -108,7 +108,7 @@ class SMAcc_SM_AccountViewDetail extends SugarView {
             $onboardingChecklistId = $row['onboarding_checklist_id'];
             $statusCode = $row['status'];
             $description = $row['description'];
-            $option = !empty($onboardingChecklistArray[$onboardingChecklistId])?$onboardingChecklistArray[$onboardingChecklistId]:'';
+            $option = $onboardingChecklistArray[$onboardingChecklistId];
             $status = array_search ($statusCode, $app_list_strings['onboarding_checklist_status']);
            
             ?>

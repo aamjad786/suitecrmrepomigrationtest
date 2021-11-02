@@ -72,7 +72,6 @@ class ProspectsViewDetail extends ViewDetail {
         if(!empty($this->bean->alt_address_city)){
 			$this->bean->alt_address_city = ($app_list_strings['city_pincodes_list'][$this->bean->alt_address_city]?$app_list_strings['city_pincodes_list'][$this->bean->alt_address_city]:$this->bean->alt_address_city);
 		}
-		$total_sales =0;
 		if(!empty($this->bean->total_sales_per_month_c)){
 			$fmt = new NumberFormatter($locale = 'en_IN', NumberFormatter::CURRENCY);
 			$total_sales = $fmt->format($this->bean->total_sales_per_month_c);

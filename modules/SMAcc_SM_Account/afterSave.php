@@ -43,7 +43,6 @@ class afterSave {
         $myfile = fopen("Logs/NPSServey.log", "a");
 
         fwrite($myfile, "\n".date('Y-m-d h:i:s'));
-        require_once 'custom/include/SendSMS.php';
         $sms = new SendSMS();
         
         $beforeSaveData = $bean->fetched_row;
@@ -62,10 +61,10 @@ class afterSave {
                 $env = getenv('SCRM_ENVIRONMENT');
 
                 if ($env == 'prod') {
-                    
+                    $sms = new SendSMS();
                     $sms->send_sms_to_user($tag_name="Cust_CRM_42",$bean->contact, $smsContent, $bean);
                 } else {
-                
+                    $sms = new SendSMS();
                     $sms->send_sms_to_user($tag_name="Cust_CRM_42","919131952467", $smsContent, $bean);
                 }
         }

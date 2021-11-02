@@ -164,12 +164,6 @@ class UsersViewDetail extends ViewDetail {
     }
 
     function display() {
-        global $current_user;
-        if(!$current_user->is_admin)
-        {
-            echo "You are not authorized to access this page. Contact your administrator.";
-            die();
-        }
         if ($this->bean->portal_only == 1 || $this->bean->is_group == 1 ) {
             $this->options['show_subpanels'] = false;
             $this->dv->formName = 'DetailViewGroup';

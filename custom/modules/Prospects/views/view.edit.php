@@ -58,7 +58,7 @@ class ProspectsViewEdit extends ViewEdit {
 		$role = ACLRole::getUserRoleNames($current_user->id);
 		
 		
-        if(!empty($role[0]) && ($role[0] == 'Call Center Agent' || $role[0] == 'Call Center Manager') && empty($this->bean->fetched_row)){
+        if(($role[0] == 'Call Center Agent' || $role[0] == 'Call Center Manager') && empty($this->bean->fetched_row)){
 			echo '<b style="color:red">You do not have access to this area. Contact your site administrator to obtain access.</b>';
 			sugar_die();
 		}

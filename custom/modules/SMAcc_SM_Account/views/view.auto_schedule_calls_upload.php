@@ -69,7 +69,7 @@ class SMAcc_SM_AccountViewAuto_schedule_calls_upload extends SugarView {
             <div class="form-group">
                 <label for="sheet">Select file name to upload :</label>
                 <p><b>Note:</b> Only spreadsheets(.xlsx) are accepted. Use the sample file to upload data</p><br>
-                <input type="file" id="sheet" name="sheet" required accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/><p style='color:blue'>**Split the report if more than 200 phone numbers present**</p> 
+                <input type="file" id="sheet" name="sheet" required/><p style='color:blue'>**Split the report if more than 200 phone numbers present**</p> 
                 <br>
                 <label for="report">Report Name:</label>
                 <select id = 'report' name = 'report' required>
