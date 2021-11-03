@@ -152,7 +152,7 @@ class Neo_Customers extends Neo_Customers_sugar {
             $emails = [];
             while ($row = $db->fetchByAssoc($result)) {
                 $ticket_size = $row['user_id'];
-                $user=BeanFactory::getBean('Users',$user_id); renewals.php 
+                $user=BeanFactory::getBean('Users',$user_id);
                 $primary_email=$user->emailAddress->getPrimaryAddress($user);
                 $emails[] = $primary_email;
             }
