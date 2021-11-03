@@ -1,6 +1,6 @@
 <?php
 
-require_once('CurlReq.php');
+require_once('custom/include/CurlReq.php');
 require_once 'custom/CustomLogger/CustomLogger.php';
 
 $curl_req = new CurlReq();
