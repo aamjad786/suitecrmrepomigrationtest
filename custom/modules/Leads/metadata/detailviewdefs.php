@@ -764,6 +764,45 @@ array (
           ),
           1 => '',
         ),
+        22 => 
+        array (
+          0 => 
+          array (
+            'name' => 'campaignid_c',
+            'label' => 'LBL_CAMPAIGN_ID',
+          ),
+          1 => 
+          array (
+            'name' => 'campaign_name_c',
+            'label' => 'LBL_CAMPAIGN_NAME',
+          ),
+        ),
+        23 => 
+        array (
+          0 => 
+          array (
+            'name' => 'campaign_medium_c',
+            'label' => 'LBL_CAMPAIGN_MEDIUM',
+          ),
+          1 => 
+          array (
+            'name' => 'campaign_content_c',
+            'label' => 'LBL_CAMPAIGN_CONTENT',
+          ),
+        ),
+        24 => 
+        array (
+          0 => 
+          array (
+            'name' => 'campaign_source_c',
+            'label' => 'LBL_CAMPAIGN_SOURCE',
+          ),
+          1 => 
+          array (
+            'name' => 'campaign_term_c',
+            'label' => 'LBL_CAMPAIGN_TERM',
+          ),
+        ),
       ),
       'LBL_EOS_PANEL' => 
       array (

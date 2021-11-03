@@ -82,6 +82,40 @@ class BeforeSaveLead {
 		$this->logger->log('debug', 'BeforeSaveLead fieldSanity completed');
 	}
 
+	public function utmFieldsUpdate($oLead) {
+		//Check Opportunity is linked with current Lead
+		if(!empty($oLead->opportunity_id)) {
+			// array of Old and new values of UTM fields
+			$fieldsOldNewVal = array( $oLead->fetched_row['campaignid_c'] => $oLead->campaignid_c,
+								$oLead->fetched_row['campaign_source_c'] => $oLead->campaign_source_c,
+								$oLead->fetched_row['campaign_medium_c'] => $oLead->campaign_medium_c,
+								$oLead->fetched_row['campaign_name_c'] => $oLead->campaign_name_c,
+								$oLead->fetched_row['campaign_term_c'] => $oLead->campaign_term_c,
+								$oLead->fetched_row['campaign_content_c'] => $oLead->campaign_content_c);
+			foreach($fieldsOldNewVal as $key => $value) {
+				//if any of the field is updated 
+				if($key !== $value) {
+					$update = true; //set update true
+					break;
+				}
+			}
+			//when update has to be done
+			if($update) {
+				//Retrieve Bean of Opportunity
+				$oOpportunity = BeanFactory::getBean("Opportunities",$oLead->opportunity_id);
+				//array of fields 
+				$aFields = array('campaignid_c','campaign_source_c','campaign_name_c','campaign_term_c','campaign_content_c','campaign_medium_c');
+				foreach($aFields as $field) {
+					//Setting the UTM fields from Leads to Opportnities
+					$oOpportunity->$field = $oLead->$field;
+				}
+				$oOpportunity->save();
+			}
+		}
+		$this->logger->log('debug', 'BeforeSaveLead utmFieldsUpdate completed');
+
+	}
+
 	public function validate_mobile($mobile) {
 		return preg_match('/^[0-9]{10}+$/', $mobile);
 	}

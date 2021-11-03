@@ -48,8 +48,9 @@ class AfterSaveOpportunity {
             
             $isApplicationIdGenerated = (!empty($bean->application_id_c) || !empty($bean->stored_fetched_row_c['application_id_c']));
             $isSalesStageSanctioned = !empty($bean->sales_stage) && $bean->sales_stage == 'Sanctioned';
-            
-            $isNeoCashInstaOppCanAssign = $isApplicationIdGenerated &&  $isSalesStageSanctioned;
+            $idDigitalNo=(strtolower($bean->digital_c) == "no"); // CSI-1117
+
+            $isNeoCashInstaOppCanAssign = $isApplicationIdGenerated &&  $isSalesStageSanctioned && $idDigitalNo;
 
             $this->logger->log('debug', 'NeoCash Insta Opportunity Conditions: ');
             $this->logger->log('debug', 'isApplicationIdGenerated: '.$isApplicationIdGenerated);

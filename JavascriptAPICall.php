@@ -92,11 +92,19 @@ if ($apiName == 'getApplicationDataFromLMM') {
     $assigned_user = $case->assigned_user_id;
     $datetime=date("Y-m-d H:i:s");
     if(empty($_REQUEST['reject'])){
+        $details = $sugar_config['case_types'];
 
         $oldCategory=$case->case_category_c;
         $oldSubCategory=$case->case_subcategory_c;
         $case->case_category_c=$case->case_category_c_new_c;
         $case->case_subcategory_c=$case->case_subcategory_c_new_c;
+
+        $subcat = $case->case_subcategory_c;
+        $index=getdetail($details,$subcat);
+        $detail=$details[$index];
+        $type=$detail['qrc'];
+        $action_code=$detail['ftr'];
+
         $case->type=$app_list_strings['case_type_mapping'][$case->case_subcategory_c_new_c]['qrc'];
         $r =  $case->save();
         $timestamp=strtotime($datetime);
@@ -104,7 +112,7 @@ if ($apiName == 'getApplicationDataFromLMM') {
         $timestamp = date("Y-m-d H:i:s", $timestamp);
         $auditid=create_guid();
         // Approved
-        $update_case = 'UPDATE cases s join cases_cstm c on s.id=c.id_c SET c.case_category_approval_c =1, c.case_category_counts_c = case_category_counts_c + 1, s.assigned_user_id ="'.$assigned_user.'",deleted=0,c.checker_comment_c="'.$_REQUEST['checker_comments'].'" ,c.checker_c="'.$_REQUEST['user_id'].'", c.date_of_changes_c = "'.$datetime.'" WHERE id = "'.$_REQUEST['id'].'"';
+        $update_case = 'UPDATE cases s join cases_cstm c on s.id=c.id_c SET c.case_category_approval_c =1, c.case_category_counts_c = case_category_counts_c + 1, s.assigned_user_id ="'.$assigned_user.'",deleted=0,c.checker_comment_c="'.$_REQUEST['checker_comments'].'" ,c.checker_c="'.$_REQUEST['user_id'].'", c.date_of_changes_c = "'.$datetime.'",s.type = "'.$type.'" WHERE id = "'.$_REQUEST['id'].'"';
 
         $audit_query1 ="insert into cases_audit values ('$auditid','$case->id','$timestamp','1','$case_subcategory_c','relate','$oldSubCategory','$case->case_subcategory_c',null,null)";
 
@@ -117,6 +125,13 @@ if ($apiName == 'getApplicationDataFromLMM') {
         $res1=$db->query($audit_query1);
 
         $res2=$db->query($audit_query2);
+
+        if(!empty($action_code)){
+            $update_cases_cstm = "update cases_cstm set case_action_code_c = '".$action_code."' where id_c='$item->id'";
+
+            $results = $db->query($update_cases_cstm);
+        }
+
     } 
     
     if(!empty($_REQUEST['reject'])){
@@ -171,96 +186,111 @@ if ($apiName == 'getApplicationDataFromLMM') {
     print_r($r=1);
 
 
-} else if( $apiName == 'bulkapproveCategory'){
-   //var_dump($_REQUEST['user_id']);exit;
-   foreach($_REQUEST['category'] as $case_id){
-       
+} 
+else if( $apiName == 'bulkapproveCategory'){
+    //var_dump($_REQUEST['user_id']);exit;
+    $details = $sugar_config['case_types'];
     $bean = BeanFactory::newBean('Cases');
 
-    $case=$bean->retrieve($case_id);
+    foreach($_REQUEST['category'] as $case_id){
 
-    $assigned_user = $case->assigned_user_id;
+        $case=$bean->retrieve($case_id);
 
-    $datetime=date("Y-m-d H:i:s");
+        $assigned_user = $case->assigned_user_id;
 
-    $oldCategory=$case->case_category_c;
+        $datetime=date("Y-m-d H:i:s");
 
-    $oldSubCategory=$case->case_subcategory_c;
+        $oldCategory=$case->case_category_c;
 
-    $case->case_category_c=$case->case_category_c_new_c;
+        $oldSubCategory=$case->case_subcategory_c;
 
-    $case->case_subcategory_c=$case->case_subcategory_c_new_c;
+        $case->case_category_c=$case->case_category_c_new_c;
 
-    $r =  $case->save();
+        $case->case_subcategory_c=$case->case_subcategory_c_new_c;
 
-    $timestamp=strtotime($datetime);
+        $case->type=$app_list_strings['case_type_mapping'][$case->case_subcategory_c_new]['qrc'];
 
-    $timestamp = $timestamp - (5*60*60+30*60);//subtract 5h 30min from current time;
+        $r =  $case->save();
 
-    $timestamp = date("Y-m-d H:i:s", $timestamp);
+        $subcat         = $case->case_subcategory_c;
+        $index          = getdetail($details,$subcat);
+        $detail         = $details[$index];
+        $type           = $detail['qrc'];
+        $action_code    = $detail['ftr'];
 
-    $auditid=create_guid();
+        $timestamp=strtotime($datetime);
 
-    // Approved
-    $update_case = 'UPDATE cases s join cases_cstm c on s.id=c.id_c SET c.case_category_approval_c =1, c.case_category_counts_c = c.case_category_counts_c + 1, assigned_user_id ="'.$assigned_user.'",deleted=0,c.checker_comment_c="'.$_REQUEST['checker_comments'].'" ,c.checker_c="'.$_REQUEST['user_id'].'", date_of_changes_c = "'.$datetime.'" WHERE id = "'.$case_id.'"';
+        $timestamp = $timestamp - (5*60*60+30*60);//subtract 5h 30min from current time;
 
-    $audit_query1 ="insert into cases_audit values ('$auditid','$case->id','$timestamp','1','$case_subcategory_c','relate','$oldSubCategory','$case->case_subcategory_c',null,null)";
+        $timestamp = date("Y-m-d H:i:s", $timestamp);
 
-    $auditid=create_guid();
+        $auditid=create_guid();
 
-    $audit_query2 ="insert into cases_audit values ('$auditid','$case->id','$timestamp','1','$case_category_c','relate','$oldCategory','$case->case_category_c',null,null)";
+        // Approved
+        $update_case = 'UPDATE cases s join cases_cstm c on s.id=c.id_c SET c.case_category_approval =1, c.case_category_counts_c = c.case_category_counts_c + 1, assigned_user_id ="'.$assigned_user.'",deleted=0,c.="'.$_REQUEST['checker_comments'].'" ,c.checker_c="'.$_REQUEST['user_id'].'", c.date_of_changes_c = "'.$datetime.'",type = "'.$type.'" WHERE id = "'.$case_id.'"';
 
-    $s = $db->query($update_case);
+        $s = $db->query($update_case);
 
-    $res1=$db->query($audit_query1);
+        $audit_query1 ="insert into cases_audit values ('$auditid','$case->id','$timestamp','1','$case_subcategory_c','relate','$oldSubCategory','$case->case_subcategory_c',null,null)";
+        
+        $res1=$db->query($audit_query1);
 
-    $res2=$db->query($audit_query2);
+        $auditid=create_guid();
 
-    $to = getUserEmail($case->maker_id_c);
+        $audit_query2 ="insert into cases_audit values ('$auditid','$case->id','$timestamp','1','$case_category_c','relate','$oldCategory','$case->case_category_c',null,null)";
+
+        $res2=$db->query($audit_query2);
+
+        $to = getUserEmail($case->maker_id_c);
+        
+        $email = new SendEmail();
+
+        $subject = "Approved your updated Category / Sub Category for case $case->case_number";
+        
+        $user_maker = getUserName($case->maker_id_c);
+
+        if(!empty($action_code)){
+            $update_cases_cstm = "update cases_cstm set case_action_code_c = '".$action_code."' where id_c='$item->id'";
     
-    $email = new SendEmail();
+            $results = $db->query($update_cases_cstm);
+        }
 
-    $subject = "Approved your updated Category / Sub Category for case $case->case_number";
+        $status= empty($_REQUEST['reject'])?'approved':'rejected';
+
+        if ($status=='rejected') {
+            $subject = "Rejected your Category / Sub Category change request for case $case->case_number";
+        } 
     
-    $user_maker = getUserName($case->maker_id_c);
-
-    $status= empty($_REQUEST['reject'])?'approved':'rejected';
-
-    if ($status=='rejected')
-    {
-        $subject = "Rejected your Category / Sub Category change request for case $case->case_number";
-    } 
-   
-    $desc = "<pre>Dear $user_maker,
+        $desc = "<pre>Dear $user_maker,
             Your requested change in category/subcategory of the following case has been $status,
            
             </pre>";
                 
-                $desc .= "<pre><b>Case History:</b>
-                            <table border='1' style='border-collapse: collapse;'>
-                                <tr>
-                                    <td><b>Case Number</b></td>
-                                    <td colspan=2>$case->case_number</td>
-                                    <td><b>Case Login Date</b></td>
-                                    <td colspan=2>$case->date_entered</td>
-                                </tr>
-                                <tr>
-                                    <td><b>Issue Category (SubCategory)</b></td>
-                                    <td colspan=2>$case->case_category_c- $case->case_subcategory_c</td>
-                                    <td><b>Case Status</b></td>
-                                    <td colspan=2>$case->state</td>
-                                </tr></table>";
-                                $url = (getenv('SCRM_SITE_URL')."/index.php?module=Cases&action=DetailView&record=".$case->id);
-                            
-                                $desc.= "<pre>You may review this Case at:
+        $desc .= "<pre><b>Case History:</b>
+            <table border='1' style='border-collapse: collapse;'>
+                <tr>
+                    <td><b>Case Number</b></td>
+                    <td colspan=2>$case->case_number</td>
+                    <td><b>Case Login Date</b></td>
+                    <td colspan=2>$case->date_entered</td>
+                </tr>
+                <tr>
+                    <td><b>Issue Category (SubCategory)</b></td>
+                    <td colspan=2>$case->case_category_c- $case->case_subcategory_c</td>
+                    <td><b>Case Status</b></td>
+                    <td colspan=2>$case->state</td>
+                </tr></table>";
+        $url = (getenv('SCRM_SITE_URL')."/index.php?module=Cases&action=DetailView&record=".$case->id);
+    
+        $desc.= "<pre>You may review this Case at:
         <a href='$url'>$url</a></pre>";
 
-    $cc = array();
+        $cc = array();
 
-    $email->send_email_to_user($subject, $desc, $to, $cc);
-    
+        $email->send_email_to_user($subject, $desc, $to, $cc);
+        
 
-   }
+    }
 
    print_r($r=1);
   
@@ -347,6 +377,14 @@ function getUserEmail($user_id){
    
     $email = $user->email1;
     return $email;
+}
+
+function getdetail($a,$subcat) {
+    foreach($a as $key => $i) {
+        if(array_search($subcat,$i)) {
+            return $key;
+        }
+    }
 }
 
 function getUserName($user_id){

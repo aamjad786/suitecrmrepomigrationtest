@@ -44,6 +44,7 @@ $mod_strings = array (
   'LBL_SCHEME' => 'Scheme:',
   'LBL_FI_BUSINESS' => 'FI Business',
   'LBL_PARTNER_NAME' => 'Partner Name',
+  'LBL_EMAIL_SOURCE' => 'Email Source',
   'LBL_BOT_REJECT_REASON' => 'Bot Reject Reason',
   'LBL_PROCESSOR_NAME' => 'Processor Name',
   'LBL_SUMMARY' => 'Summary:',

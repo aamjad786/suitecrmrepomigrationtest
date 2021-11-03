@@ -6134,82 +6134,7 @@ class InboundEmail extends SugarBean
 		
         return false;
     }
-    // public function getCaseIdFromCaseNumber($emailName, $fromaddr, $aCase)
-    // {
-        
-    //     //$emailSubjectMacro
-    //     $exMacro = explode('%1', $aCase->getEmailSubjectMacro());
-    //     $open = $exMacro[0];
-    //     $close = $exMacro[1];
-
-    //     if ($sub = stristr($emailName, $open)) {
-    //         // eliminate everything up to the beginning of the macro and return the rest
-    //         // $sub is [CASE:XX] xxxxxxxxxxxxxxxxxxxxxx
-    //         $sub2 = str_replace($open, '', $sub);
-    //         // $sub2 is XX] xxxxxxxxxxxxxx
-    //         $sub3 = substr($sub2, 0, strpos($sub2, $close));
-
-    //         // case number is supposed to be numeric
-    //         if (ctype_digit($sub3)) {
-    //             // filter out deleted records in order to create a new case
-    //             // if email is related to deleted one (bug #49840)
-    //             $query = 'SELECT id FROM cases WHERE case_number = '
-    //                 . $this->db->quoted($sub3)
-    //                 . " and deleted = 0 and state NOT IN ('Closed','Resolved')";
-    //             $r = $this->db->query($query, true);
-    //             $a = $this->db->fetchByAssoc($r);
-
-    //             $this->logger->log('debug', "Query to check email is not related to deleted one, to create new case $query ");
-
-    //             if (!empty($a['id'])) {
-
-	// 				$query_email = "select parent_id from emails  LEFT JOIN emails_text ON  emails.id = emails_text.email_id where parent_id='" .$a['id']. "' and from_addr='".$fromaddr."' and emails.deleted = 0  order by date_entered desc limit 1";
-
-	// 				$r_email = $this->db->query($query_email, true);
-
-	// 				$a = $this->db->fetchByAssoc($r_email);
-
-    //                 $this->logger->log('debug', "Query to check email is not related to deleted one, to create new case $query_email ");
-	// 				if (!empty($a['parent_id'])) {
-    //                     echo '<br/> rcord is : <br/>';
-    //                     var_dump($a);
-    //                     $this->logger->log('debug', "getCaseIdFromCaseNumber returned case id  ".$a['id']);
-    //                     die;
-	// 					return $a['id'];
-	// 				}
-    //             }
-    //         }
-    //     }
-    //     $prefixes = array("RE:","FWD:","FW:");
-    //     foreach($prefixes as $prefix){
-    //     	if (substr(strtolower($emailName), 0, strlen($prefix)) == strtolower($prefix)) {
-    //             $this->logger->log('debug', "$prefix found in $emailName");
-	// 		    $str = trim(substr($emailName, strlen($prefix)));
-	// 		    $query = "SELECT id FROM cases WHERE name = ".$this->db->quoted($str)."
-    //                  and deleted = 0 and state NOT IN ('Closed','Resolved') order by date_entered desc limit 1";
-    //             $this->logger->log('debug', "Cases Query: $query");
-
-    //             $results = $this->db->query($query, true);
-    //             $row = $this->db->fetchByAssoc($results);
-    //             if (!empty($row['id'])) {	
-
-	// 				$query_email = "select parent_id from emails  LEFT JOIN emails_text ON  emails.id = emails_text.email_id where parent_id='" .$a['id']. "' and from_addr='".$fromaddr."' and emails.deleted = 0  order by date_entered desc limit 1";
-
-	// 				$r_email = $this->db->query($query_email, true);
-
-	// 				$a = $this->db->fetchByAssoc($r_email);
-    //                 $this->logger->log('debug', "Email Query: $query_email ");
-	// 				if (!empty($a['parent_id'])) {
-    //                     $this->logger->log('debug', "getCaseIdFromCaseNumber returned case id  ".$row['id']);
-    //                 	return $row['id'];
-	// 				}
-    //             }
-    //         }
-    //     }
-
-    //     return false;
-    // }
-
+    
     /**
      * @param $option_name
      * @param null $default_value
@@ -6309,42 +6234,49 @@ class InboundEmail extends SugarBean
      * @return array Array of messageNumbers (mail server's internal keys)
      */
     public function getNewMessageIds() {
-        $this->logger->log('debug', "In getNewMessageIds in customInboundEmail");
+		$this->logger->log('debug', "In getNewMessageIds in customInboundEmail");
 
-        $storedOptions = sugar_unserialize(base64_decode($this->stored_options));
+		$storedOptions = sugar_unserialize(base64_decode($this->stored_options));
+        
+		$this->logger->log('debug', print_r($storedOptions,true));
 
-        //TODO figure out if the since date is UDT
-        if (!is_bool($storedOptions) && $storedOptions['only_since']) {// POP3 does not support Unseen flags
-            if (!isset($storedOptions['only_since_last']) && !empty($storedOptions['only_since_last'])) {
-                $q = "SELECT last_run FROM schedulers WHERE job = '{$this->job_name}'";
-                $r = $this->db->query($q, true);
-                $a = $this->db->fetchByAssoc($r);
+		//TODO figure out if the since date is UDT
+		if (!is_bool($storedOptions) && $storedOptions['only_since']) {// POP3 does not support Unseen flags
+			if (!isset($storedOptions['only_since_last']) && !empty($storedOptions['only_since_last'])) {
+				$q = "SELECT last_run FROM schedulers WHERE job = \'function::custompollMonitoredInboxesAOP\'";
+				$r = $this->db->query($q, true);
+				$a = $this->db->fetchByAssoc($r);
 
-                $date = date('r', strtotime($a['last_run']));
-                $this->logger->log('debug', "-----> getNewMessageIds() executed query: {$q}");
-            } else {
-                $date = $storedOptions['only_since_last'];
-            }
-            $ret = $this->getImap()->search('SINCE "' . $date . '" UNDELETED');
-            // $ret = $this->getImap()->search('UNDELETED'); // Pallavi temp commented since date
-            $check = $this->getImap()->check();
-            $storedOptions['only_since_last'] = $check->Date;
-            $storedOptions['only_since'] = 1;
-            $this->stored_options = base64_encode(serialize($storedOptions));
-            $this->save();
-        } else {
+				$date = date('r', strtotime($a['last_run']));
+				$this->logger->log('debug', "In stored options date is not set, using scheduler date $date executed query: {$q}");
+			} 
+            else {
+				$date = $storedOptions['only_since_last'];
+				$this->logger->log('debug', "In else found the date $date");
+			}
+            
+			$ret = $ret = $this->getImap()->search($this->conn, 'SINCE "'.$date.'" UNDELETED');
+			
+			$check = $this->getImap()->check();
+			$storedOptions['only_since_last'] = $check->Date;
+			$storedOptions['only_since'] = 1;
+			$this->stored_options = base64_encode(serialize($storedOptions));
+			$this->save();
+		} 
+        else {
             if (!is_resource($this->conn)) {
                 LoggerManager::getLogger()->fatal('Inbound Email Connection is not valid resource for getting New Message Ids.');
 
                 return false;
             }
-            $ret = $this->getImap()->search('UNDELETED UNSEEN');
-        }
+            $ret = $ret = $this->getImap()->search($this->conn, 'UNDELETED');
+		}
 
-        $this->logger->log('debug', '-----> getNewMessageIds() got ' . count($ret) . ' new Messages');
+		$this->logger->log('debug', '-----> getNewMessageIds() got '.count($ret).' new Messages');
+		$GLOBALS['log']->debug('-----> getNewMessageIds() got '.count($ret).' new Messages');
 
-        return $ret;
-    }
+		return $ret;
+	}
 
     /**
      * Constructs the resource connection string that IMAP needs
