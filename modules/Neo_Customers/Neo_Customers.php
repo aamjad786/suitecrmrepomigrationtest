@@ -86,9 +86,9 @@ class Neo_Customers extends Neo_Customers_sugar {
                             concat(users.first_name,' ',users.last_name) as 'Assigned User Name',
                             convert_tz(neo_customers.hot_lead_trigger_time ,'+0:00','+5:30') as 'Hot Lead Trigger Time'
                             ";
-        	$query .=  $custom_join['select'];
+        	// $query .=  $custom_join['select'];
                             $query .= " FROM neo_customers ";
-        	$query .=  $custom_join['join'];
+        	// $query .=  $custom_join['join'];
                             $query .= "";
             $query .= "		LEFT JOIN users
                             ON neo_customers.assigned_user_id=users.id";
@@ -147,11 +147,10 @@ class Neo_Customers extends Neo_Customers_sugar {
             $city = $this->location;
             $ticket_size = $this->getTicketSizeAmount($loan_amount);
             global $db;
-            $query  = "select * from renewal_users where role='Renewal Manager' and city like '%$city%' and ticket_size='%ticket_size%'";
+            $query  = "select * from renewal_users where role='Renewal Manager' and city like '%$city%' and ticket_size='%$ticket_size%'";
             $result = $db->query($query);
             $emails = [];
             while ($row = $db->fetchByAssoc($result)) {
-                $ticket_size = $row['user_id'];
                 $user=BeanFactory::getBean('Users',$row['user_id']);  
                 $primary_email=$user->emailAddress->getPrimaryAddress($user);
                 $emails[] = $primary_email;
