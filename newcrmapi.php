@@ -37,7 +37,8 @@ $apiAction = array(
     'Fetch',
     'Audit',
     'Create_ETL',
-    'Transacting'
+    'Transacting',
+    'EosUpdate'
 );
 
 if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HTTP_REQUESTEDMODULE'], $apiModule) && in_array($_SERVER['HTTP_REQUESTEDMETHOD'], $apiAction)) {
@@ -577,7 +578,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                 }else{
                         $msg = array(
                             'Success' => false,
-                            'Message' => 'Unable To Find Lead With Given'
+                            'Message' => 'Unable To Find Lead With Given ID'
                         );
                 }
             }
