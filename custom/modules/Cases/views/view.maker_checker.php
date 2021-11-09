@@ -233,7 +233,7 @@ $(document).on('click','#approve_category',function(){
         if(r ==true){
             $.ajax({
                 type	:	'POST',
-                url:"JavascriptAPICall.php?api=bulkapproveCategory",
+                url     :   "JavascriptAPICall.php?api=bulkapproveCategory",
                 cache	:	false,
                 data	: 	{category:category,checker_comments:'Bulk Approval',user_id:user_id},				
                 success : 	function(res){	 
