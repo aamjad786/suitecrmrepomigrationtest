@@ -505,9 +505,9 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         
 
     }
-    else if ($module == "Lead" && $action == 'Update') {
+    else if ($module == "Lead" && $action == 'EosUpdate') {
         
-            $logger->log('debug', 'Update Lead API Request =====>'.var_export($rawData, true));
+            $logger->log('debug', 'EosUpdate Lead API Request =====>'.var_export($rawData, true));
             
             // Data Validation
             global $app_list_strings;
@@ -588,6 +588,63 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                     'Message' => 'Mandatory field(s) are missing. Lead ID Is Empty'
                 );
                 
+            }
+        }
+    } 
+    else if ($module == "Lead" && $action == 'Update') {
+        
+        $logger->log('debug', 'Update Lead API Request =====>'.var_export($rawData, true));
+        
+        $lead_id = $rawData->lead_id;
+        
+        if (!isset($lead_id) or empty($lead_id)) {
+            $msg = array(
+                'Success' => false,
+                'Message' => 'Mandatory field(s) are missing'
+            );
+        }
+        else if(!empty($rawData->disposition_c) &&  ($rawData->disposition_c =='interested' || $rawData->disposition_c=='pick_up') && empty($rawData->pickup_appointment_city_c))
+        {  
+            # This has execute only for the disposition is interested or pick and pick up is empty.
+            $msg = array(
+                'Success' => false,
+                'Message' => 'Please select pickup city to continue.'
+            );
+            
+        } else {
+            
+            $lead = new Lead();
+            $retrieved_data  = $lead->retrieve($lead_id);
+            
+            if(!empty($retrieved_data)){
+
+                foreach($rawData as $k=>$v){
+
+                    if ($k == 'Description') $v = htmlentities($v);
+
+                    if ($k == 'pickup_appointment_city_c' or $k == 'phone_mobile') {
+                        continue;
+                    }
+    
+                    $lead->{$k} = $v;
+                }
+
+                $id = $lead->save();
+
+                if (!$id) {
+
+                    $msg = array(
+                        'Success' => false,
+                        'Message' => 'Lead was not updated'
+                    );
+
+                }
+                
+            }else{
+                $msg = array(
+                    'Success' => false,
+                    'Message' => "Lead $lead_id not found in DB"
+                );
             }
         }
     }
