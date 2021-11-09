@@ -639,6 +639,11 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                         'Message' => 'Lead was not updated'
                     );
 
+                }else{
+                    $msg = array(
+                        'Success' => false,
+                        'Message' => 'Lead Updated Successfully.'
+                    );
                 }
                 
             }else{
