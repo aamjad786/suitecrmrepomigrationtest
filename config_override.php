@@ -27,6 +27,10 @@ $sugar_config['email_xss'] = 'YToxMzp7czo2OiJhcHBsZXQiO3M6NjoiYXBwbGV0IjtzOjQ6Im
 $sugar_config['verify_client_ip'] = false;
 $sugar_config['Adrenalin Api']="http://192.168.11.186:3001/WebAPI/NEOGROWTH/D26E59DDF39740B2B6789C26A1BBFBC5/DT_668/API0001/20080505010101";
 $sugar_config['AS_CRM_Domain'] = 'crm.advancesuite.in';
+$sugar_config['prod_case_link'] = 'https://crm.advancesuite.in/SuiteCRM/index.php?module=Cases&action=DetailView&record=';
+$sugar_config['uat_case_link'] = 'https://uat.advancesuite.in/SuiteCRM/index.php?module=Cases&action=DetailView&record=';
+$sugar_config['dev_case_link'] = 'https://localhost/index.php?module=Cases&action=DetailView&record=';
+    
 
 $sugar_config['ng_khatal_jay'] = 'khataljay@gmail.com';
 
