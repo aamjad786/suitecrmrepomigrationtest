@@ -6241,9 +6241,9 @@ class InboundEmail extends SugarBean
 		$this->logger->log('debug', print_r($storedOptions,true));
 
 		//TODO figure out if the since date is UDT
-		if (!is_bool($storedOptions) && $storedOptions['only_since']) {// POP3 does not support Unseen flags
+		if($storedOptions['only_since']) {// POP3 does not support Unseen flags
 			if (!isset($storedOptions['only_since_last']) && !empty($storedOptions['only_since_last'])) {
-				$q = "SELECT last_run FROM schedulers WHERE job = \'function::custompollMonitoredInboxesAOP\'";
+				$q = 'SELECT last_run FROM schedulers WHERE job = \'function::custompollMonitoredInboxesAOP\'';
 				$r = $this->db->query($q, true);
 				$a = $this->db->fetchByAssoc($r);
 
@@ -6255,7 +6255,7 @@ class InboundEmail extends SugarBean
 				$this->logger->log('debug', "In else found the date $date");
 			}
             
-			$ret = $ret = $this->getImap()->search($this->conn, 'SINCE "'.$date.'" UNDELETED');
+			$ret = $this->getImap()->search('SINCE "'.$date.'" UNDELETED');
 			
 			$check = $this->getImap()->check();
 			$storedOptions['only_since_last'] = $check->Date;
@@ -6264,12 +6264,7 @@ class InboundEmail extends SugarBean
 			$this->save();
 		} 
         else {
-            if (!is_resource($this->conn)) {
-                LoggerManager::getLogger()->fatal('Inbound Email Connection is not valid resource for getting New Message Ids.');
-
-                return false;
-            }
-            $ret = $ret = $this->getImap()->search($this->conn, 'UNDELETED');
+            $ret = $this->getImap()->search('UNDELETED');
 		}
 
 		$this->logger->log('debug', '-----> getNewMessageIds() got '.count($ret).' new Messages');

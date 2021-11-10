@@ -193,7 +193,7 @@ else if( $apiName == 'bulkapproveCategory'){
     $bean = BeanFactory::newBean('Cases');
 
     foreach($_REQUEST['category'] as $case_id){
-
+        
         $case=$bean->retrieve($case_id);
 
         $assigned_user = $case->assigned_user_id;
@@ -208,8 +208,8 @@ else if( $apiName == 'bulkapproveCategory'){
 
         $case->case_subcategory_c=$case->case_subcategory_c_new_c;
 
-        $case->type=$app_list_strings['case_type_mapping'][$case->case_subcategory_c_new]['qrc'];
-
+        $case->type=$app_list_strings['case_type_mapping'][$case->case_subcategory_c_new_c]['qrc'];
+        
         $r =  $case->save();
 
         $subcat         = $case->case_subcategory_c;
@@ -223,11 +223,11 @@ else if( $apiName == 'bulkapproveCategory'){
         $timestamp = $timestamp - (5*60*60+30*60);//subtract 5h 30min from current time;
 
         $timestamp = date("Y-m-d H:i:s", $timestamp);
-
+        
         $auditid=create_guid();
 
         // Approved
-        $update_case = 'UPDATE cases s join cases_cstm c on s.id=c.id_c SET c.case_category_approval =1, c.case_category_counts_c = c.case_category_counts_c + 1, assigned_user_id ="'.$assigned_user.'",deleted=0,c.="'.$_REQUEST['checker_comments'].'" ,c.checker_c="'.$_REQUEST['user_id'].'", c.date_of_changes_c = "'.$datetime.'",type = "'.$type.'" WHERE id = "'.$case_id.'"';
+        $update_case = 'UPDATE cases s join cases_cstm c on s.id=c.id_c SET c.case_category_approval_c =1, c.case_category_counts_c = c.case_category_counts_c + 1, assigned_user_id ="'.$assigned_user.'",deleted=0,c.checker_comment_c="'.$_REQUEST['checker_comments'].'" ,c.checker_c="'.$_REQUEST['user_id'].'", c.date_of_changes_c = "'.$datetime.'",type = "'.$type.'" WHERE id = "'.$case_id.'"';
 
         $s = $db->query($update_case);
 
@@ -292,7 +292,7 @@ else if( $apiName == 'bulkapproveCategory'){
 
     }
 
-   print_r($r=1);
+    print_r($r=1);
   
 } else if($apiName == 'bulkRejectCategory') {
     // var_dump($_REQUEST['category']);exit;
