@@ -20,7 +20,7 @@ $dictionary['Opportunity']['fields']['loan_amount_c']['validation'] = array (
         var regEx=/\d{1,2}[\,\.]{1}\d{1,2}/;
         var value=$("#" + nameIndex).val();
         console.log("from loan amount added");
-        if (regEx.test(value)== false) {
+        if (value != "" && regEx.test(value)== false) {
             add_error_style(formname, nameIndex, "Please Enter Valid Loan Amount!");
             return false;
         };
@@ -34,7 +34,7 @@ $dictionary['Opportunity']['fields']['amount']['validation'] = array (
         var regEx=/\d{1,2}[\,\.]{1}\d{1,2}/;
         var value=$("#" + nameIndex).val();
         console.log("from loan amount added");
-        if (regEx.test(value)== false) {
+        if (value != "" && regEx.test(value)== false) {
             add_error_style(formname, nameIndex, "Please Enter ValidLoan Amount Disbursed!");
             return false;
         };
@@ -48,7 +48,7 @@ $dictionary['Opportunity']['fields']['loan_amount_sanctioned_c']['validation'] =
         var regEx=/\d{1,2}[\,\.]{1}\d{1,2}/;
         var value=$("#" + nameIndex).val();
         console.log("from loan amount added");
-        if (regEx.test(value)== false) {
+        if (value != "" && regEx.test(value)== false) {
             add_error_style(formname, nameIndex, "Please Enter Valid Loan Amount Sanctioned!");
             return false;
         };
@@ -61,8 +61,8 @@ $dictionary['Opportunity']['fields']['pickup_appointment_address_c']['validation
     'callback' => 'function(formname, nameIndex) {
         var regEx=/^[#.0-9a-zA-Z\s,-]+$/;
         var value=$("#" + nameIndex).val();
-        console.log("from loan amount added");
-        if (regEx.test(value)== false) {
+        
+        if (value != "" && regEx.test(value)== false) {
             add_error_style(formname, nameIndex, "Please Enter Valid Pickup/ appointment address!");
             return false;
         };
@@ -76,7 +76,7 @@ $dictionary['Opportunity']['fields']['pickup_appointment_contact_c']['validation
         var regEx=/^[0-9]{10}$/;
         var value=$("#" + nameIndex).val();
         console.log("from loan amount added");
-        if (regEx.test(value)== false) {
+        if (value != "" && regEx.test(value)== false) {
             add_error_style(formname, nameIndex, "Please Enter Valid Pickup / appointment Contact Number!");
             return false;
         };
@@ -90,7 +90,7 @@ $dictionary['Opportunity']['fields']['pickup_appointment_pincode_c']['validation
         var regEx=/^[1-9][0-9]{5}$/;
         var value=$("#" + nameIndex).val();
         console.log("from loan amount added");
-        if (regEx.test(value)== false) {
+        if (value != "" && regEx.test(value)== false) {
             add_error_style(formname, nameIndex, "Please Enter Valid Pickup/ appointment pin code!");
             return false;
         };
@@ -101,7 +101,7 @@ $dictionary['Opportunity']['fields']['pickup_appointment_pincode_c']['validation
 $dictionary['Opportunity']['fields']['scheme_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("script added");
+        
         var regEx=/^\d*[a-zA-Z][a-zA-Z \d]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
@@ -115,7 +115,7 @@ $dictionary['Opportunity']['fields']['scheme_c']['validation'] = array (
 $dictionary['Opportunity']['fields']['Alliance_Lead_Docs_shared_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("script added");
+        
         var regEx=/^[a-zA-Z ]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
@@ -129,7 +129,7 @@ $dictionary['Opportunity']['fields']['Alliance_Lead_Docs_shared_c']['validation'
 $dictionary['Opportunity']['fields']['dsa_code_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("script added");
+   
         var regEx=/^\d*[a-zA-Z][a-zA-Z \d]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
@@ -143,7 +143,7 @@ $dictionary['Opportunity']['fields']['dsa_code_c']['validation'] = array (
 $dictionary['Opportunity']['fields']['advanced_suite_id_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("script added");
+        
         var regEx=/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
@@ -157,7 +157,7 @@ $dictionary['Opportunity']['fields']['advanced_suite_id_c']['validation'] = arra
 $dictionary['Opportunity']['fields']['application_id_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("script added");
+      
         var regEx=/^[0-9]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
@@ -172,7 +172,7 @@ $dictionary['Opportunity']['fields']['application_id_c']['validation'] = array (
 $dictionary['Opportunity']['fields']['product_type_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("script added");
+        
         var regEx=/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
@@ -186,7 +186,7 @@ $dictionary['Opportunity']['fields']['product_type_c']['validation'] = array (
 $dictionary['Opportunity']['fields']['seller_id_online_platform_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("script added");
+        
         var regEx=/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
@@ -200,7 +200,7 @@ $dictionary['Opportunity']['fields']['seller_id_online_platform_c']['validation'
 $dictionary['Opportunity']['fields']['seller_customer_rating_online_platform_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("script added");
+        
         var regEx=/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
@@ -214,7 +214,7 @@ $dictionary['Opportunity']['fields']['seller_customer_rating_online_platform_c']
 $dictionary['Opportunity']['fields']['seller_partner_rating_online_platform_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("script added");
+        
         var regEx=/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
@@ -229,7 +229,7 @@ $dictionary['Opportunity']['fields']['seller_partner_rating_online_platform_c'][
 $dictionary['Opportunity']['fields']['settlement_cycle_in_days_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("script added");
+        
         var regEx=/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
@@ -245,7 +245,7 @@ $dictionary['Opportunity']['fields']['settlement_cycle_in_days_c']['validation']
 $dictionary['Opportunity']['fields']['partner_id_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("script added");
+        
         var regEx=/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
@@ -259,7 +259,7 @@ $dictionary['Opportunity']['fields']['partner_id_c']['validation'] = array (
 $dictionary['Opportunity']['fields']['business_age_in_months_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("script added");
+        
         var regEx=/^[0-9]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
@@ -273,7 +273,7 @@ $dictionary['Opportunity']['fields']['business_age_in_months_c']['validation'] =
 $dictionary['Opportunity']['fields']['industry_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("script added");
+        
         var regEx=/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
@@ -287,7 +287,7 @@ $dictionary['Opportunity']['fields']['industry_c']['validation'] = array (
 $dictionary['Opportunity']['fields']['referral_agent_id_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("script added");
+        
         var regEx=/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
@@ -301,7 +301,7 @@ $dictionary['Opportunity']['fields']['referral_agent_id_c']['validation'] = arra
 $dictionary['Opportunity']['fields']['sales_3_month_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("script added");
+        
         var regEx=/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {

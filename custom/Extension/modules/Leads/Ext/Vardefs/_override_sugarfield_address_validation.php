@@ -6,8 +6,8 @@
         var regEx=/^[#.0-9a-zA-Z\s,-]+$/;
         var value=$("#" + nameIndex).val();
         
-        if (regEx.test(value)== false) {
-            add_error_style(formname, nameIndex, "Please Enter Valid Street Address!");
+        if (value != "" && regEx.test(value)== false) {
+            add_error_style(formname, nameIndex, "Please Enter Valid Street Address msg!");
             return false;
         };
         return true;
@@ -20,7 +20,7 @@ $dictionary['Lead']['fields']['alt_address_street']['validation'] = array (
         var regEx=/^[#.0-9a-zA-Z\s,-]+$/;
         var value=$("#" + nameIndex).val();
         
-        if (regEx.test(value)== false) {
+        if (value != "" && regEx.test(value)== false) {
             add_error_style(formname, nameIndex, "Please Enter Valid Street Address!");
             return false;
         };
@@ -33,7 +33,7 @@ $dictionary['Lead']['fields']['primary_address_postalcode']['validation'] = arra
     'callback' => 'function(formname, nameIndex) {
         var regEx=/^[1-9][0-9]{5}$/;
         var value=$("#" + nameIndex).val();
-        if (regEx.test(value)== false) {
+        if (value != "" && regEx.test(value)== false) {
             add_error_style(formname, nameIndex, "Please Enter Valid Postal Code!");
             return false;
         };
@@ -47,7 +47,7 @@ $dictionary['Lead']['fields']['alt_address_postalcode']['validation'] = array (
     'callback' => 'function(formname, nameIndex) {
         var regEx=/^[1-9][0-9]{5}$/;
         var value=$("#" + nameIndex).val();
-        if (regEx.test(value)== false) {
+        if (value != "" && regEx.test(value)== false) {
             add_error_style(formname, nameIndex, "Please Enter Valid Postal Code!");
             return false;
         };

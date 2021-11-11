@@ -157,12 +157,14 @@ array (
         'default' => true,
         'name' => 'control_program',
       ),
-      'alliance_opportunities_status' => 
+      'alliance_opp_status_c' => 
       array (
         'type' => 'enum',
-        'label' => 'Alliance Opportunities Status',
-        'width' => '150px.',
-        'name' => 'alliance_opportunities_status',
+        'default' => true,
+        'studio' => 'visible',
+        'label' => 'LBL_ALLIANCE_OPP_STATUS_C',
+        'width' => '10%',
+        'name' => 'alliance_opp_status_c',
       ),
     ),
   ),
@@ -177,4 +179,5 @@ array (
     ),
   ),
 );
+;
 ?>

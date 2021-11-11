@@ -45,7 +45,7 @@ class BeforeSaveLead {
 		$mobile = $bean->phone_mobile;
 		$scheme_c=$bean->scheme_c;
 		
-		$query  = "select id,scheme_c from leads l join leads_cstm lcstm where deleted = 0 and phone_mobile = '$mobile' and lcstm.scheme_c='$scheme_c'and date_entered> CURDATE() - INTERVAL 30 DAY order by date_entered desc limit 1";
+		$query  = "select id,scheme_c from leads l join leads_cstm lcstm where deleted = 0 and phone_mobile = '$mobile' and date_entered> CURDATE() - INTERVAL 30 DAY order by date_entered desc limit 1";
 		
 		$result = $db->query($query);
 
