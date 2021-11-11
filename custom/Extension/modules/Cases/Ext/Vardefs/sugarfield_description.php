@@ -7,7 +7,7 @@ $dictionary['Case']['fields']['description']['massupdate']=false;
 $dictionary['Case']['fields']['description']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        var regEx=/^[ A-Za-z0-9_.-_-:/&<>?;"%]*$/;
+        var regEx=/^[ A-Za-z0-9_.-_-:/&=.<>()|?#,;"%]*$/;
         var value=$("#" + nameIndex).val();
         //console.log("field value"+value);
         if (regEx.test(value)== false) {
