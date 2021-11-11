@@ -6,7 +6,7 @@ $dictionary['Case']['fields']['name']['merge_filter']='disabled';
 $dictionary['Case']['fields']['name']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        var regEx=/^[ A-Za-z0-9_:_></()Ã~¥¿±!Â¤–´.¯[#-]*$]*$/;
+        var regEx=/^[ A-Za-z0-9_:_></()Ã"~¥¿±!|,Â¤–´.¯[#-\]*$]*$/;
         var value=$("#" + nameIndex).val();
         //console.log("field value"+value);
         if (regEx.test(value)== false) {
