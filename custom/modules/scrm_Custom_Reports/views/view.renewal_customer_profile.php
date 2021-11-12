@@ -21,27 +21,27 @@ class scrm_Custom_ReportsViewrenewal_customer_profile extends ViewList{
         return $var;
     }
 
-    function curl_req($url, $headers = null){
-        // return "";
-        $ch = curl_init();
-        if(empty($headers)){
-            $headers  = ['Content-Type: application/json'];
-        }
-        if(!empty($headers)){
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        }
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPGET, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        $output = curl_exec($ch);
-        curl_close($ch);
-        // echo "here <br>";
-        // print_r($output);
-        // echo "<br>";
-        return $output;
-    }
+    // function curl_req($url, $headers = null){
+    //     // return "";
+    //     $ch = curl_init();
+    //     if(empty($headers)){
+    //         $headers  = ['Content-Type: application/json'];
+    //     }
+    //     if(!empty($headers)){
+    //         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    //     }
+    //     curl_setopt($ch, CURLOPT_URL, $url);
+    //     curl_setopt($ch, CURLOPT_HTTPGET, 1);
+    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    //     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    //     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    //     $output = curl_exec($ch);
+    //     curl_close($ch);
+    //     // echo "here <br>";
+    //     // print_r($output);
+    //     // echo "<br>";
+    //     return $output;
+    // }
 
     function __construct(){    
         parent::__construct();
@@ -120,7 +120,13 @@ SCRIPT_UPFRONT;
         $auth_token = getenv("SCRM_AS_API_RENEWALS_AUTH_KEY");
         $headers = ["Authorization: $auth_token"];
         // echo "<br> in <br>";
-        $response = $this->curl_req($url, $headers);
+        //$response = $this->curl_req($url, $headers);
+        
+        require_once('custom/include/CurlReq.php');
+        $curl_req = new CurlReq();
+
+        $response = $curl_req->curl_req($url, 'get', '', $headers);
+
         return $response;
     }
 

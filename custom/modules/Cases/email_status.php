@@ -47,16 +47,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 <br><br>
 <?php
-$url="https://api.pepipost.com/v5.1/events?email=$toemail&enddate=$todate&events=$status&fromaddress=$fromemail&limit=10000&startdate=$fromdate";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_HTTPGET, 1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    'api_key:ca8866bcafa408491438c65eea6840b6'));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $output = curl_exec($ch);
-    curl_close($ch);
+  $url="https://api.pepipost.com/v5.1/events?email=$toemail&enddate=$todate&events=$status&fromaddress=$fromemail&limit=10000&startdate=$fromdate";
+  $headers = array('api_key:ca8866bcafa408491438c65eea6840b6');
+  // $ch = curl_init();
+  // curl_setopt($ch, CURLOPT_URL, $url);
+  // curl_setopt($ch, CURLOPT_HTTPGET, 1);
+  // curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+  //   'api_key:ca8866bcafa408491438c65eea6840b6'));
+  //   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  //   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //   $output = curl_exec($ch);
+  //   curl_close($ch);
+  
+    require_once('custom/include/CurlReq.php');
+    $curl_req       = new CurlReq();
+
+    $output         = $curl_req->curl_req($url,'get','',$headers);
+
     $output=json_decode($output);
     //print_r($output->data);
     $result=$output->data;

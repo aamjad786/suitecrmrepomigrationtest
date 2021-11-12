@@ -26,18 +26,29 @@ if (!empty($application_id)) {
 }
 function customCurlRequest($url) {
     $bearerPassword = getenv('LMS_BEARER_PASSWORD');
-    $header = array(
+    $headers = array(
         "authorization: Bearer $bearerPassword",
         'content-type' => 'application/json'
     );
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HTTPGET, 1);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $output = curl_exec($ch);
-    curl_close($ch);
+
+    require_once('custom/include/CurlReq.php');
+    $curl_req = new CurlReq();
+
+    $output = $curl_req->curl_req($url, 'get', '', $headers);
+    
+    // $ch = curl_init();
+    // curl_setopt($ch, CURLOPT_URL, $url);
+    // curl_setopt($ch, CURLOPT_HTTPGET, 1);
+    // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    // $output = curl_exec($ch);
+    // curl_close($ch);
+
+    // $logger = new CustomLogger('LMM_APIs');
+	// $logger->log('debug', "curl URL : $url");
+	// $logger->log('debug', "Response : " . var_export($output, true));
+
     return $output;
 }
 

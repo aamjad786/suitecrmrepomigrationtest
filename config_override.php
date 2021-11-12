@@ -296,9 +296,7 @@ $sugar_config['designationToRoleMap'] = array(
     'Senior Area Sales Manager'                         => 'Customer Acquisition Manager',
     'Senior Executive - Bank Coordination'              => 'Customer Acquisition Manager',
     'Senior Executive - Sales Coordinator'              => 'Customer Acquisition Manager',
-
     'City Manager - Sales'                              => 'City Manager',
-
     'Channel Development Manager - Insurance'           => 'Cluster Manager',
     'Cluster Manager - Sales'                           => 'Cluster Manager',
     'Cluster Manager - Direct Sales'                    => 'Cluster Manager',
@@ -307,8 +305,6 @@ $sugar_config['designationToRoleMap'] = array(
     'Cluster Manager-Direct Sales'                      => 'Cluster Manager',
     'Cluster Manager - FS2'                             => 'Cluster Manager',
     'Senior Manager - Sales Training'                   => 'Cluster Manager',
-
-
     'Regional Sales Manager'                            => 'Regional Manager',
     'Regional Manager - Finance & Accounts'             => 'Regional Manager',
     'Regional Credit Manager'                           => 'Regional Manager',
@@ -330,7 +326,6 @@ $sugar_config['designationToRoleMap'] = array(
     'Senior Manager - Sales & Strategy'                 => 'Regional Manager',
     'Strategic Alliance'                                => 'Regional Manager',
     'Manager - Sales Operations & Analytics'            => 'Regional Manager',
-
     'Assistant Vice President - Sales'                  => 'Zonal Manager',
     'Manager- Business Alliance'                        => 'Zonal Manager',
     'Manager - Business Alliances'                      => 'Zonal Manager',
@@ -340,6 +335,82 @@ $sugar_config['designationToRoleMap'] = array(
     'Zonal Manager - Finance & Accounts'                => 'Zonal Manager',
     'Zonal Sales Manager'                               => 'Zonal Manager',
     'Zonal Business Manager'                            => 'Zonal Manager'
-
+);
+$sugar_config['AS_renewal_stage_mapping'] = array(
+    205=>"Open",
+    206=>"Submitted",
+    207=>"Rejected",
+    308=>"Sent to Login", //Kanika
+    309=>"Sent to Login",	//Kanika
+    310=>"Credit",	//Kanika
+    311=>"Rejected by Ops",	//Kanika
+    327 => "Sent to Login", 
+    328 => "Sent to Login",
+    412=>"Credit",
+    413=>"Credit",
+    414=>"Credit",
+    415=>"Sanctioned",
+    416=>"Credit",
+    417=>"Rejected by Credit",	//Kanika
+    425=>"Approved",	//Kanika
+    426=>"Credit",
+    444=>"Credit",
+    445=>"Credit",
+    467=>"Credit",
+    475=>"Credit",
+    490=>"Pending Post approval",	//Kanika
+    503 =>"Post Ops Rejected",
+    504 =>"Post Ops Approved",
+    518=>"Sanctioned",
+    519=>"Sanctioned",
+    520=>"Sanctioned",
+    521=>"Sanctioned",
+    522=>"Rejected",
+    623=>"Disbursed",
+    624=>"Disbursed"
+);
+$sugar_config['prod_renewal_sub_stage'] = array(
+    27=>"Loan Applied",
+    28=>"Loan applied",
+    29=>"Doc pick up completed",
+    30=>"Doc pick up completed",
+    31=>"Doc pick up completed",
+    32=>"Doc pick up completed",
+    33=>"Doc pick up completed",
+    34=>"Doc pick up completed",
+    35=>"Loan sanctioned",
+    36=>"Loan disbursed",
+    63=>"Loan applied",
+    64=>"Doc pick up completed",
+    79=>"Doc pick up completed",
+    80=>"Doc pick up completed",
+    81=>"Doc pick up completed",
+    82=>"Doc pick up completed",
+    86=>"Loan sanctioned",
+    99=>"Loan sanctioned",
+    100=>"Loan sanctioned",
+    105=>"Doc pick up completed",
+    106=>"Doc pick up completed"
+);
+$sugar_config['uat_renewal_sub_stage'] = array(
+    27=>"Loan applied",
+    28=>"Loan applied",
+    29=>"Doc pick up completed",
+    30=>"Doc pick up completed",
+    31=>"Doc pick up completed",
+    32=>"Doc pick up completed",
+    33=>"Doc pick up completed",
+    34=>"Doc pick up completed",
+    35=>"Loan sanctioned",
+    36=>"Loan disbursed",
+    61=>"Loan sanctioned",
+    81=>"Loan sanctioned",
+    82=>"Loan sanctioned",
+    85=>"Doc pick up completed",
+    100=>"Loan applied",
+    101=>"Loan applied",
+    102=>"Doc pick up completed",
+    103=>"Doc pick up completed",
+    107=>"Loan sanctioned"
 );
 /***CONFIGURATOR***/

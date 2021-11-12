@@ -14,20 +14,28 @@ function OnboardingSMApplication() {
     
     $url = getenv('SCRM_AS_API_BASE_URL')."/crm/get_disbursed_loans?date=$previousDayDate";
 
-    $cSession = curl_init();
-    $requestHeaders = array();
-    $requestHeaders[] = 'Authorization: Basic bmVvZ3Jvd3RoOmNSbUBuZTBnUjB3dGg=';
-    curl_setopt($cSession, CURLOPT_URL, $url);
-    curl_setopt($cSession, CURLOPT_HTTPHEADER, $requestHeaders);
-    curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($cSession, CURLOPT_VERBOSE, 0);
-    curl_setopt($cSession, CURLOPT_HEADER, true);
-    curl_setopt($cSession, CURLOPT_CUSTOMREQUEST, "GET");
-    curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
+    // $cSession = curl_init();
+    $headers = array();
+    $headers[] = 'Authorization: Basic bmVvZ3Jvd3RoOmNSbUBuZTBnUjB3dGg=';
+    // curl_setopt($cSession, CURLOPT_URL, $url);
+    // curl_setopt($cSession, CURLOPT_HTTPHEADER, $requestHeaders);
+    // curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
+    // curl_setopt($cSession, CURLOPT_VERBOSE, 0);
+    // curl_setopt($cSession, CURLOPT_HEADER, true);
+    // curl_setopt($cSession, CURLOPT_CUSTOMREQUEST, "GET");
+    // curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
     
-    $result = curl_exec($cSession);
-    $httpCode = curl_getinfo($cSession, CURLINFO_HTTP_CODE);
-    $aHeaderInfo = curl_getinfo($cSession);
+    // $result = curl_exec($cSession);
+    // $httpCode = curl_getinfo($cSession, CURLINFO_HTTP_CODE);
+    // $aHeaderInfo = curl_getinfo($cSession);
+
+    require_once('custom/include/CurlReq.php');
+    $curl_req       = new CurlReq();
+
+    $result         = $curl_req->curl_req($url, 'get', '', $headers, '', '', '', '', false, '', true);
+    $result   	    = $result['response'];
+    $aHeaderInfo    = $result['header'];
+
     $curlHeaderSize = $aHeaderInfo['header_size'];
     $sBody = trim(mb_substr($result, $curlHeaderSize));
     $ResponseHeader = explode("\n", trim(mb_substr($result, 0, $curlHeaderSize)));

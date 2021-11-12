@@ -8,6 +8,9 @@ require_once('custom/include/SendEmail.php');
 require_once ('data/BeanFactory.php');
 require_once ('data/SugarBean.php');
 require_once('custom/modules/Cases/views/view.detail.php');
+require_once('custom/include/CurlReq.php');
+$curl_req = new CurlReq();
+
 global $sugar_config,$db,$current_user,$app_list_strings;
 
 $apiName = $_REQUEST['api'];
@@ -18,23 +21,18 @@ if ($apiName == 'getApplicationDataFromLMM') {
 
     $url = getenv('SCRM_LMM_URI') ."/api/v2/paylater_accounts/".$application_id;
     
-    $response = curl_req($url);
+    $response = custom_curl_req($url);
 
     print_r($response);
 
 } else if($apiName == 'getRegisteredEmail') {
 
-    $case_id = $_REQUEST['case_id'];
-    
-    $bean = BeanFactory::newBean('Cases');
-
-    $case=$bean->retrieve($case_id);
-
-    $as_api_base_url = getenv('SCRM_AS_API_BASE_URL');
-
-    $url = $as_api_base_url."/get_merchant_details?ApplicationID=".$case->merchant_app_id_c;
-    
-    $response = curl_req($url);
+    $case_id            = $_REQUEST['case_id'];
+    $bean               = BeanFactory::newBean('Cases');
+    $case               = $bean->retrieve($case_id);
+    $as_api_base_url    = getenv('SCRM_AS_API_BASE_URL');
+    $url                = $as_api_base_url."/get_merchant_details?ApplicationID=".$case->merchant_app_id_c;
+    $response           = $curl_req->curl_req($url);
 
     if($response) {
 
@@ -59,7 +57,7 @@ if ($apiName == 'getApplicationDataFromLMM') {
 
     $url = getenv('SCRM_LMM_URI') .'/api/v2/paylater_open/paylater_accounts/'.$application_id.'/tokens/email_verification_link?email='.$emailId;
 
-    $response = curl_req($url);
+    $response = custom_curl_req($url);
 
     $responseArray = json_decode($response);
 
@@ -397,23 +395,33 @@ function getUserName($user_id){
     return $name;
 }
 
-function curl_req($url) {
+function custom_curl_req($url) {
 
     $bearerPassword = getenv('LMS_BEARER_PASSWORD');
 
-    $header = array(
+    $headers = array(
         "authorization: Bearer $bearerPassword",
         'content-type' => 'application/json'
     );
+
+    require_once('custom/include/CurlReq.php');
+    $curl_req = new CurlReq();
+
+    $output = $curl_req->curl_req($url, 'get', '', $headers);
     
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HTTPGET, 1);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $output = curl_exec($ch);
-    curl_close($ch);
+    // $ch = curl_init();
+    // curl_setopt($ch, CURLOPT_URL, $url);
+    // curl_setopt($ch, CURLOPT_HTTPGET, 1);
+    // curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    // $output = curl_exec($ch);
+    // curl_close($ch);
+
+    // $logger = new CustomLogger('LMM_APIs');
+    // $logger->log('debug', "curl URL : $url");
+	// $logger->log('debug', "Response : " . var_export($output, true));
+
     return $output;
 }
 

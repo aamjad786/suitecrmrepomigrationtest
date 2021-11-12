@@ -3,12 +3,12 @@
 require_once 'custom/CustomLogger/CustomLogger.php';
 array_push($job_strings, 'updateAdrenalinUserInfo');
 global $logger;
-$logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+$logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
 //Scheculer Main Function
 function updateAdrenalinUserInfo($override_last_run_date=null)
 {
     global $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $results = false;
 
     $logger->log('debug', '<======================STARTED==========================>');
@@ -59,7 +59,7 @@ function updateAdrenalinUserInfo($override_last_run_date=null)
 
 function fetchLastRunDate($function_name){
     global $db, $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $logger->log('debug',  'fetchLastRunDate called');
 
     $last_run_query = "select last_run from schedulers where job = '$function_name' and deleted = 0 and status = 'Active'";
@@ -79,30 +79,45 @@ function fetchLastRunDate($function_name){
 
 function fetchUserInfoFromAdrenalin($last_run_date){
     global $logger,$sugar_config;;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $logger->log('debug', 'fetchUserInfoFromAdrenalin Called....!');
     try {
-        $curl   = curl_init();
-        $url    = getenv('Adrenalin_Api'); //.$last_run_date."?type=json"; // $sugar_config['Adrenalin Api'];
-        curl_setopt_array($curl, array(
-            CURLOPT_PORT => "",
-            CURLOPT_URL => "$url" . $last_run_date . "?type=json",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => array(
-                "cache-control: no-cache",
-                "content-type: application/json"
-            ),
-        ));
+        // $curl   = curl_init();
+        // $url    = getenv('Adrenalin_Api'); //.$last_run_date."?type=json"; // $sugar_config['Adrenalin Api'];
+        // curl_setopt_array($curl, array(
+        //     CURLOPT_PORT => "",
+        //     CURLOPT_URL => "$url" . $last_run_date . "?type=json",
+        //     CURLOPT_RETURNTRANSFER => true,
+        //     CURLOPT_ENCODING => "",
+        //     CURLOPT_MAXREDIRS => 10,
+        //     CURLOPT_TIMEOUT => 30,
+        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        //     CURLOPT_CUSTOMREQUEST => "GET",
+        //     CURLOPT_HTTPHEADER => array(
+        //         "cache-control: no-cache",
+        //         "content-type: application/json"
+        //     ),
+        // ));
         
-        $results = curl_exec($curl);
-        $err = curl_error($curl);
+        // $results = curl_exec($curl);
+        // $err = curl_error($curl);
         
-        curl_close($curl);
+        // curl_close($curl);
+        
+        $url            = getenv('Adrenalin_Api'). $last_run_date . "?type=json";
+        $headers        = array(
+            "cache-control: no-cache",
+            "content-type: application/json"
+        );
+        $max_redirects  = 10;
+        $timeout        = 30;
+
+        require_once('custom/include/CurlReq.php');
+        $curl_req       = new CurlReq();
+
+        $result         = $curl_req->curl_req($url, 'get', '', $headers, '', '', $max_redirects, $timeout, true);
+        $results   	    = $result['response'];
+        $err            = $result['error'];
 
         if ($err) {
             $logger->log('error', 'cURL Error:' . $err);
@@ -121,7 +136,7 @@ function fetchUserInfoFromAdrenalin($last_run_date){
 
 function updateUserDetails($userInfo){
     global $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
 	$results = true;
 	
     foreach ($userInfo as $user) {
@@ -137,7 +152,7 @@ function updateUserDetails($userInfo){
 
 function updateUserDetailsUtil($user_info){
     global $db, $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     
     $user_info=array_change_key_case($user_info,CASE_LOWER);
     
@@ -320,7 +335,7 @@ function updateUserDetailsUtil($user_info){
 
 function getUserBean($user_name){
     global $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $bean = BeanFactory::getBean('Users');
 
     $query = 'users.deleted=0 and users.user_name = "'.$user_name.'"';
@@ -341,7 +356,7 @@ function getUserBean($user_name){
 // Functions Realted to User Role Assignment
 function updateRoleForNewUser($user, $userInfo) {
     global $logger, $sugar_config;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $user = getUserBean($userInfo[strtolower('EMPLOYEE CODE')]);
     $logger->log('debug', "updateRoleForNewUser: " . $userInfo['EMPLOYEE CODE'] );
 
@@ -386,7 +401,7 @@ function updateRoleForNewUser($user, $userInfo) {
 
 function fetchRoleIdFromName($role_name){
     global $db, $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $query = "select id from acl_roles where name = '$role_name'";
     $results = $db->query($query);
 
@@ -405,7 +420,7 @@ function fetchRoleIdFromName($role_name){
 // Functions Realted to Security Group Assignment
 function updateSecurityGroupForNewUser($user_bean, $userInfo){
     global $db, $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $query = "select securitygroup_id from securitygroups_users where user_id = '$user_bean->id'";
     $results = $db->query($query);
 
@@ -448,7 +463,7 @@ function updateSecurityGroupForNewUser($user_bean, $userInfo){
 
 function fetchSgId($department_name){
     global $db, $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $sg_id = "";
 
     $departmentToSgMap = array(
@@ -475,7 +490,7 @@ function fetchSgId($department_name){
 
 function updateAdrenalinCacheTable($userInfo,$last_run_date=null){
     global $db ,$logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $logger->log('debug','UpdateAdrenalinCacheTable Started: ');
 
     try {

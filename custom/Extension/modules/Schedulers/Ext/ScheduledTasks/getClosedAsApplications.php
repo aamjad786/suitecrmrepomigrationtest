@@ -14,6 +14,11 @@ function getClosedAsApplications() {
         "authorization: Basic bmVvZ3Jvd3RoOmNSbUBuZTBnUjB3dGg=",
       );
     $response = $curl->curl_req($url,'get',null,$header);
+    
+    $logger = new CustomLogger('AS_APIs');
+	$logger->log('debug', "curl URL : $url");
+	$logger->log('debug', "Response : " . var_export($response, true));
+
     $responseArray = json_decode($response);
     if (!empty($responseArray)){
         foreach ($responseArray as $key => $value) {

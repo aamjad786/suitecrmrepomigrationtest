@@ -33,6 +33,11 @@ class payLaterOpenBeforeSaveEvents {
 //        $url = "https://uat.advancesuite.in:3039/api/v2/paylater_accounts/".$applicationId;
         $response = $curl->curl_req($url, 'get', null, $header);
         $responseArray = json_decode($response);
+
+        $logger = new CustomLogger('LMM_APIs');
+        $logger->log('debug', "curl URL : $url");
+        $logger->log('debug', "Response : " . var_export($output, true));
+
         $sanctionedLimit = $responseArray->credit_limit;
         $accountActivationDate = $responseArray->activation_date;
         $accountExpiryDate = $responseArray->account_valid_till;

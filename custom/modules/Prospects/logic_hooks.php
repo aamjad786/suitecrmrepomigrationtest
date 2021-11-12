@@ -1,8 +1,5 @@
 <?php
 require_once 'custom/CustomLogger/CustomLogger.php';
-global $logger;
-$logger= new CustomLogger('targetslogichook');
-global $logger;
 // Do not store anything in this file that is not part of the array or the hook version.  This file will	
 // be automatically rebuilt in the future. 
  $hook_version = 1; 

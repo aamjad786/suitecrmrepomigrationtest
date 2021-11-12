@@ -6,28 +6,41 @@ class PullUser{
 	function insertUser($nguid){
 		$results = false;
 	try{
-		$GLOBALS['log']->debug("Pulling user " . $nguid);
-			$curl = curl_init();
+			$GLOBALS['log']->debug("Pulling user " . $nguid);
+			$url = getenv("SCRM_AD_UTILITY_HOST")."/json2ldap";
+			$params = "{\n  \"method\"  : \"ldap.search\",\n  \"params\"  : { \n  \"filter\": \"(sAMAccountName=$nguid)\",\n  \"attributes\": \"*\",\n    \"binaryAttributes\": [\"objectGUID\", \"objectSid\"]\n  },\n  \"decoded\" : true\n}";
+			$headers = array(
+				    "cache-control: no-cache",
+				    "content-type: application/json"
+			);
+			$max_redirects = 10;
+			$timeout = 30;
+			$port = "3009";
+			// $curl = curl_init();
 
-			curl_setopt_array($curl, array(
-			  CURLOPT_PORT => "3009",
-			  CURLOPT_URL => getenv("SCRM_AD_UTILITY_HOST")."/json2ldap",
-			  CURLOPT_RETURNTRANSFER => true,
-			  CURLOPT_ENCODING => "",
-			  CURLOPT_MAXREDIRS => 10,
-			  CURLOPT_TIMEOUT => 30,
-			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			  CURLOPT_CUSTOMREQUEST => "POST",
-			  CURLOPT_POSTFIELDS => "{\n  \"method\"  : \"ldap.search\",\n  \"params\"  : { \n  \"filter\": \"(sAMAccountName=$nguid)\",\n  \"attributes\": \"*\",\n    \"binaryAttributes\": [\"objectGUID\", \"objectSid\"]\n  },\n  \"decoded\" : true\n}",
-			  CURLOPT_HTTPHEADER => array(
-			    "cache-control: no-cache",
-			    "content-type: application/json"
-			  ),
-			));
-			$results = curl_exec($curl);
-			$err = curl_error($curl);
+			// curl_setopt_array($curl, array(
+			//   CURLOPT_PORT => ,
+			//   CURLOPT_URL => $url,
+			//   CURLOPT_RETURNTRANSFER => true,
+			//   CURLOPT_ENCODING => "",
+			//   CURLOPT_MAXREDIRS => $max_redirects,
+			//   CURLOPT_TIMEOUT => $timeout,
+			//   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			//   CURLOPT_CUSTOMREQUEST => "POST",
+			//   CURLOPT_POSTFIELDS => $params,
+			//   CURLOPT_HTTPHEADER => $headers
+			// ));
+			// $results = curl_exec($curl);
+			// $err = curl_error($curl);
 
-			curl_close($curl);
+			// curl_close($curl);
+
+			require_once('custom/include/CurlReq.php');
+			$curl_req   = new CurlReq();
+
+			$result     = $curl_req->curl_req($url, 'post', $params, $headers, '', '', $max_redirects, $timeout, true, $port);
+			$results   	= $result['response'];
+			$err        = $result['error'];
 
 			if ($err) {
 			  echo "cURL Error #:" . $err;
