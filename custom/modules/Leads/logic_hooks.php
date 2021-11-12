@@ -18,12 +18,18 @@ $hook_array['before_save'][] = Array(3, 'Sanity For Filed Values', 'custom/modul
 $hook_array['before_save'][] = Array(4, 'Update Opp fields if UTM fields are updated', 'custom/modules/Leads/BeforeSaveLead.php','BeforeSaveLead', 'utmFieldsUpdate');
 
 
-$hook_array['after_save'][] = Array(2, 'addToCallDisposition', 'custom/modules/Leads/AddCallDisposition.php','Disposition', 'saveDisposition'); 
+$hook_array['after_save'][] = Array(2, 'addToCallDisposition', 'custom/modules/Leads/AddCallDisposition.php','Disposition', 'saveDisposition'); // old function name fun_Disposition_Save
 $hook_array['after_save'][] = Array(3, 'Auto Convert Lead to Account, Opportunities and Contacts', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'autoConvertionOfLead');
-// $hook_array['after_save'][] = Array(5, 'Business vintage years calculations', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'business_vintage_years');
+$hook_array['after_save'][] = Array(4, 'Calculate No. Of Attempts For Leads', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'calculateNoOfAttempts'); // Part of business_vintage_years logic hook
+
+// Combine With autoConvertionOfLead
 // $hook_array['after_save'][] = Array(6, '', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'save_on_acc_con_opp');
 // $hook_array['after_save'][] = Array(7, 'update opportunity when lead is created through crmapi', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'update_opp');
-// $hook_array['after_save'][] = Array(200, 'adding first assigned user to change log', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'audit_first_assigned');
+
+// $hook_array['after_save'][] = Array(5, 'Business vintage years calculations', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'business_vintage_years');
+
+//using bean in the logic hook so no need to insert manually in the log
+// $hook_array['after_save'][] = Array(200, 'adding first assigned user to change log', 'custom/modules/Leads/AfterSaveLead.php','AfterSaveLead', 'audit_first_assigned'); 
 
 
 

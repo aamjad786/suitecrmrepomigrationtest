@@ -145,6 +145,13 @@ class LeadsViewDetail extends SugarView
         	}
 			$(document).ready(function(){
 
+				console.log('document is ready');
+				if('$opp_id' == '' || '$opp_id' == 'NULL'){
+					console.log('hiding opp panel');
+					$('#top-panel-0').prev().hide();
+					$('#top-panel-0').hide();
+				}
+
 				$('#leads_scrm_disposition_history_1_create_button').parent().parent().hide();
 				$('#pickup_appointment_city_c').after('<span>$city</span>');
 				$('#pickup_contact_number_c').text('$contant_no');
