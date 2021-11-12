@@ -282,4 +282,64 @@ $sugar_config['case_types'] = array(
     array ( 'parent' => 'paylater_sms_received_not_purchased' ,    'qrc'=> 'query',     'ftr'=>'non_ftr' ),
     array ( 'parent' => 'paylater_otp_not_received' ,              'qrc'=> 'query',     'ftr'=>'non_ftr' )
 );
+
+$sugar_config['designationToRoleMap'] = array(
+    'Associate Manager - Customer Acquisition'          => 'Customer Acquisition Manager',
+    'Area Sales Manager'                                => 'Customer Acquisition Manager',
+    'Area Manager - Renewals'                           => 'Customer Acquisition Manager',
+    'Area Collection Manager'                           => 'Customer Acquisition Manager',
+    'Channel Sales Manager'                             => 'Customer Acquisition Manager',
+    'Channel Manager-FS2'                               => 'Customer Acquisition Manager',
+    'Executive - Telecalling'                           => 'Customer Acquisition Manager',
+    'Relationship Manager - Telesales'                  => 'Customer Acquisition Manager',
+    'Senior Associate Manager - Customer Acquisition'   => 'Customer Acquisition Manager',
+    'Senior Area Sales Manager'                         => 'Customer Acquisition Manager',
+    'Senior Executive - Bank Coordination'              => 'Customer Acquisition Manager',
+    'Senior Executive - Sales Coordinator'              => 'Customer Acquisition Manager',
+
+    'City Manager - Sales'                              => 'City Manager',
+
+    'Channel Development Manager - Insurance'           => 'Cluster Manager',
+    'Cluster Manager - Sales'                           => 'Cluster Manager',
+    'Cluster Manager - Direct Sales'                    => 'Cluster Manager',
+    'Cluster Credit Manager'                            => 'Cluster Manager',
+    'Cluster Manager - Renewals'                        => 'Cluster Manager',
+    'Cluster Manager-Direct Sales'                      => 'Cluster Manager',
+    'Cluster Manager - FS2'                             => 'Cluster Manager',
+    'Senior Manager - Sales Training'                   => 'Cluster Manager',
+
+
+    'Regional Sales Manager'                            => 'Regional Manager',
+    'Regional Manager - Finance & Accounts'             => 'Regional Manager',
+    'Regional Credit Manager'                           => 'Regional Manager',
+    'Regional Manager - Collection'                     => 'Regional Manager',
+    'Manager- Sales Force Automation'                   => 'Regional Manager',
+    'Manager - Sales Operations'                        => 'Regional Manager',
+    'Associate Vice President - Sales'                  => 'Regional Manager',
+    'Associate Vice President- Telesales'               => 'Regional Manager',
+    'Assistant Vice President - Direct Sales'           => 'Regional Manager',
+    'Assistant Vice President - Business Alliances'     => 'Regional Manager',
+    'Senior Manager - Sales'                            => 'Regional Manager',
+    'Senior Manager - Direct Sales'                     => 'Regional Manager',
+    'Senior Manager - Merchant Account'                 => 'Regional Manager',
+    'Senior Manager - Collections'                      => 'Regional Manager',
+    'Senior Manager - Technology'                       => 'Regional Manager',
+    'Senior Manager - Human Resource'                   => 'Regional Manager',
+    'Senior Manager - Marketing'                        => 'Regional Manager',
+    'Senior Manager - Sales and Strategy'               => 'Regional Manager',
+    'Senior Manager - Sales & Strategy'                 => 'Regional Manager',
+    'Strategic Alliance'                                => 'Regional Manager',
+    'Manager - Sales Operations & Analytics'            => 'Regional Manager',
+
+    'Assistant Vice President - Sales'                  => 'Zonal Manager',
+    'Manager- Business Alliance'                        => 'Zonal Manager',
+    'Manager - Business Alliances'                      => 'Zonal Manager',
+    'National Sales Manager - Corporate Channel'        => 'Zonal Manager',
+    'Sales Coordinator'                                 => 'Zonal Manager',
+    'Senior Vice President - Sales'                     => 'Zonal Manager',
+    'Zonal Manager - Finance & Accounts'                => 'Zonal Manager',
+    'Zonal Sales Manager'                               => 'Zonal Manager',
+    'Zonal Business Manager'                            => 'Zonal Manager'
+
+);
 /***CONFIGURATOR***/

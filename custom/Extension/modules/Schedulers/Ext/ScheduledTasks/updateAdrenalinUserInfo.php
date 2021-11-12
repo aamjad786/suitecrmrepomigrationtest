@@ -82,8 +82,8 @@ function fetchUserInfoFromAdrenalin($last_run_date){
     $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $logger->log('debug', 'fetchUserInfoFromAdrenalin Called....!');
     try {
-        $curl = curl_init();
-        $url=$sugar_config['Adrenalin Api'];
+        $curl   = curl_init();
+        $url    = getenv('Adrenalin_Api'); //.$last_run_date."?type=json"; // $sugar_config['Adrenalin Api'];
         curl_setopt_array($curl, array(
             CURLOPT_PORT => "",
             CURLOPT_URL => "$url" . $last_run_date . "?type=json",
@@ -107,8 +107,8 @@ function fetchUserInfoFromAdrenalin($last_run_date){
         if ($err) {
             $logger->log('error', 'cURL Error:' . $err);
         }
-        
-        $logger->log('debug', 'Adrenaline API Response: ' . $results);
+        $logger->log('debug', "curl URL : $url" . $last_run_date . "?type=json");
+        $logger->log('debug', 'Adrenaline API Response: ' . var_export($results, true));
         
         $results = (json_decode($results, true));
         
@@ -340,70 +340,12 @@ function getUserBean($user_name){
 
 // Functions Realted to User Role Assignment
 function updateRoleForNewUser($user, $userInfo) {
-    global $logger;
+    global $logger, $sugar_config;
     $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $user = getUserBean($userInfo[strtolower('EMPLOYEE CODE')]);
     $logger->log('debug', "updateRoleForNewUser: " . $userInfo['EMPLOYEE CODE'] );
 
-    $designationToRoleMap = array(
-        'Associate Manager - Customer Acquisition'          => 'Customer Acquisition Manager',
-        'Area Sales Manager'                                => 'Customer Acquisition Manager',
-        'Area Manager - Renewals'                           => 'Customer Acquisition Manager',
-        'Area Collection Manager'                           => 'Customer Acquisition Manager',
-        'Channel Sales Manager'                             => 'Customer Acquisition Manager',
-        'Channel Manager-FS2'                               => 'Customer Acquisition Manager',
-        'Executive - Telecalling'                           => 'Customer Acquisition Manager',
-        'Relationship Manager - Telesales'                  => 'Customer Acquisition Manager',
-        'Senior Associate Manager - Customer Acquisition'   => 'Customer Acquisition Manager',
-        'Senior Area Sales Manager'                         => 'Customer Acquisition Manager',
-        'Senior Executive - Bank Coordination'              => 'Customer Acquisition Manager',
-        'Senior Executive - Sales Coordinator'              => 'Customer Acquisition Manager',
-
-        'City Manager - Sales'                              => 'City Manager',
-
-        'Channel Development Manager - Insurance'           => 'Cluster Manager',
-        'Cluster Manager - Sales'                           => 'Cluster Manager',
-        'Cluster Manager - Direct Sales'                    => 'Cluster Manager',
-        'Cluster Credit Manager'                            => 'Cluster Manager',
-        'Cluster Manager - Renewals'                        => 'Cluster Manager',
-        'Cluster Manager-Direct Sales'                      => 'Cluster Manager',
-        'Cluster Manager - FS2'                             => 'Cluster Manager',
-        'Senior Manager - Sales Training'                   => 'Cluster Manager',
-
-
-        'Regional Sales Manager'                            => 'Regional Manager',
-        'Regional Manager - Finance & Accounts'             => 'Regional Manager',
-        'Regional Credit Manager'                           => 'Regional Manager',
-        'Regional Manager - Collection'                     => 'Regional Manager',
-        'Manager- Sales Force Automation'                   => 'Regional Manager',
-        'Manager - Sales Operations'                        => 'Regional Manager',
-        'Associate Vice President - Sales'                  => 'Regional Manager',
-        'Associate Vice President- Telesales'               => 'Regional Manager',
-        'Assistant Vice President - Direct Sales'           => 'Regional Manager',
-        'Assistant Vice President - Business Alliances'     => 'Regional Manager',
-        'Senior Manager - Sales'                            => 'Regional Manager',
-        'Senior Manager - Direct Sales'                     => 'Regional Manager',
-        'Senior Manager - Merchant Account'                 => 'Regional Manager',
-        'Senior Manager - Collections'                      => 'Regional Manager',
-        'Senior Manager - Technology'                       => 'Regional Manager',
-        'Senior Manager - Human Resource'                   => 'Regional Manager',
-        'Senior Manager - Marketing'                        => 'Regional Manager',
-        'Senior Manager - Sales and Strategy'               => 'Regional Manager',
-        'Senior Manager - Sales & Strategy'                 => 'Regional Manager',
-        'Strategic Alliance'                                => 'Regional Manager',
-        'Manager - Sales Operations & Analytics'            => 'Regional Manager',
-
-        'Assistant Vice President - Sales'                  => 'Zonal Manager',
-        'Manager- Business Alliance'                        => 'Zonal Manager',
-        'Manager - Business Alliances'                      => 'Zonal Manager',
-        'National Sales Manager - Corporate Channel'        => 'Zonal Manager',
-        'Sales Coordinator'                                 => 'Zonal Manager',
-        'Senior Vice President - Sales'                     => 'Zonal Manager',
-        'Zonal Manager - Finance & Accounts'                => 'Zonal Manager',
-        'Zonal Sales Manager'                               => 'Zonal Manager',
-        'Zonal Business Manager'                            => 'Zonal Manager'
-
-    );
+    $designationToRoleMap = $sugar_config['designationToRoleMap'];
 
     try {
 
