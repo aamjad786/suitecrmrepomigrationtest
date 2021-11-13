@@ -1392,7 +1392,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             );
         }
     }
-    else if($module == "Users" && $action == "Create"){
+    /*else if($module == "Users" && $action == "Create"){
         $logger->log('debug', 'Create Users API Request =====>'.var_export($rawData, true));
         try {
             // print_r($rawData->nguid);
@@ -1499,7 +1499,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             'Success' => $success,
             'Message' => $message,
         );
-    }
+    }*/
     else if($module == "Users" && $action == "Create_ETL"){
         $logger->log('debug', 'Create Users through ETL API Request =====>'.var_export($rawData, true));
         global $db;
@@ -1597,7 +1597,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             'Message' => $message,
         );
     } 
-    else if($module == "Paylater_Open" && $action == 'Create') {
+    /*else if($module == "Paylater_Open" && $action == 'Create') {
         $logger->log('debug', 'Create Paylater_open API Request =====>'.var_export($rawData, true));
         $paylaterOpen = new neo_Paylater_Open();
         $name_value_list = array();
@@ -1744,7 +1744,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             echo json_encode($msg);
             exit;
         }
-    }    
+    }*/    
     else {
         $msg = array(
             'Success' => false,
