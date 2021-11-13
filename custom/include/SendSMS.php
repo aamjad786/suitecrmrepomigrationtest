@@ -13,6 +13,8 @@ class SendSMS {
 		try {
 			
 			$logger->log('debug', '<=============== OutgoingSMS Details =================>');
+			$logger->log('debug', 'Mobile : '.$mobile_no);
+			$logger->log('debug', 'Mobile : '.$message);
 		
 			$env = getenv('SCRM_ENVIRONMENT');
 			$feedid = getenv('NETCORE_FEEDID');

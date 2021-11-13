@@ -16,6 +16,9 @@ class SendEmail
 
 		$logger->log('debug', 'Subject: '.$sub);
 		$logger->log('debug', 'Body: '.$body);
+		$logger->log('debug', 'To: '.print_r($emailTo,true));
+		$logger->log('debug', 'CC: '.print_r($emailCc,true));
+		
 		try {
 			//Message Details
 			$env = getenv('SCRM_ENVIRONMENT');
