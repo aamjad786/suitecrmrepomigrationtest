@@ -14,7 +14,6 @@ function MeetingEscalation()
 	global $db;
 	$email = new SendEmail();
 
-	$subject = "Meeting Is Not Creating Since 24 Hr.";
     $body = "Email Body";
 
 
@@ -39,13 +38,14 @@ function MeetingEscalation()
 		$logger->log('debug', 'Precessing Opportunity Id: '.$oppId);
 
 		// echo $oppId;
-		echo "<br>";
 
 		$oppBean = new Opportunity();
 		$oppBeanData=$oppBean->retrieve($oppId);
 
 		$userBean=new User();
 		$assignUserBeanData=$userBean->retrieve($oppBeanData->assigned_user_id);
+
+		$subject = "Meeting Is Not Creating Since 24 Hr. For ".$oppBeanData->pickup_appointment_contact_c;
 
 		// Cluster Manager 
 		$clusterManagerData=$userBean->retrieve($assignUserBeanData->reports_to_id);
