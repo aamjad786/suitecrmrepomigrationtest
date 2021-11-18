@@ -59,10 +59,6 @@ function PushInstaLeads()
 		$arr['stage_drop_off'] = $lead->stage_drop_off;
 		$arr['Address_Street'] = $lead->primary_address_street;
 		$arr['Address_pin'] = $lead->primary_address_postalcode;
-		$arr['stage_drop_off'] = $lead->sales_stage == "Sanctioned" ? 'Customer Deal Generated' : '';
-		$arr['app_form_link'] = $lead->app_form_link;
-		$arr['product_type'] = "NeoCash Insta";
-		$arr['loan_amount_c'] = $lead->loan_amount_c;
 
 		$logger->log('debug', 'Payload: ' . print_r($arr, true));
 
