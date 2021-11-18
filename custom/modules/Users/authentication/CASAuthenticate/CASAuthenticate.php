@@ -189,8 +189,8 @@ class CASAuthenticate extends SugarAuthenticate {
         $GLOBALS['log']->debug('Akshay CAS checking session validation in postSessionAuthenticate');
         global $action, $allowed_actions, $sugar_config;
         $_SESSION['userTime']['last'] = time();
+        $_SESSION['unique_key'] = $sugar_config['unique_key'];
         $user_unique_key = (isset ($_SESSION['unique_key'])) ? $_SESSION['unique_key'] : '';
-
         // (isset ($_SESSION['unique_key'])) ? $_SESSION['unique_key'] : '';
         $server_unique_key = (isset ($sugar_config['unique_key'])) ? $sugar_config['unique_key'] : '';
 
