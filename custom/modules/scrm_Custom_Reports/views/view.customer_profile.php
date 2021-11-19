@@ -9,7 +9,6 @@ include_once('modules/Administration/Administration.php');
 require_once 'custom/include/SendEmail.php';
 require_once('modules/EmailTemplates/EmailTemplate.php');
 require_once('include/MVC/View/views/view.detail.php');
-
 class scrm_Custom_ReportsViewcustomer_profile extends ViewDetail {
 	
 	private $chartV;
@@ -18,16 +17,16 @@ class scrm_Custom_ReportsViewcustomer_profile extends ViewDetail {
         parent::__construct();
     }
 
-    function curl_req($url){
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_HTTPGET, 1);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		$output = curl_exec($ch);
-		curl_close($ch);
-		return $output;
-	}
+    // function curl_req($url){
+	// 	$ch = curl_init();
+	// 	curl_setopt($ch, CURLOPT_URL, $url);
+	// 	curl_setopt($ch, CURLOPT_HTTPGET, 1);
+	// 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	// 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	// 	$output = curl_exec($ch);
+	// 	curl_close($ch);
+	// 	return $output;
+	// }
 
 	function getUserName($user_name){
         $user = BeanFactory::getBean('Users',$user_name);
@@ -63,7 +62,11 @@ HTMLFORM;
     	$as_api_base_url = getenv('SCRM_AS_API_BASE_URL');
 		if(!empty($app_id)){
 			$url = $as_api_base_url."/get_application_basic_details?ApplicationID=".$app_id;
-			$response = $this->curl_req($url);
+			
+			require_once('custom/include/CurlReq.php');
+			$curl_req = new CurlReq();
+
+			$response = $curl_req->curl_req($url);
 			if($response){
 				$json_response = json_decode($response, true);
 				if(!empty($json_response) && count($json_response)>0){
@@ -80,7 +83,11 @@ HTMLFORM;
 				}
 			}
 			$url = $as_api_base_url."/get_merchant_details?ApplicationID=".$app_id;
-			$response = $this->curl_req($url);
+			
+			require_once('custom/include/CurlReq.php');
+			$curl_req = new CurlReq();
+
+			$response = $curl_req->curl_req($url);
 			if($response){
 				$json_response = json_decode($response, true);
 				if(!empty($json_response) && count($json_response)>0){
@@ -187,7 +194,11 @@ TITLE;
 DISP1;
 		if(!empty($app_id)){
 			$url = $as_api_base_url."/get_application_deal_details?ApplicationID=".$app_id;
-			$response = $this->curl_req($url);
+			
+			require_once('custom/include/CurlReq.php');
+			$curl_req = new CurlReq();
+
+			$response = $curl_req->curl_req($url);
 			if($response){
 				$json_response = json_decode($response, true);
 				if(!empty($json_response) && count($json_response)>0){
@@ -199,7 +210,11 @@ DISP1;
 				}
 			}
 			$url = $as_api_base_url."/get_application_funding_details?ApplicationID=".$app_id;
-			$response = $this->curl_req($url);
+			
+			require_once('custom/include/CurlReq.php');
+			$curl_req = new CurlReq();
+
+			$response = $curl_req->curl_req($url);
 			if($response){
 				$json_response = json_decode($response, true);
 				if(!empty($json_response) && count($json_response)>0){
@@ -250,7 +265,11 @@ DISP1;
 				}
 			}
 			$url = $as_api_base_url."/get_application_repaymec_details?ApplicationID=".$app_id;
-			$response = $this->curl_req($url);
+			
+			require_once('custom/include/CurlReq.php');
+			$curl_req = new CurlReq();
+
+			$response = $curl_req->curl_req($url);
 			if($response){
 				$json_response = json_decode($response, true);
 				if(!empty($json_response) && count($json_response)>0){
@@ -267,7 +286,11 @@ DISP1;
 				}
 			}
 			$url = $as_api_base_url."/get_application_pprmis_details?ApplicationID=".$app_id;
-			$response = $this->curl_req($url);
+			
+			require_once('custom/include/CurlReq.php');
+			$curl_req = new CurlReq();
+
+			$response = $curl_req->curl_req($url);
 			if($response){
 				$json_response = json_decode($response, true);
 				if(!empty($json_response) && count($json_response)>0){

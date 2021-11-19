@@ -168,10 +168,13 @@ HTMLFORM_2;
       
         $env = getenv('SCRM_ENVIRONMENT');
         if($env =='prod'){
-            $url ='https://crm.advancesuite.in/SuiteCRM/index.php?module=Cases&action=DetailView&record='; 
+            $url = $sugar_config['prod_case_link']; 
+        } else if($env =='uat'){
+            $url = $sugar_config['uat_case_link'];
         } else {
-            $url = 'https://uat.advancesuite.in/SuiteCRM/index.php?module=Cases&action=DetailView&record=';
+            $url = $sugar_config['dev_case_link'];
         }
+
         $i=1;
        
         while($row = $db->fetchByAssoc($res)){
@@ -233,7 +236,7 @@ $(document).on('click','#approve_category',function(){
         if(r ==true){
             $.ajax({
                 type	:	'POST',
-                url:"JavascriptAPICall.php?api=bulkapproveCategory",
+                url     :   "JavascriptAPICall.php?api=bulkapproveCategory",
                 cache	:	false,
                 data	: 	{category:category,checker_comments:'Bulk Approval',user_id:user_id},				
                 success : 	function(res){	 

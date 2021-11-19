@@ -1,5 +1,5 @@
 <?php
-// created: 2021-04-19 11:38:12
+// created: 2021-11-11 09:31:23
 $searchFields['Opportunities'] = array (
   'name' => 
   array (
@@ -84,7 +84,7 @@ $searchFields['Opportunities'] = array (
     'subquery' => 'SELECT favorites.parent_id FROM favorites
 			                    WHERE favorites.deleted = 0
 			                        and favorites.parent_type = \'Opportunities\'
-			                        and favorites.assigned_user_id = \'1\') OR NOT ({0}',
+			                        and favorites.assigned_user_id = \'{1}\') OR NOT ({0}',
     'db_field' => 
     array (
       0 => 'id',
@@ -242,6 +242,42 @@ $searchFields['Opportunities'] = array (
     'is_date_field' => true,
   ),
   'end_range_date_sent_to_EOS' => 
+  array (
+    'query_type' => 'default',
+    'enable_range_search' => true,
+    'is_date_field' => true,
+  ),
+  'range_date_funded_c' => 
+  array (
+    'query_type' => 'default',
+    'enable_range_search' => true,
+    'is_date_field' => true,
+  ),
+  'start_range_date_funded_c' => 
+  array (
+    'query_type' => 'default',
+    'enable_range_search' => true,
+    'is_date_field' => true,
+  ),
+  'end_range_date_funded_c' => 
+  array (
+    'query_type' => 'default',
+    'enable_range_search' => true,
+    'is_date_field' => true,
+  ),
+  'range_date_sent_to_EOS_c' => 
+  array (
+    'query_type' => 'default',
+    'enable_range_search' => true,
+    'is_date_field' => true,
+  ),
+  'start_range_date_sent_to_EOS_c' => 
+  array (
+    'query_type' => 'default',
+    'enable_range_search' => true,
+    'is_date_field' => true,
+  ),
+  'end_range_date_sent_to_EOS_c' => 
   array (
     'query_type' => 'default',
     'enable_range_search' => true,

@@ -74,19 +74,28 @@ class Neo_CustomersViewassign extends SugarView {
             "cache-control: no-cache",
             "Content-type: application/x-www-form-urlencoded"
         );
+        $params = "userID=$userID&roleID=$roleID&remove=$remove";
         session_write_close();
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch,CURLOPT_URL,$url);
-        curl_setopt($ch,CURLOPT_USERAGENT, $useragent);
-        curl_setopt($ch, CURLOPT_COOKIE, $strCookie );
-        curl_setopt($ch, CURLOPT_POSTFIELDS, "userID=$userID&roleID=$roleID&remove=$remove");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        $err = curl_error($ch);
-        curl_close($ch);
+        // $ch = curl_init();
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        // curl_setopt($ch,CURLOPT_URL,$url);
+        // curl_setopt($ch,CURLOPT_USERAGENT, $useragent);
+        // curl_setopt($ch, CURLOPT_COOKIE, $strCookie );
+        // curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // $response = curl_exec($ch);
+        // $err = curl_error($ch);
+        // curl_close($ch);
+
+        require_once('custom/include/CurlReq.php');
+        $curl_req   = new CurlReq();
+
+        $result     = $curl_req->curl_req($url, 'post', $params, $headers, $useragent, $strCookie, '', '', true);
+        $response   = $result['response'];
+        $err        = $result['error'];
+
         if(strpos(html_entity_decode($response), 'Added') !== false) {
             echo "<p style='color:green'>Successfully Assigned.</p>";
             return 1;

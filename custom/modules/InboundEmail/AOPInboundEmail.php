@@ -103,16 +103,16 @@ class AOPInboundEmail extends InboundEmail
     }
 
 
-    function curl_req($url){
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPGET, 1);
-        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $output = curl_exec($ch);
-        curl_close($ch);
-        return $output;
-     }
+    // function curl_req($url){
+    //     $ch = curl_init();
+    //     curl_setopt($ch, CURLOPT_URL, $url);
+    //     curl_setopt($ch, CURLOPT_HTTPGET, 1);
+    //     curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
+    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    //     $output = curl_exec($ch);
+    //     curl_close($ch);
+    //     return $output;
+    //  }
 
     function handleCreateCase($email, $userId) {
         if(empty($email))
@@ -235,7 +235,11 @@ class AOPInboundEmail extends InboundEmail
             if(!empty($app_id)){
                 $url = "$base_url/get_merchant_details?ApplicationID=$app_id";
                 $c->merchant_app_id_c = $app_id;
-                $response = $this->curl_req($url);
+                
+                require_once('custom/include/CurlReq.php');
+                $curl_req = new CurlReq();
+
+                $response = $curl_req->curl_req($url);
                 $json_response = json_decode($response);
                 $json_response = $json_response[0];
                 if(!empty($json_response)){
@@ -330,7 +334,11 @@ class AOPInboundEmail extends InboundEmail
         if(empty($app_id)){
             $base_url = getenv("SCRM_AS_API_BASE_URL");
             $url = "$base_url/get_applications_by_email?email=$email_from_addr";
-            $response = $this->curl_req($url);
+            
+			require_once('custom/include/CurlReq.php');
+			$curl_req = new CurlReq();
+
+			$response = $curl_req->curl_req($url);
             $json_response = json_decode($response);
             rsort($json_response);
             $app_id = $json_response[0];

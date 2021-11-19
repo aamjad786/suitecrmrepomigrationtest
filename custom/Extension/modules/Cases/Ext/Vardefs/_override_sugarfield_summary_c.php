@@ -4,7 +4,7 @@ $dictionary['Case']['fields']['summary_c']['inline_edit']=1;
 $dictionary['Case']['fields']['summary_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        var regEx=/^[A-Za-z]+$/;
+        var regEx=/^[a-zA-Z ]*$/;
         var value=$("#" + nameIndex).val();
         //console.log("field value"+value);
         if (regEx.test(value)== false) {

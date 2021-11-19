@@ -2,7 +2,7 @@
 require_once 'custom/CustomLogger/CustomLogger.php';
 array_push($job_strings, 'UpdateRenewedAppId');
 global $logger;
-$logger= new CustomLogger('updaterenewedAppid');
+$logger = new CustomLogger('updaterenewedAppid');
 	//Scheculer Starting point 
 	function UpdateRenewedAppId(){
 		global $logger;

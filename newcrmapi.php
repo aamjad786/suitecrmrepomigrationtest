@@ -11,7 +11,7 @@ require_once 'custom/CustomLogger/CustomLogger.php';
 
 global $db, $sugar_config;
 
-$logger=new CustomLogger('crmapi-2.0');
+$logger =new CustomLogger('crmapi-2.0');
 
 $scrm_key = $sugar_config['scrm_key'];
 $url      = $sugar_config['scrm_api_url'];
@@ -37,7 +37,8 @@ $apiAction = array(
     'Fetch',
     'Audit',
     'Create_ETL',
-    'Transacting'
+    'Transacting',
+    'EosUpdate'
 );
 
 if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HTTP_REQUESTEDMODULE'], $apiModule) && in_array($_SERVER['HTTP_REQUESTEDMETHOD'], $apiAction)) {
@@ -505,9 +506,9 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         
 
     }
-    else if ($module == "Lead" && $action == 'Update') {
+    else if ($module == "Lead" && $action == 'EosUpdate') {
         
-            $logger->log('debug', 'Update Lead API Request =====>'.var_export($rawData, true));
+            $logger->log('debug', 'EosUpdate Lead API Request =====>'.var_export($rawData, true));
             
             // Data Validation
             global $app_list_strings;
@@ -577,7 +578,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                 }else{
                         $msg = array(
                             'Success' => false,
-                            'Message' => 'Unable To Find Lead With Given'
+                            'Message' => 'Unable To Find Lead With Given ID'
                         );
                 }
             }
@@ -588,6 +589,68 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                     'Message' => 'Mandatory field(s) are missing. Lead ID Is Empty'
                 );
                 
+            }
+        }
+    } 
+    else if ($module == "Lead" && $action == 'Update') {
+        
+        $logger->log('debug', 'Update Lead API Request =====>'.var_export($rawData, true));
+        
+        $lead_id = $rawData->lead_id;
+        
+        if (!isset($lead_id) or empty($lead_id)) {
+            $msg = array(
+                'Success' => false,
+                'Message' => 'Mandatory field(s) are missing'
+            );
+        }
+        else if(!empty($rawData->disposition_c) &&  ($rawData->disposition_c =='interested' || $rawData->disposition_c=='pick_up') && empty($rawData->pickup_appointment_city_c))
+        {  
+            # This has execute only for the disposition is interested or pick and pick up is empty.
+            $msg = array(
+                'Success' => false,
+                'Message' => 'Please select pickup city to continue.'
+            );
+            
+        } else {
+            
+            $lead = new Lead();
+            $retrieved_data  = $lead->retrieve($lead_id);
+            
+            if(!empty($retrieved_data)){
+
+                foreach($rawData as $k=>$v){
+
+                    if ($k == 'Description') $v = htmlentities($v);
+
+                    if ($k == 'pickup_appointment_city_c' or $k == 'phone_mobile') {
+                        continue;
+                    }
+    
+                    $lead->{$k} = $v;
+                }
+
+                $id = $lead->save();
+
+                if (!$id) {
+
+                    $msg = array(
+                        'Success' => false,
+                        'Message' => 'Lead was not updated'
+                    );
+
+                }else{
+                    $msg = array(
+                        'Success' => false,
+                        'Message' => 'Lead Updated Successfully.'
+                    );
+                }
+                
+            }else{
+                $msg = array(
+                    'Success' => false,
+                    'Message' => "Lead $lead_id not found in DB"
+                );
             }
         }
     }
@@ -1015,7 +1078,8 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             );
         }
     }
-    else if($module == "Cases" && $action=='Update') {
+    /*else if($module == "Cases" && $action=='Update') {
+        $logger->log('debug', 'Update Case API Request =====>'.var_export($rawData, true));
         global $db;
         if(empty($rawData->case_id)) {
             $msg = array(
@@ -1047,37 +1111,36 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             }
         
         }
-    }
+    }*/
     else if ($module == "Cases" && $action == 'Create') {
-        $merchant_name_c = get_var_value($rawData->merchant_name_c);
-        $merchant_app_id_c = get_var_value($rawData->merchant_app_id_c);
-        $merchant_contact_number_c = get_var_value($rawData->merchant_contact_number_c);
-        $merchant_email_id_c = get_var_value($rawData->merchant_email_id_c);
-        $description = get_var_value($rawData->description);
-        $case_location_c = get_var_value($rawData->case_location_c);
-        $subject = get_var_value($rawData->subject);
-        $case_source_c = get_var_value($rawData->case_source_c);
-        $case_sub_source_c = get_var_value($rawData->case_sub_source_c);
-
-        $complaintaint_c = get_var_value($rawData->complaintaint_c);
-        $merchant_establisment_c = get_var_value($rawData->merchant_establisment_c);
-        $case_subcategory_c = get_var_value($rawData->case_subcategory_c);
-        $case_category_c = get_var_value($rawData->case_category_c);
-
-        $call_back_start_time_c = get_var_value($rawData->call_back_start_time_c);
-        $call_back_duration_c = get_var_value($rawData->call_back_duration_c);
+        $logger->log('debug', 'Create Case API Request =====>'.var_export($rawData, true));
+        
+        $merchant_name_c            = get_var_value($rawData->merchant_name_c);
+        $merchant_app_id_c          = get_var_value($rawData->merchant_app_id_c);
+        $merchant_contact_number_c  = get_var_value($rawData->merchant_contact_number_c);
+        $merchant_email_id_c        = get_var_value($rawData->merchant_email_id_c);
+        $description                = get_var_value($rawData->description);
+        $case_location_c            = get_var_value($rawData->case_location_c);
+        $subject                    = get_var_value($rawData->subject);
+        $case_source_c              = get_var_value($rawData->case_source_c);
+        $case_sub_source_c          = get_var_value($rawData->case_sub_source_c);
+        $complaintaint_c            = get_var_value($rawData->complaintaint_c);
+        $merchant_establisment_c    = get_var_value($rawData->merchant_establisment_c);
+        $case_subcategory_c         = get_var_value($rawData->case_subcategory_c);
+        $case_category_c            = get_var_value($rawData->case_category_c);
+        $call_back_start_time_c     = get_var_value($rawData->call_back_start_time_c);
+        $call_back_duration_c       = get_var_value($rawData->call_back_duration_c);
         //dont delete or modify this field '$is_call_back_c', based on this in data_sync we are skipping assigned_user_id = null
-        $is_call_back_c = get_var_value($rawData->is_call_back_c);
-        $call_back_30_min_c = get_var_value($rawData->call_back_30_min_c);
-
-        $custom_case_type = get_var_value($rawData->custom_case_type);
-        $custom_s3_url = get_var_value($rawData->custom_s3_url);
-        $type = get_var_value($rawData->type);
-        $financial_year_c = get_var_value($rawData->financial_year_c);
-        $digitally_signed_c = get_var_value($rawData->digitally_signed_c);
-        $quarter_c = get_var_value($rawData->quarter_c);
-        $agent_user_id = "";
-        $recordExits = FALSE;
+        $is_call_back_c             = get_var_value($rawData->is_call_back_c);
+        $call_back_30_min_c         = get_var_value($rawData->call_back_30_min_c);
+        $custom_case_type           = get_var_value($rawData->custom_case_type);
+        $custom_s3_url              = get_var_value($rawData->custom_s3_url);
+        $type                       = get_var_value($rawData->type);
+        $financial_year_c           = get_var_value($rawData->financial_year_c);
+        $digitally_signed_c         = get_var_value($rawData->digitally_signed_c);
+        $quarter_c                  = get_var_value($rawData->quarter_c);
+        $agent_user_id              = "";
+        $recordExits                = FALSE;
 
         global $db;
             
@@ -1113,7 +1176,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         if (!isset($merchant_name_c) or empty($merchant_name_c)) {
             $msg = array(
                 'Success' => false,
-                'Message' => 'Mandatory field(s) are missing'
+                'Message' => 'Mandatory field(s) merchant name are missing'
             );
         }
         else if ($is_call_back_c == 1 and
@@ -1126,7 +1189,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                 ) {
                 $msg = array(
                     'Success' => false,
-                    'Message' => 'Mandatory field(s) are missing'
+                    'Message' => 'Mandatory field(s) for is_call_back are missing [case source, merchant contact no, case sub source, call back start time, call back duration]'
                 );
         }
         else {
@@ -1263,8 +1326,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             }
         }
     }
-    else
-    if($module == "Neo_Customers" && $action == "Fetch"){
+    else if($module == "Neo_Customers" && $action == "Fetch"){
         $logger->log('debug', 'Fetch Neo_Customers API Request =====>'.var_export($rawData, true));
         (isset($rawData->application_id) ? $application_id = $rawData->application_id : '');
         (isset($rawData->customer_id) ? $customer_id = $rawData->customer_id : '');
@@ -1332,208 +1394,208 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
     }
     else if($module == "Users" && $action == "Create"){
         $logger->log('debug', 'Create Users API Request =====>'.var_export($rawData, true));
-        try{
-        // print_r($rawData->nguid);
-        $result = json_decode(json_encode($rawData), TRUE);
-        $message = "";
-        $loginUserId = $result['nguid'];
-        $loginUserId = array_keys($loginUserId);
-        $user = new User;
-        if(!empty($loginUserId)){
-            $user->retrieve($loginUserId[0]);
-        }
-    
-        if(empty($user->date_entered)) {
-          //save for first time
-            if(!empty($loginUserId) && !empty($result['cn'])&& !empty($result['username']) 
-            && !empty($result['firstname'])){
-                $user->new_schema = true;
-                $user->new_with_id = true;
-                $user->id = $loginUserId[0];
-                $user->name = $result['cn'];
-                $user->user_name = $result['username'];
-    
-                $user->first_name = $result['firstname'];
-                $user->last_name = $result['lastname'];
-                $user->email1 = $result['email'];
-                // $user->department = $result['department'];
-                //creating users by sales app request - department will be sales
-                $user->department = 'SALES';
-                $user->is_admin = stripos($result['description'], 'crm') > -1;
-                $user->authenticated = true;
-                $user->description = $result['memberOf'];
-                $user->team_exists = false;
-                $user->table_name = "users";
-                $user->module_dir = 'Users';
-                $user->object_name = "User";
-                $user->status = "Active";
-    
-                $user->importable = true;
-                $user->encodeFields = Array ("first_name", "last_name", "description");
-                $user->save();
-                $message .=  $result['sAMAccountName'][0]." user saved\n";
-                $success = true;
-                require_once('custom/include/SendEmail.php');
-                $email = new SendEmail();
-                $desc = json_encode($rawData);
-                require_once('custom/include/SendEmail.php');
-                // Updating CAM Role
-                require_once('custom/include/ng_utils.php');
-                $ng_utils = new Ng_utils();
-                $roleID = $ng_utils->fetchRoleIdFromName('Customer Acquisition Manager');
-                if (empty($roleID)) {
-                  $message .= "Roles not found, Updation failed. Please contact admin or your supervisor";
-                  $success = false;
-                }
-                $user->load_relationship('aclroles');
-                $status = $user->aclroles->add($roleID);
-                if($status){
-                    $logger->log('debug', 'Added '.$user->id.' to '.$roleID);
-                }
-                else{
-                    $message .= "Unable add user to the given role. Some error. $user->id";
+        try {
+            // print_r($rawData->nguid);
+            $result = json_decode(json_encode($rawData), TRUE);
+            $message = "";
+            $loginUserId = $result['nguid'];
+            $loginUserId = array_keys($loginUserId);
+            $user = new User;
+            if(!empty($loginUserId)){
+                $user->retrieve($loginUserId[0]);
+            }
+        
+            if(empty($user->date_entered)) {
+            //save for first time
+                if(!empty($loginUserId) && !empty($result['cn'])&& !empty($result['username']) 
+                && !empty($result['firstname'])) {
+                    $user->new_schema = true;
+                    $user->new_with_id = true;
+                    $user->id = $loginUserId[0];
+                    $user->name = $result['cn'];
+                    $user->user_name = $result['username'];
+        
+                    $user->first_name = $result['firstname'];
+                    $user->last_name = $result['lastname'];
+                    $user->email1 = $result['email'];
+                    // $user->department = $result['department'];
+                    //creating users by sales app request - department will be sales
+                    $user->department = 'SALES';
+                    $user->is_admin = stripos($result['description'], 'crm') > -1;
+                    $user->authenticated = true;
+                    $user->description = $result['memberOf'];
+                    $user->team_exists = false;
+                    $user->table_name = "users";
+                    $user->module_dir = 'Users';
+                    $user->object_name = "User";
+                    $user->status = "Active";
+        
+                    $user->importable = true;
+                    $user->encodeFields = Array ("first_name", "last_name", "description");
+                    $user->save();
+                    $message .=  $result['sAMAccountName'][0]." user saved\n";
+                    $success = true;
+                    require_once('custom/include/SendEmail.php');
+                    $email = new SendEmail();
+                    $desc = json_encode($rawData);
+                    require_once('custom/include/SendEmail.php');
+                    // Updating CAM Role
+                    require_once('custom/include/ng_utils.php');
+                    $ng_utils = new Ng_utils();
+                    $roleID = $ng_utils->fetchRoleIdFromName('Customer Acquisition Manager');
+                    if (empty($roleID)) {
+                    $message .= "Roles not found, Updation failed. Please contact admin or your supervisor";
                     $success = false;
-                }
-                //Assigning to sales security group
-                global $db;
-                $query = "select id from securitygroups where name = 'Sales Team'";
-                $results = $db->query($query);
-                $add_sg_id = '';
-                while($row = $db->fetchByAssoc($results)){
-                    $add_sg_id = $row['id'];
-                }
-                $user->load_relationship('SecurityGroups');
-                if(!empty($add_sg_id)){
-                    $status = $user->SecurityGroups->add($add_sg_id);
+                    }
+                    $user->load_relationship('aclroles');
+                    $status = $user->aclroles->add($roleID);
                     if($status){
-                        $logger->log('debug','Added '.$user->id.' to '.$add_sg_id);
+                        $logger->log('debug', 'Added '.$user->id.' to '.$roleID);
                     }
                     else{
-                        $message .= "Unable add User to the given Security Group. Some error.";
+                        $message .= "Unable add user to the given role. Some error. $user->id";
                         $success = false;
                     }
+                    //Assigning to sales security group
+                    global $db;
+                    $query = "select id from securitygroups where name = 'Sales Team'";
+                    $results = $db->query($query);
+                    $add_sg_id = '';
+                    while($row = $db->fetchByAssoc($results)){
+                        $add_sg_id = $row['id'];
+                    }
+                    $user->load_relationship('SecurityGroups');
+                    if(!empty($add_sg_id)){
+                        $status = $user->SecurityGroups->add($add_sg_id);
+                        if($status){
+                            $logger->log('debug','Added '.$user->id.' to '.$add_sg_id);
+                        }
+                        else{
+                            $message .= "Unable add User to the given Security Group. Some error.";
+                            $success = false;
+                        }
+                    }
+                    else{
+                        $message .= "Security group not found, Updation failed. Please contact admin or your supervisor";
+                        $success = false;
+                    }
+                    $email->send_email_to_user("User Created in CRM Using Sales App",$desc,[$sugar_config['non_prod_merchant_email']], [$sugar_config['non_prod_merchant_CC_email']],null,array(),1);
                 }
                 else{
-                    $message .= "Security group not found, Updation failed. Please contact admin or your supervisor";
+                    $message .=  "Missing Details in AD. Contact Admin";
                     $success = false;
                 }
-                $email->send_email_to_user("User Created in CRM Using Sales App",$desc,[$sugar_config['non_prod_merchant_email']], [$sugar_config['non_prod_merchant_CC_email']],null,array(),1);
             }
             else{
-                $message .=  "Missing Details in AD. Contact Admin";
-                $success = false;
+                $message .=  "User already exit in CRM";
+                $success = true;
             }
+            
+        } catch(Exception $e){
+            $message .= "Exception in saving $nguid".$e->getMessage();
+            $success = false;
         }
-        else{
-            $message .=  "User already exit in CRM";
-            $success = true;
-        }
-        
-    }catch(Exception $e){
-        $message .= "Exception in saving $nguid".$e->getMessage();
-        $success = false;
-    }
-    $msg = array(
-        'Success' => $success,
-        'Message' => $message,
-    );
+        $msg = array(
+            'Success' => $success,
+            'Message' => $message,
+        );
     }
     else if($module == "Users" && $action == "Create_ETL"){
         $logger->log('debug', 'Create Users through ETL API Request =====>'.var_export($rawData, true));
         global $db;
-        try{
-        // print_r($rawData);
-        $user = new User;
-        if(!empty($rawData->nguid)){
-            $user->retrieve($rawData->nguid);
-        }
-        if(empty($user->date_entered)) {
-          //save for first time
-            if(!empty($rawData->nguid) && !empty($rawData->cn)&& !empty($rawData->username) 
-             && !empty($rawData->firstname) && !empty($rawData->status)){
-                $user->new_schema = true;
-                $user->new_with_id = true;
-                $user->id = $rawData->nguid;
-                $user->name = $rawData->cn;
-                $user->user_name = $rawData->username;
-                $user->phone_mobile=$rawData->mobile;
-                $user->first_name = $rawData->firstname;
-                $user->last_name = $rawData->lastname;
-                $user->email1 = $rawData->email;
-                $user->department = $rawData->department;
-                $user->is_admin = stripos($rawData->description, 'crm') > -1;
-                $user->authenticated = true;
-                $user->description = $rawData->memberOf;
-                $user->team_exists = false;
-                $user->table_name = "users";
-                $user->module_dir = 'Users';
-                $user->object_name = "User";
-                $user->status = $rawData->status;
-                $user->importable = true;
-                $user->encodeFields = Array ("first_name", "last_name", "description");
-                $user->save();
-                $message .=  $rawData->username . " user saved\n";
-                $success = true;
+            try{
+            // print_r($rawData);
+            $user = new User;
+            if(!empty($rawData->nguid)){
+                $user->retrieve($rawData->nguid);
+            }
+            if(empty($user->date_entered)) {
+            //save for first time
+                if(!empty($rawData->nguid) && !empty($rawData->cn)&& !empty($rawData->username) 
+                && !empty($rawData->firstname) && !empty($rawData->status)){
+                    $user->new_schema = true;
+                    $user->new_with_id = true;
+                    $user->id = $rawData->nguid;
+                    $user->name = $rawData->cn;
+                    $user->user_name = $rawData->username;
+                    $user->phone_mobile=$rawData->mobile;
+                    $user->first_name = $rawData->firstname;
+                    $user->last_name = $rawData->lastname;
+                    $user->email1 = $rawData->email;
+                    $user->department = $rawData->department;
+                    $user->is_admin = stripos($rawData->description, 'crm') > -1;
+                    $user->authenticated = true;
+                    $user->description = $rawData->memberOf;
+                    $user->team_exists = false;
+                    $user->table_name = "users";
+                    $user->module_dir = 'Users';
+                    $user->object_name = "User";
+                    $user->status = $rawData->status;
+                    $user->importable = true;
+                    $user->encodeFields = Array ("first_name", "last_name", "description");
+                    $user->save();
+                    $message .=  $rawData->username . " user saved\n";
+                    $success = true;
+                }
+                else{
+                    $message .=  "Missing Details in AD. Contact Admin";
+                    $success = false;
+                }
             }
             else{
-                $message .=  "Missing Details in AD. Contact Admin";
-                $success = false;
-            }
-        }
-        else{
-            $message .=  " User already exist in CRM. ";
-            if(!empty($rawData->status) && $user->status != $rawData->status){
-                $user->status = $rawData->status;
-                $message .=  " Status is updated to $rawData->status ";
-            }
-            if(!empty($rawData->mobile) && $user->phone_mobile != $rawData->mobile){
-                $user->phone_mobile = $rawData->mobile;
-                $message .=  " Mobile is updated to $rawData->mobile ";
-            }
-            if(!empty($rawData->joining_date) && $user->joining_date_c != $rawData->joining_date){
-                $user->joining_date_c = $rawData->joining_date;
-                $message .=  " joining_date is updated to $rawData->joining_date ";
-            }
-            if(!empty($rawData->designation) && $user->designation_c != $rawData->designation){
-                $user->designation_c = $rawData->designation;
-                $message .=  " designation is updated to $rawData->designation ";
-            }
-            if(!empty($rawData->email) && $user->email1 != $rawData->email){
-                $user->email1 = $rawData->email;
-                $message .=  " email is updated to $rawData->email ";
-            }
-            $user->save();
-    
-            $query="update  user_preferences SET contents = 'YTo0OntzOjEwOiJ1c2VyX3RoZW1lIjtzOjY6IlN1aXRlUiI7czo4OiJ0aW1lem9uZSI7czoxMjoiQXNpYS9Lb2xrYXRhIjtzOjI6InV0IjtpOjE7czo2OiJDYWxsc1EiO2E6MTE6e3M6NjoibW9kdWxlIjtzOjU6IkNhbGxzIjtzOjY6ImFjdGlvbiI7czo1OiJpbmRleCI7czoxMzoic2VhcmNoRm9ybVRhYiI7czoxMjoiYmFzaWNfc2VhcmNoIjtzOjU6InF1ZXJ5IjtzOjQ6InRydWUiO3M6Nzoib3JkZXJCeSI7czowOiIiO3M6OToic29ydE9yZGVyIjtzOjA6IiI7czoxMDoibmFtZV9iYXNpYyI7czoxMToiOTEyMjYyNTg3NDAiO3M6MjM6ImN1cnJlbnRfdXNlcl9vbmx5X2Jhc2ljIjtzOjE6IjAiO3M6MjA6ImZhdm9yaXRlc19vbmx5X2Jhc2ljIjtzOjE6IjAiO3M6MTU6Im9wZW5fb25seV9iYXNpYyI7czoxOiIwIjtzOjY6ImJ1dHRvbiI7czo2OiJTZWFyY2giO319' WHERE assigned_user_id='".$user->id."' and category='global'";
-            
-            $db->query($query);        
-            
-            $designations=array(strtolower("Associate Manager - Customer Acquisition"),strtolower("Senior Associate Manager - Customer Acquisition"),strtolower("Area Sales Manager"),strtolower("Senior Area Sales Manager"));
-                if (in_array(strtolower($user->designation),$designations)){
-                    $q="select count(*) as count from  acl_roles_users where role_id='978da784-78e3-5c78-ff7a-57e10a137412' and user_id='$user->id' and deleted=0";
-                    $result=$db->query($q);
-                    $count=0;
-                    while (($row = $db->fetchByAssoc($result)) != null) {
-                        $count=$row['count'];
-                    }
-                    if(empty($count) || $count==0 || !isset($count))
-                    {
-                        $roleid=create_guid();
-                        $query="insert into acl_roles_users values('$roleid','978da784-78e3-5c78-ff7a-57e10a137412','$user->id','','0')";
-                        $db->query($query);
-                    }
+                $message .=  " User already exist in CRM. ";
+                if(!empty($rawData->status) && $user->status != $rawData->status){
+                    $user->status = $rawData->status;
+                    $message .=  " Status is updated to $rawData->status ";
                 }
-            $success = true;
-        }
+                if(!empty($rawData->mobile) && $user->phone_mobile != $rawData->mobile){
+                    $user->phone_mobile = $rawData->mobile;
+                    $message .=  " Mobile is updated to $rawData->mobile ";
+                }
+                if(!empty($rawData->joining_date) && $user->joining_date_c != $rawData->joining_date){
+                    $user->joining_date_c = $rawData->joining_date;
+                    $message .=  " joining_date is updated to $rawData->joining_date ";
+                }
+                if(!empty($rawData->designation) && $user->designation_c != $rawData->designation){
+                    $user->designation_c = $rawData->designation;
+                    $message .=  " designation is updated to $rawData->designation ";
+                }
+                if(!empty($rawData->email) && $user->email1 != $rawData->email){
+                    $user->email1 = $rawData->email;
+                    $message .=  " email is updated to $rawData->email ";
+                }
+                $user->save();
         
-    }catch(Exception $e){
-        $message .= "Exception in saving $nguid".$e->getMessage();
-        $success = false;
-    }
-    $msg = array(
-        'Success' => $success,
-        'Message' => $message,
-    );
+                $query="update  user_preferences SET contents = 'YTo0OntzOjEwOiJ1c2VyX3RoZW1lIjtzOjY6IlN1aXRlUiI7czo4OiJ0aW1lem9uZSI7czoxMjoiQXNpYS9Lb2xrYXRhIjtzOjI6InV0IjtpOjE7czo2OiJDYWxsc1EiO2E6MTE6e3M6NjoibW9kdWxlIjtzOjU6IkNhbGxzIjtzOjY6ImFjdGlvbiI7czo1OiJpbmRleCI7czoxMzoic2VhcmNoRm9ybVRhYiI7czoxMjoiYmFzaWNfc2VhcmNoIjtzOjU6InF1ZXJ5IjtzOjQ6InRydWUiO3M6Nzoib3JkZXJCeSI7czowOiIiO3M6OToic29ydE9yZGVyIjtzOjA6IiI7czoxMDoibmFtZV9iYXNpYyI7czoxMToiOTEyMjYyNTg3NDAiO3M6MjM6ImN1cnJlbnRfdXNlcl9vbmx5X2Jhc2ljIjtzOjE6IjAiO3M6MjA6ImZhdm9yaXRlc19vbmx5X2Jhc2ljIjtzOjE6IjAiO3M6MTU6Im9wZW5fb25seV9iYXNpYyI7czoxOiIwIjtzOjY6ImJ1dHRvbiI7czo2OiJTZWFyY2giO319' WHERE assigned_user_id='".$user->id."' and category='global'";
+                
+                $db->query($query);        
+                
+                $designations=array(strtolower("Associate Manager - Customer Acquisition"),strtolower("Senior Associate Manager - Customer Acquisition"),strtolower("Area Sales Manager"),strtolower("Senior Area Sales Manager"));
+                    if (in_array(strtolower($user->designation),$designations)){
+                        $q="select count(*) as count from  acl_roles_users where role_id='978da784-78e3-5c78-ff7a-57e10a137412' and user_id='$user->id' and deleted=0";
+                        $result=$db->query($q);
+                        $count=0;
+                        while (($row = $db->fetchByAssoc($result)) != null) {
+                            $count=$row['count'];
+                        }
+                        if(empty($count) || $count==0 || !isset($count))
+                        {
+                            $roleid=create_guid();
+                            $query="insert into acl_roles_users values('$roleid','978da784-78e3-5c78-ff7a-57e10a137412','$user->id','','0')";
+                            $db->query($query);
+                        }
+                    }
+                $success = true;
+            }
+            
+        } catch(Exception $e){
+            $message .= "Exception in saving $nguid".$e->getMessage();
+            $success = false;
+        }
+        $msg = array(
+            'Success' => $success,
+            'Message' => $message,
+        );
     } 
     else if($module == "Paylater_Open" && $action == 'Create') {
         $logger->log('debug', 'Create Paylater_open API Request =====>'.var_export($rawData, true));
@@ -1573,9 +1635,9 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
     //        $objCase = new aCase();
     //        $userToAssign = $objCase->getUserToAssign();
     //        $name_value_list[] = array('name'=>'assigned_user_id','value'=>$userToAssign);
-    
-    $logger->log('debug', "Data going to be saved in Neo Paylater Open");
-    $logger->log('debug', var_export($name_value_list, true));  
+            
+            $logger->log('debug', "Data going to be saved in Neo Paylater Open");
+            $logger->log('debug', var_export($name_value_list, true));  
                     
             if(!empty($paylaterOpen)) {
                 $queryToGetPaylaterOpen = "select id from neo_paylater_open where application_id = '$applicationId'";
@@ -1652,7 +1714,8 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             }        
             print_r($response);
         }    
-    }else if($module == "Paylater_Open" && $action == 'Transacting'){
+    }
+    else if($module == "Paylater_Open" && $action == 'Transacting'){
             global $db;
             $query = "update neo_paylater_open set transaction_status='' where transaction_status='not_transacting'";
             $db->query($query);
@@ -1673,7 +1736,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                     'Message' => 'Application updated successfully',
                 );
             } else {
-                 $msg = array(
+                $msg = array(
                     'Success' => false,
                     'Message' => 'Application update failed',
                 );
@@ -1806,19 +1869,6 @@ function getUserId($sessionID, $module, $user_name, $url) {
     return $ID;
 }
 
-function getUserRole($user_id) {
-    require_once 'modules/ACLRoles/ACLRole.php';
-    $objACLRole = new ACLRole();
-    $roles = $objACLRole->getUserRoles($user_id);
-    if(in_array('Customer Acquisition Manager',$roles) 
-        || in_array('Renewal manager',$roles) 
-        || in_array('Renewal Location caller',$roles) ) {
-        return true;
-    }
-
-    return false;
-}
-
 function validate_mobile($mobile){
     return preg_match('/^[0-9]{10}+$/', $mobile);
 }
@@ -1828,10 +1878,10 @@ function checkDuplicateLead( $mobile,$scheme_c) {
     if(empty($date_entered))
         $date_entered = date("Y-m-d");
 
-    $query  = "select id,scheme_c from leads l join leads_cstm lcstm where deleted = 0 and phone_mobile = '$mobile' and lcstm.scheme_c='$scheme_c'and date_entered> CURDATE() - INTERVAL 30 DAY order by date_entered desc limit 1";
+    $query  = "select id,scheme_c from leads l join leads_cstm lcstm where deleted = 0 and phone_mobile = '$mobile' and date_entered> CURDATE() - INTERVAL 30 DAY order by date_entered desc limit 1";
     $result = $db->query($query);
     while (($row = $db->fetchByAssoc($result)) != null) {
-        $logger=new CustomLogger('crmapi-2.0');
+        $logger =new CustomLogger('crmapi-2.0');
         $logger->log('debug', 'Dedup Query Result: '.print_r($row,true));
         $lead_id = $row['id'];
     }

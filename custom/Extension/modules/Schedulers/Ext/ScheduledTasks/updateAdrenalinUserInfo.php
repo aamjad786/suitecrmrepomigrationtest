@@ -3,12 +3,12 @@
 require_once 'custom/CustomLogger/CustomLogger.php';
 array_push($job_strings, 'updateAdrenalinUserInfo');
 global $logger;
-$logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+$logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
 //Scheculer Main Function
 function updateAdrenalinUserInfo($override_last_run_date=null)
 {
     global $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $results = false;
 
     $logger->log('debug', '<======================STARTED==========================>');
@@ -59,7 +59,7 @@ function updateAdrenalinUserInfo($override_last_run_date=null)
 
 function fetchLastRunDate($function_name){
     global $db, $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $logger->log('debug',  'fetchLastRunDate called');
 
     $last_run_query = "select last_run from schedulers where job = '$function_name' and deleted = 0 and status = 'Active'";
@@ -79,36 +79,51 @@ function fetchLastRunDate($function_name){
 
 function fetchUserInfoFromAdrenalin($last_run_date){
     global $logger,$sugar_config;;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $logger->log('debug', 'fetchUserInfoFromAdrenalin Called....!');
     try {
-        $curl = curl_init();
-        $url=$sugar_config['Adrenalin Api'];
-        curl_setopt_array($curl, array(
-            CURLOPT_PORT => "",
-            CURLOPT_URL => "$url" . $last_run_date . "?type=json",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => array(
-                "cache-control: no-cache",
-                "content-type: application/json"
-            ),
-        ));
+        // $curl   = curl_init();
+        // $url    = getenv('Adrenalin_Api'); //.$last_run_date."?type=json"; // $sugar_config['Adrenalin Api'];
+        // curl_setopt_array($curl, array(
+        //     CURLOPT_PORT => "",
+        //     CURLOPT_URL => "$url" . $last_run_date . "?type=json",
+        //     CURLOPT_RETURNTRANSFER => true,
+        //     CURLOPT_ENCODING => "",
+        //     CURLOPT_MAXREDIRS => 10,
+        //     CURLOPT_TIMEOUT => 30,
+        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        //     CURLOPT_CUSTOMREQUEST => "GET",
+        //     CURLOPT_HTTPHEADER => array(
+        //         "cache-control: no-cache",
+        //         "content-type: application/json"
+        //     ),
+        // ));
         
-        $results = curl_exec($curl);
-        $err = curl_error($curl);
+        // $results = curl_exec($curl);
+        // $err = curl_error($curl);
         
-        curl_close($curl);
+        // curl_close($curl);
+        
+        $url            = getenv('Adrenalin_Api'). $last_run_date . "?type=json";
+        $headers        = array(
+            "cache-control: no-cache",
+            "content-type: application/json"
+        );
+        $max_redirects  = 10;
+        $timeout        = 30;
+
+        require_once('custom/include/CurlReq.php');
+        $curl_req       = new CurlReq();
+
+        $result         = $curl_req->curl_req($url, 'get', '', $headers, '', '', $max_redirects, $timeout, true);
+        $results   	    = $result['response'];
+        $err            = $result['error'];
 
         if ($err) {
             $logger->log('error', 'cURL Error:' . $err);
         }
-        
-        $logger->log('debug', 'Adrenaline API Response: ' . $results);
+        $logger->log('debug', "curl URL : $url" . $last_run_date . "?type=json");
+        $logger->log('debug', 'Adrenaline API Response: ' . var_export($results, true));
         
         $results = (json_decode($results, true));
         
@@ -121,7 +136,7 @@ function fetchUserInfoFromAdrenalin($last_run_date){
 
 function updateUserDetails($userInfo){
     global $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
 	$results = true;
 	
     foreach ($userInfo as $user) {
@@ -137,7 +152,7 @@ function updateUserDetails($userInfo){
 
 function updateUserDetailsUtil($user_info){
     global $db, $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     
     $user_info=array_change_key_case($user_info,CASE_LOWER);
     
@@ -320,7 +335,7 @@ function updateUserDetailsUtil($user_info){
 
 function getUserBean($user_name){
     global $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $bean = BeanFactory::getBean('Users');
 
     $query = 'users.deleted=0 and users.user_name = "'.$user_name.'"';
@@ -340,70 +355,12 @@ function getUserBean($user_name){
 
 // Functions Realted to User Role Assignment
 function updateRoleForNewUser($user, $userInfo) {
-    global $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    global $logger, $sugar_config;
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $user = getUserBean($userInfo[strtolower('EMPLOYEE CODE')]);
     $logger->log('debug', "updateRoleForNewUser: " . $userInfo['EMPLOYEE CODE'] );
 
-    $designationToRoleMap = array(
-        'Associate Manager - Customer Acquisition'          => 'Customer Acquisition Manager',
-        'Area Sales Manager'                                => 'Customer Acquisition Manager',
-        'Area Manager - Renewals'                           => 'Customer Acquisition Manager',
-        'Area Collection Manager'                           => 'Customer Acquisition Manager',
-        'Channel Sales Manager'                             => 'Customer Acquisition Manager',
-        'Channel Manager-FS2'                               => 'Customer Acquisition Manager',
-        'Executive - Telecalling'                           => 'Customer Acquisition Manager',
-        'Relationship Manager - Telesales'                  => 'Customer Acquisition Manager',
-        'Senior Associate Manager - Customer Acquisition'   => 'Customer Acquisition Manager',
-        'Senior Area Sales Manager'                         => 'Customer Acquisition Manager',
-        'Senior Executive - Bank Coordination'              => 'Customer Acquisition Manager',
-        'Senior Executive - Sales Coordinator'              => 'Customer Acquisition Manager',
-
-        'City Manager - Sales'                              => 'City Manager',
-
-        'Channel Development Manager - Insurance'           => 'Cluster Manager',
-        'Cluster Manager - Sales'                           => 'Cluster Manager',
-        'Cluster Manager - Direct Sales'                    => 'Cluster Manager',
-        'Cluster Credit Manager'                            => 'Cluster Manager',
-        'Cluster Manager - Renewals'                        => 'Cluster Manager',
-        'Cluster Manager-Direct Sales'                      => 'Cluster Manager',
-        'Cluster Manager - FS2'                             => 'Cluster Manager',
-        'Senior Manager - Sales Training'                   => 'Cluster Manager',
-
-
-        'Regional Sales Manager'                            => 'Regional Manager',
-        'Regional Manager - Finance & Accounts'             => 'Regional Manager',
-        'Regional Credit Manager'                           => 'Regional Manager',
-        'Regional Manager - Collection'                     => 'Regional Manager',
-        'Manager- Sales Force Automation'                   => 'Regional Manager',
-        'Manager - Sales Operations'                        => 'Regional Manager',
-        'Associate Vice President - Sales'                  => 'Regional Manager',
-        'Associate Vice President- Telesales'               => 'Regional Manager',
-        'Assistant Vice President - Direct Sales'           => 'Regional Manager',
-        'Assistant Vice President - Business Alliances'     => 'Regional Manager',
-        'Senior Manager - Sales'                            => 'Regional Manager',
-        'Senior Manager - Direct Sales'                     => 'Regional Manager',
-        'Senior Manager - Merchant Account'                 => 'Regional Manager',
-        'Senior Manager - Collections'                      => 'Regional Manager',
-        'Senior Manager - Technology'                       => 'Regional Manager',
-        'Senior Manager - Human Resource'                   => 'Regional Manager',
-        'Senior Manager - Marketing'                        => 'Regional Manager',
-        'Senior Manager - Sales and Strategy'               => 'Regional Manager',
-        'Senior Manager - Sales & Strategy'                 => 'Regional Manager',
-        'Strategic Alliance'                                => 'Regional Manager',
-        'Manager - Sales Operations & Analytics'            => 'Regional Manager',
-
-        'Assistant Vice President - Sales'                  => 'Zonal Manager',
-        'Manager- Business Alliance'                        => 'Zonal Manager',
-        'Manager - Business Alliances'                      => 'Zonal Manager',
-        'National Sales Manager - Corporate Channel'        => 'Zonal Manager',
-        'Sales Coordinator'                                 => 'Zonal Manager',
-        'Senior Vice President - Sales'                     => 'Zonal Manager',
-        'Zonal Manager - Finance & Accounts'                => 'Zonal Manager',
-        'Zonal Sales Manager'                               => 'Zonal Manager',
-        'Zonal Business Manager'                            => 'Zonal Manager'
-
-    );
+    $designationToRoleMap = $sugar_config['designationToRoleMap'];
 
     try {
 
@@ -444,7 +401,7 @@ function updateRoleForNewUser($user, $userInfo) {
 
 function fetchRoleIdFromName($role_name){
     global $db, $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $query = "select id from acl_roles where name = '$role_name'";
     $results = $db->query($query);
 
@@ -463,7 +420,7 @@ function fetchRoleIdFromName($role_name){
 // Functions Realted to Security Group Assignment
 function updateSecurityGroupForNewUser($user_bean, $userInfo){
     global $db, $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $query = "select securitygroup_id from securitygroups_users where user_id = '$user_bean->id'";
     $results = $db->query($query);
 
@@ -506,7 +463,7 @@ function updateSecurityGroupForNewUser($user_bean, $userInfo){
 
 function fetchSgId($department_name){
     global $db, $logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $sg_id = "";
 
     $departmentToSgMap = array(
@@ -533,7 +490,7 @@ function fetchSgId($department_name){
 
 function updateAdrenalinCacheTable($userInfo,$last_run_date=null){
     global $db ,$logger;
-    $logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
+    $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $logger->log('debug','UpdateAdrenalinCacheTable Started: ');
 
     try {

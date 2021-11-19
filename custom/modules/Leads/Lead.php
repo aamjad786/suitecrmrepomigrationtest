@@ -662,7 +662,7 @@ class Lead extends Person implements EmailInterface
 
         if(!empty($this->phone_mobile) && !empty($this->scheme_c)){
 
-            $query  = "select id,scheme_c from leads l join leads_cstm lcstm where deleted = 0 and phone_mobile = '$this->phone_mobile' and lcstm.scheme_c='$this->scheme_c'and date_entered> CURDATE() - INTERVAL 30 DAY order by date_entered desc limit 1";
+            $query  = "select id,scheme_c from leads l join leads_cstm lcstm where deleted = 0 and phone_mobile = '$this->phone_mobile' and date_entered> CURDATE() - INTERVAL 30 DAY order by date_entered desc limit 1";
             $logger->log('debug', 'ImportLeadsDupeCheck Query: ' . $query);
             global $db;
             $result = $db->query($query);

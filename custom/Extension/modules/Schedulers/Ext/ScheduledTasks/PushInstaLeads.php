@@ -15,6 +15,7 @@ function PushInstaLeads()
 
 	$DayDate = date('Y-m-d H:i:s', strtotime('-360 minutes'));
 	$lead_list = $bean->get_full_list("", "leads.deleted=0 and 
+										   leads.opportunity_id is null and
 										   leads.date_entered>'2021-04-15' and
 										   leads.date_entered<'$DayDate' and 
 										   leads_cstm.control_program_c='NeoCash Insta' and 
@@ -45,23 +46,19 @@ function PushInstaLeads()
 		$arr['Lead_Source'] = $lead->lead_source;
 		$arr['Sub_Source'] = $lead->sub_source_c;
 		$arr['DSA_code'] = $lead->dsa_code_c;
-		$arr['First_Name'] = $lead->name;
-		$arr['Last_Name'] = "";
-		$arr['Mobile_Number'] = $lead->pickup_appointment_contact_c;
+		$arr['First_Name'] = $lead->first_name;
+		$arr['Last_Name'] = $lead->last_name;
+		$arr['Mobile_Number'] = $lead->phone_mobile;
 		$arr['EmailID'] = $lead->email1;
 		$arr['Business_Trading_Name'] = $lead->merchant_name_c;
 		$arr['Lead_ID'] = $lead->id;
-		$arr['City'] = $lead->pickup_appointment_city_c;
+		$arr['City'] = $lead->primary_address_city;
 		$arr['product'] = "NeoCash Insta";
 		$arr['remarks'] = $lead->remarks;
 		$arr['Loan_amount'] = $lead->loan_amount_c;
 		$arr['stage_drop_off'] = $lead->stage_drop_off;
 		$arr['Address_Street'] = $lead->primary_address_street;
 		$arr['Address_pin'] = $lead->primary_address_postalcode;
-		$arr['stage_drop_off'] = $lead->sales_stage == "Sanctioned" ? 'Customer Deal Generated' : '';
-		$arr['app_form_link'] = $lead->app_form_link;
-		$arr['product_type'] = "NeoCash Insta";
-		$arr['loan_amount_c'] = $lead->loan_amount_c;
 
 		$logger->log('debug', 'Payload: ' . print_r($arr, true));
 

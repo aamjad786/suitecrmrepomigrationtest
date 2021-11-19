@@ -1,25 +1,25 @@
 <?php
-// created: 2018-04-24 12:59:31
-$dictionary["prospects_leads_1"] = array (
-  'true_relationship_type' => 'one-to-one',
+// created: 2021-11-18 05:45:54
+$dictionary["scrm_disposition_history_leads_1"] = array (
+  'true_relationship_type' => 'one-to-many',
   'from_studio' => true,
   'relationships' => 
   array (
-    'prospects_leads_1' => 
+    'scrm_disposition_history_leads_1' => 
     array (
-      'lhs_module' => 'Prospects',
-      'lhs_table' => 'prospects',
+      'lhs_module' => 'scrm_Disposition_History',
+      'lhs_table' => 'scrm_disposition_history',
       'lhs_key' => 'id',
       'rhs_module' => 'Leads',
       'rhs_table' => 'leads',
       'rhs_key' => 'id',
       'relationship_type' => 'many-to-many',
-      'join_table' => 'prospects_leads_1_c',
-      'join_key_lhs' => 'prospects_leads_1prospects_ida',
-      'join_key_rhs' => 'prospects_leads_1leads_idb',
+      'join_table' => 'scrm_disposition_history_leads_1_c',
+      'join_key_lhs' => 'scrm_disposition_history_leads_1scrm_disposition_history_ida',
+      'join_key_rhs' => 'scrm_disposition_history_leads_1leads_idb',
     ),
   ),
-  'table' => 'prospects_leads_1_c',
+  'table' => 'scrm_disposition_history_leads_1_c',
   'fields' => 
   array (
     0 => 
@@ -43,13 +43,13 @@ $dictionary["prospects_leads_1"] = array (
     ),
     3 => 
     array (
-      'name' => 'prospects_leads_1prospects_ida',
+      'name' => 'scrm_disposition_history_leads_1scrm_disposition_history_ida',
       'type' => 'varchar',
       'len' => 36,
     ),
     4 => 
     array (
-      'name' => 'prospects_leads_1leads_idb',
+      'name' => 'scrm_disposition_history_leads_1leads_idb',
       'type' => 'varchar',
       'len' => 36,
     ),
@@ -58,7 +58,7 @@ $dictionary["prospects_leads_1"] = array (
   array (
     0 => 
     array (
-      'name' => 'prospects_leads_1spk',
+      'name' => 'scrm_disposition_history_leads_1spk',
       'type' => 'primary',
       'fields' => 
       array (
@@ -67,20 +67,20 @@ $dictionary["prospects_leads_1"] = array (
     ),
     1 => 
     array (
-      'name' => 'prospects_leads_1_ida1',
+      'name' => 'scrm_disposition_history_leads_1_ida1',
       'type' => 'index',
       'fields' => 
       array (
-        0 => 'prospects_leads_1prospects_ida',
+        0 => 'scrm_disposition_history_leads_1scrm_disposition_history_ida',
       ),
     ),
     2 => 
     array (
-      'name' => 'prospects_leads_1_idb2',
-      'type' => 'index',
+      'name' => 'scrm_disposition_history_leads_1_alt',
+      'type' => 'alternate_key',
       'fields' => 
       array (
-        0 => 'prospects_leads_1leads_idb',
+        0 => 'scrm_disposition_history_leads_1leads_idb',
       ),
     ),
   ),

@@ -153,13 +153,19 @@ function uploadDocToS3ApiAudio($tmpfile, $filename, $path, $application, $bucket
     if (!empty($filePath)) {
         $as_api_url = getenv('AWS_API_UTILITY_URL')."/aws_upload";
         $params =array('application' => $application, 'bucket' => $bucket, 'path' => $path, 'files'=>$filePath);
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,$as_api_url);
-        curl_setopt($ch, CURLOPT_POST,1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // $ch = curl_init();
+        // curl_setopt($ch, CURLOPT_URL,$as_api_url);
+        // curl_setopt($ch, CURLOPT_POST,1);
+        // curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $result = curl_exec($ch);
+        // $result = curl_exec($ch);
+
+		require_once('custom/include/CurlReq.php');
+		$curl_req = new CurlReq();
+
+		$result = $curl_req->curl_req($as_api_url, 'post', $params);
+
         // fwrite($fp,"\n ".print_r($result,true));
         $resultArray = json_decode($result, true);
 
@@ -182,8 +188,7 @@ function postDataToAS($input_array, $s3_file_url){
 	$s3_path = $s3_file_url_arr['path'];
 	$input_array['AudioFile'] = $s3_path;
 
-	$json_to_post = json_encode($input_array);
-	$ch = curl_init();
+	$params = json_encode($input_array);
     $as_url = getenv('SCRM_AS_API_OZONTEL_URL');
     if(empty($as_url)){
     	$logger->log('debug', " AS URL is empty. env required SCRM_AS_API_OZONTEL_URL");
@@ -191,13 +196,21 @@ function postDataToAS($input_array, $s3_file_url){
     }
     $as_api_url = $as_url."/api/Inductioncall/PostInsertInductioncallDetails";
     $logger->log('debug', "as_api_url = $as_api_url" );
-    curl_setopt($ch, CURLOPT_URL,$as_api_url);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-    curl_setopt($ch, CURLOPT_POST,1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $json_to_post);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	// diue('done, not sent');
-    $reslt = curl_exec($ch);
+	$headers = array('Content-Type:application/json');
+	// $ch = curl_init();
+    // curl_setopt($ch, CURLOPT_URL,$as_api_url);
+	// curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    // curl_setopt($ch, CURLOPT_POST,1);
+    // curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	// // diue('done, not sent');
+    // $result = curl_exec($ch);
+
+	require_once('custom/include/CurlReq.php');
+	$curl_req = new CurlReq();
+
+	$result = $curl_req->curl_req($as_api_url, 'post', $params);
+
     $logger->log('debug', "as post result: ".print_r($result,true));
     return 1;
 }

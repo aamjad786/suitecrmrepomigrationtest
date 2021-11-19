@@ -183,7 +183,46 @@ class AfterSaveLead
 
 		return $account_bean;
 	}
-	
+
+	public function calculateNoOfAttempts($bean){
+		 
+		$this->logger->log('debug', '<======= calculateNoOfAttempts Login Hook =======>');
+		
+		global $db;
+		$lead_id = $bean->id;
+		$attempts_done = $bean->attempts_done_c;
+		
+		$queryForNoOfAttempts= "SELECT 
+						COUNT(sdh.id) AS attempt
+					FROM
+						scrm_disposition_history sdh
+							LEFT JOIN
+						leads_scrm_disposition_history_1_c lsdh ON lsdh.leads_scrm_disposition_history_1scrm_disposition_history_idb = sdh.id
+							LEFT JOIN
+						leads l ON l.id = lsdh.leads_scrm_disposition_history_1leads_ida
+					WHERE
+						l.id = '$lead_id' AND l.deleted = 0
+							AND lsdh.deleted = 0
+							AND sdh.deleted = 0";
+		
+		$resultForNoOfAttempts = $db->query($queryForNoOfAttempts);
+		
+		while($row = $db->fetchByAssoc($resultForNoOfAttempts)){
+			$count = $row['attempt'];
+
+			$this->logger->log('debug', "No. of attempts for $lead_id is $count");
+		}
+
+		if(strcmp($attempts_done,$count) != 0){
+			$this->logger->log('debug', "Updating Count For $lead_id");
+			
+			$updateQuery = "update leads_cstm set attempts_done_c = '$count' where id_c = '$lead_id'";
+			$db->query($updateQuery);
+
+			$this->logger->log('debug', "No. Of Attempts Updated");
+		}
+
+	}	
 
 	function first_val_if_present($a, $b) {
 		return ((!empty($a)) ? ($a) : ($b));

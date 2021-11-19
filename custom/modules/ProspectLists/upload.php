@@ -61,13 +61,21 @@ $filename = $_SERVER['CONTEXT_DOCUMENT_ROOT']."/targets/targets.csv";
 echo $filename;
 file_put_contents( $filename, $output );
 // die();
+$url = "https://api.exacttouch.com/API/mailing/";
 $xml_data ="type=list&activity=Add&data=<DATASET><CONSTANT><ApiKey>{$api_key}</ApiKey><RefIp></RefIp><RefWeb></RefWeb></CONSTANT><INPUT><Name>$target_name</Name><Active>1</Active></INPUT></DATASET>";
-$ch = curl_init( 'https://api.exacttouch.com/API/mailing/' );
-curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-curl_setopt( $ch, CURLOPT_POST, 1 );
-curl_setopt( $ch, CURLOPT_POSTFIELDS, $xml_data );
-$result = curl_exec( $ch );
-curl_close( $ch );
+// $ch = curl_init();
+// curl_setopt( $ch2, CURLOPT_URL, $url );
+// curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+// curl_setopt( $ch, CURLOPT_POST, 1 );
+// curl_setopt( $ch, CURLOPT_POSTFIELDS, $xml_data );
+// $result = curl_exec( $ch );
+// curl_close( $ch );
+
+require_once('custom/include/CurlReq.php');
+$curl_req = new CurlReq();
+
+$result = $curl_req->curl_req($url, 'post', $xml_data);
+
 echo (htmlspecialchars($result));
 
 if ( stripos( $result, 'error' ) !== false ) {
@@ -78,35 +86,41 @@ else {
 	$list_id= $xml_doc->OUTPUT->LID;
 	echo PHP_EOR."List with ".$target_name." created successfully list id = ".$list_id.PHP_EOR;
 	$XML_DATA = "type=list&activity=DataUpload&data=<DATASET>
-	<CONSTANT><ApiKey>{$api_key}</ApiKey>
-	<RefIp></RefIp><RefWeb></RefWeb>
-	</CONSTANT>
-	<INPUT><LID>$list_id</LID><Operation>Add</Operation>
-	<Path>$target_url</Path>
-	<NotifyEmail>nikhil.kumar@neogrowth.in</NotifyEmail>
-	<TaskPriority>1</TaskPriority>
-	</INPUT>
-</DATASET>";
+			<CONSTANT><ApiKey>{$api_key}</ApiKey>
+			<RefIp></RefIp><RefWeb></RefWeb>
+			</CONSTANT>
+			<INPUT><LID>$list_id</LID><Operation>Add</Operation>
+			<Path>$target_url</Path>
+			<NotifyEmail>nikhil.kumar@neogrowth.in</NotifyEmail>
+			<TaskPriority>1</TaskPriority>
+			</INPUT>
+		</DATASET>";
 
 	$url = "https://api.exacttouch.com/API/mailing/";
 	//echo $url ; exit;
-	$ch2 = curl_init();
-	curl_setopt( $ch2, CURLOPT_URL, $url );
-	curl_setopt( $ch2, CURLOPT_RETURNTRANSFER, true );
-	curl_setopt( $ch2, CURLOPT_POST, true );
-	curl_setopt( $ch2, CURLOPT_POSTFIELDS, $XML_DATA );
-	curl_setopt( $ch2, CURLOPT_SSL_VERIFYPEER, true );
-	//curl_setopt($ch, CURLOPT_GETFIELDS, $XML_DATA);
-	$Result = curl_exec( $ch2 );
-	//print_r($XML_DATA);
-	curl_close( $ch2 );
-	echo (htmlspecialchars($Result));
-	// var_dump( $Result );
-	if ( stripos( $Result, 'error' ) !== false ) {
+	// $ch2 = curl_init();
+	// curl_setopt( $ch2, CURLOPT_URL, $url );
+	// curl_setopt( $ch2, CURLOPT_RETURNTRANSFER, true );
+	// curl_setopt( $ch2, CURLOPT_POST, true );
+	// curl_setopt( $ch2, CURLOPT_POSTFIELDS, $XML_DATA );
+	// curl_setopt( $ch2, CURLOPT_SSL_VERIFYPEER, true );
+	// //curl_setopt($ch, CURLOPT_GETFIELDS, $XML_DATA);
+	// $result = curl_exec( $ch2 );
+	// //print_r($XML_DATA);
+	// curl_close( $ch2 );
+
+	require_once('custom/include/CurlReq.php');
+	$curl_req = new CurlReq();
+
+	$result = $curl_req->curl_req($url, 'post', $XML_DATA);
+
+	echo (htmlspecialchars($result));
+	// var_dump( $result );
+	if ( stripos( $result, 'error' ) !== false ) {
 		echo PHP_EOR."Error performing request" .  PHP_EOR;
 	}
 	else {
-		$xml_doc = simplexml_load_string( $Result );
+		$xml_doc = simplexml_load_string( $result );
 		
 		// var_dump( $xml_doc );
 		// print_r( $xml_doc->TYPE );

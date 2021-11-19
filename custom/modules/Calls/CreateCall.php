@@ -45,7 +45,7 @@ class CreateCall {
         }
 
         //Getting Application Status
-        $getApplicationStatusApiResponse = $applicationApis->getAppData($applicationId, "/get_app_status/?app_id=");
+        $getApplicationStatusApiResponse = $applicationApis->getAppData($applicationId, "/get_app_status/?app_id_c=");
         if ($getApplicationStatusApiResponse) {
             $json_response_status = json_decode($getApplicationStatusApiResponse, true);
             if (!empty($json_response_status) && count($json_response_status) > 0) {

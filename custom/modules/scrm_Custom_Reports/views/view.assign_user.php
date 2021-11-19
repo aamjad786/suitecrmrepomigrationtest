@@ -10,8 +10,7 @@ require_once 'custom/include/SendEmail.php';
 require_once('modules/EmailTemplates/EmailTemplate.php');
 require_once 'custom/CustomLogger/CustomLogger.php';
 global $logger;
-$logger= new CustomLogger('UpdateAdrenalinUserInfoScheduler');
-
+$logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
 
 class scrm_Custom_ReportsViewassign_user extends SugarView {
 	
@@ -117,19 +116,28 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
             "cache-control: no-cache",
             "Content-type: application/x-www-form-urlencoded"
         );
+        $params = "userID=$userID&roleID=$roleID&remove=$remove";
         session_write_close();
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($ch,CURLOPT_URL,$url);
-		curl_setopt($ch,CURLOPT_USERAGENT, $useragent);
-		curl_setopt($ch, CURLOPT_COOKIE, $strCookie );
-        curl_setopt($ch, CURLOPT_POSTFIELDS, "userID=$userID&roleID=$roleID&remove=$remove");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        $err = curl_error($ch);
-        curl_close($ch);
+        // $ch = curl_init();
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		// curl_setopt($ch,CURLOPT_URL,$url);
+		// curl_setopt($ch,CURLOPT_USERAGENT, $useragent);
+		// curl_setopt($ch, CURLOPT_COOKIE, $strCookie );
+        // curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // $response = curl_exec($ch);
+        // $err = curl_error($ch);
+        // curl_close($ch);
+
+        require_once('custom/include/CurlReq.php');
+        $curl_req   = new CurlReq();
+
+        $result     = $curl_req->curl_req($url, 'post', $params, $headers, $useragent, $strCookie, '', '', true);
+        $response   = $result['response'];
+        $err        = $result['error'];
+
 		if(strpos(html_entity_decode($response), 'Added') !== false) {
             echo "<p style='color:green'>Successfully Assigned.</p>";
             return 1;
@@ -145,7 +153,7 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
         }
     }
 
-	function assignSG($ngid, $sg, $remove=0){
+	function x($ngid, $sg, $remove=0){
         global $db;
         $q1 = "SELECT id FROM users WHERE user_name='$ngid' and deleted=0";
         $result = $db->query($q1);
@@ -189,19 +197,28 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
             "cache-control: no-cache",
             "Content-type: application/x-www-form-urlencoded"
         );
+        $params = "userID=$userID&sgID=$sgID&remove=$remove";
         session_write_close();
-        $ch = curl_init();
-		curl_setopt($ch,CURLOPT_URL,$url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($ch,CURLOPT_USERAGENT, $useragent);
-		curl_setopt($ch, CURLOPT_COOKIE, $strCookie );
-        curl_setopt($ch, CURLOPT_POSTFIELDS, "userID=$userID&sgID=$sgID&remove=$remove");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        $err = curl_error($ch);
-        curl_close($ch);
+        // $ch = curl_init();
+		// curl_setopt($ch,CURLOPT_URL,$url);
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		// curl_setopt($ch,CURLOPT_USERAGENT, $useragent);
+		// curl_setopt($ch, CURLOPT_COOKIE, $strCookie );
+        // curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // $response = curl_exec($ch);
+        // $err = curl_error($ch);
+        // curl_close($ch);
+
+        require_once('custom/include/CurlReq.php');
+        $curl_req   = new CurlReq();
+
+        $result     = $curl_req->curl_req($url, 'post', $params, $headers, $useragent, $strCookie, '', '', true);
+        $response   = $result['response'];
+        $err        = $result['error'];
+
 		if(strpos(html_entity_decode($response), 'Added') !== false) {
             echo "<p style='color:green'>Successfully Assigned.</p>";
             return 1;
@@ -849,37 +866,50 @@ function getDataFromAS($ngId) {
     global $logger;
     $logger->log('debug', 'fetchUserInfoFromAD Called....!');
     try {
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_PORT => "",
-            CURLOPT_URL => "http://localhost:3003/json2ldap",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => "{\n  \"method\"  : \"ldap.search\",\n  \"params\"  : { \n  \"filter\": \"(sAMAccountName=$ngId)\",\n  \"attributes\": \"*\",\n    \"binaryAttributes\": [\"objectGUID\", \"objectSid\"]\n  },\n  \"decoded\" : true\n}",
-            CURLOPT_HTTPHEADER => array(
-                "cache-control: no-cache",
-                "content-type: application/json"
-            ),
-        ));
-        $results = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
+        $url            = getenv('SCRM_AD_UTILITY_HOST').'json2ldap';
+        $params         = "{\n  \"method\"  : \"ldap.search\",\n  \"params\"  : { \n  \"filter\": \"(sAMAccountName=$ngId)\",\n  \"attributes\": \"*\",\n    \"binaryAttributes\": [\"objectGUID\", \"objectSid\"]\n  },\n  \"decoded\" : true\n}";
+        $max_redirects  = 10;
+        $timeout        = 30;
+        // $curl   = curl_init();
+        // curl_setopt_array($curl, array(
+        //     CURLOPT_PORT            => "",
+        //     CURLOPT_URL             => $url,
+        //     CURLOPT_RETURNTRANSFER  => true,
+        //     CURLOPT_ENCODING        => "",
+        //     CURLOPT_MAXREDIRS       => $max_redirects,
+        //     CURLOPT_TIMEOUT         => $timeout,
+        //     CURLOPT_HTTP_VERSION    => CURL_HTTP_VERSION_1_1,
+        //     CURLOPT_CUSTOMREQUEST   => "POST",
+        //     CURLOPT_POSTFIELDS      => $params,
+        //     CURLOPT_HTTPHEADER      => array(
+        //         "cache-control: no-cache",
+        //         "content-type: application/json"
+        //     ),
+        // ));
+        // $results    = curl_exec($curl);
+        // $err        = curl_error($curl);
+        // curl_close($curl);
+
+        require_once('custom/include/CurlReq.php');
+        $curl_req   = new CurlReq();
+
+        $result     = $curl_req->curl_req($url, 'post', $params, $headers, '', '', $max_redirects, $timeout, true);
+        $results    = $result['response'];
+        $err        = $result['error'];
 
         if ($err) {
             echo "cURL Error #:" . $err;
             die();
         }
 
-        $logger->log('debug', 'AD API Response--------: ' . $results);
+        $logger->log('debug', 'AD API URL--------: ' . $url);
+        $logger->log('debug', 'AD API Response--------: ' . var_export($results,true));
+        
         $results = (json_decode($results, true));
         $results = $results['matches'];
+
         foreach ($results as $result) {
             try {
-               
                 return $result;
             } catch (Exception $e) {
                 $logger->log('error', 'Exception in saving'. $ngId . $e->getMessage());
@@ -893,15 +923,15 @@ function getDataFromAS($ngId) {
 
 function getDataFromAdrenalin($ngid){
     global $db;
-    $query = "select employee_code, company_name, mail_id, reporting_manager, designation_name, department_name, modified_on from adrenalin_user_info where employee_code ='".$ngid."'";
-    $results = $db->query($query);
-    $response = array();
+    $query      = "select employee_code, company_name, mail_id, reporting_manager, designation_name, department_name, modified_on from adrenalin_user_info where employee_code ='".$ngid."'";
+    $results    = $db->query($query);
+    $response   = array();
     while($row = $db->fetchByAssoc($results)){
-        $response['employee_code'][0] = $row['employee_code'];
-        $response['mail'][0] = $row['mail_id'];
-        $response['manager'][0] = $row['reporting_manager'];
-        $response['department'][0] = $row['department_name'];
-        $response['objectGUID'][0] = "-";
+        $response['employee_code'][0]   = $row['employee_code'];
+        $response['mail'][0]            = $row['mail_id'];
+        $response['manager'][0]         = $row['reporting_manager'];
+        $response['department'][0]      = $row['department_name'];
+        $response['objectGUID'][0]      = "-";
     }
     return $response;
 }

@@ -1,7 +1,7 @@
 <?php
 require_once 'custom/CustomLogger/CustomLogger.php';
 global $logger;
-$logger= new CustomLogger('updaterenewedAppid');
+$logger = new CustomLogger('updaterenewedAppid');
 require_once('include/entryPoint.php');
 
 class Renewals_functions{
@@ -446,7 +446,7 @@ class Renewals_functions{
 
     function checkRenewedAppIdsFromAudit($last_run_date){
         global $logger;
-        $logger= new CustomLogger('updaterenewedAppid');
+        $logger = new CustomLogger('updaterenewedAppid');
         $logger->log('debug', "<--------------called function checkRenewedAppIdsFromAudit---------------->");
         try{
             $response = true;

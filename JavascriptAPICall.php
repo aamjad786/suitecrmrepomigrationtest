@@ -8,6 +8,9 @@ require_once('custom/include/SendEmail.php');
 require_once ('data/BeanFactory.php');
 require_once ('data/SugarBean.php');
 require_once('custom/modules/Cases/views/view.detail.php');
+require_once('custom/include/CurlReq.php');
+$curl_req = new CurlReq();
+
 global $sugar_config,$db,$current_user,$app_list_strings;
 
 $apiName = $_REQUEST['api'];
@@ -18,23 +21,18 @@ if ($apiName == 'getApplicationDataFromLMM') {
 
     $url = getenv('SCRM_LMM_URI') ."/api/v2/paylater_accounts/".$application_id;
     
-    $response = curl_req($url);
+    $response = custom_curl_req($url);
 
     print_r($response);
 
 } else if($apiName == 'getRegisteredEmail') {
 
-    $case_id = $_REQUEST['case_id'];
-    
-    $bean = BeanFactory::newBean('Cases');
-
-    $case=$bean->retrieve($case_id);
-
-    $as_api_base_url = getenv('SCRM_AS_API_BASE_URL');
-
-    $url = $as_api_base_url."/get_merchant_details?ApplicationID=".$case->merchant_app_id_c;
-    
-    $response = curl_req($url);
+    $case_id            = $_REQUEST['case_id'];
+    $bean               = BeanFactory::newBean('Cases');
+    $case               = $bean->retrieve($case_id);
+    $as_api_base_url    = getenv('SCRM_AS_API_BASE_URL');
+    $url                = $as_api_base_url."/get_merchant_details?ApplicationID=".$case->merchant_app_id_c;
+    $response           = $curl_req->curl_req($url);
 
     if($response) {
 
@@ -59,7 +57,7 @@ if ($apiName == 'getApplicationDataFromLMM') {
 
     $url = getenv('SCRM_LMM_URI') .'/api/v2/paylater_open/paylater_accounts/'.$application_id.'/tokens/email_verification_link?email='.$emailId;
 
-    $response = curl_req($url);
+    $response = custom_curl_req($url);
 
     $responseArray = json_decode($response);
 
@@ -193,7 +191,7 @@ else if( $apiName == 'bulkapproveCategory'){
     $bean = BeanFactory::newBean('Cases');
 
     foreach($_REQUEST['category'] as $case_id){
-
+        
         $case=$bean->retrieve($case_id);
 
         $assigned_user = $case->assigned_user_id;
@@ -208,8 +206,8 @@ else if( $apiName == 'bulkapproveCategory'){
 
         $case->case_subcategory_c=$case->case_subcategory_c_new_c;
 
-        $case->type=$app_list_strings['case_type_mapping'][$case->case_subcategory_c_new]['qrc'];
-
+        $case->type=$app_list_strings['case_type_mapping'][$case->case_subcategory_c_new_c]['qrc'];
+        
         $r =  $case->save();
 
         $subcat         = $case->case_subcategory_c;
@@ -223,11 +221,11 @@ else if( $apiName == 'bulkapproveCategory'){
         $timestamp = $timestamp - (5*60*60+30*60);//subtract 5h 30min from current time;
 
         $timestamp = date("Y-m-d H:i:s", $timestamp);
-
+        
         $auditid=create_guid();
 
         // Approved
-        $update_case = 'UPDATE cases s join cases_cstm c on s.id=c.id_c SET c.case_category_approval =1, c.case_category_counts_c = c.case_category_counts_c + 1, assigned_user_id ="'.$assigned_user.'",deleted=0,c.="'.$_REQUEST['checker_comments'].'" ,c.checker_c="'.$_REQUEST['user_id'].'", c.date_of_changes_c = "'.$datetime.'",type = "'.$type.'" WHERE id = "'.$case_id.'"';
+        $update_case = 'UPDATE cases s join cases_cstm c on s.id=c.id_c SET c.case_category_approval_c =1, c.case_category_counts_c = c.case_category_counts_c + 1, assigned_user_id ="'.$assigned_user.'",deleted=0,c.checker_comment_c="'.$_REQUEST['checker_comments'].'" ,c.checker_c="'.$_REQUEST['user_id'].'", c.date_of_changes_c = "'.$datetime.'",type = "'.$type.'" WHERE id = "'.$case_id.'"';
 
         $s = $db->query($update_case);
 
@@ -292,7 +290,7 @@ else if( $apiName == 'bulkapproveCategory'){
 
     }
 
-   print_r($r=1);
+    print_r($r=1);
   
 } else if($apiName == 'bulkRejectCategory') {
     // var_dump($_REQUEST['category']);exit;
@@ -397,23 +395,33 @@ function getUserName($user_id){
     return $name;
 }
 
-function curl_req($url) {
+function custom_curl_req($url) {
 
     $bearerPassword = getenv('LMS_BEARER_PASSWORD');
 
-    $header = array(
+    $headers = array(
         "authorization: Bearer $bearerPassword",
         'content-type' => 'application/json'
     );
+
+    require_once('custom/include/CurlReq.php');
+    $curl_req = new CurlReq();
+
+    $output = $curl_req->curl_req($url, 'get', '', $headers);
     
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HTTPGET, 1);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $output = curl_exec($ch);
-    curl_close($ch);
+    // $ch = curl_init();
+    // curl_setopt($ch, CURLOPT_URL, $url);
+    // curl_setopt($ch, CURLOPT_HTTPGET, 1);
+    // curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    // $output = curl_exec($ch);
+    // curl_close($ch);
+
+    // $logger = new CustomLogger('LMM_APIs');
+    // $logger->log('debug', "curl URL : $url");
+	// $logger->log('debug', "Response : " . var_export($output, true));
+
     return $output;
 }
 

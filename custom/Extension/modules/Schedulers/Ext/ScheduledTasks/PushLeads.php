@@ -53,13 +53,13 @@ function PushLeads()
 		$payload['Lead_Source'] = $lead->lead_source;
 		$payload['Sub_Source'] = $lead->sub_source_c;
 		$payload['DSA_code'] = $lead->dsa_code_c;
-		$payload['First_Name'] = $lead->name;
-		$payload['Last_Name'] = "";
-		$payload['Mobile_Number'] = $lead->pickup_appointment_contact_c;
+		$payload['First_Name'] = $lead->first_name;
+		$payload['Last_Name'] = $lead->last_name;;
+		$payload['Mobile_Number'] = $lead->phone_mobile;
 		$payload['EmailID'] = $lead->email1;
 		$payload['Business_Trading_Name'] = $lead->merchant_name_c;
 		$payload['Lead_ID'] = $lead->id;
-		$payload['City'] = $lead->pickup_appointment_city_c;
+		$payload['City'] = $lead->primary_address_city;
 		$payload['product'] = $lead->product_type;
 		$payload['remarks'] = $lead->remarks;
 		$payload['Loan_amount'] = $lead->loan_amount_c;

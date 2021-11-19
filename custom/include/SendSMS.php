@@ -13,6 +13,8 @@ class SendSMS {
 		try {
 			
 			$logger->log('debug', '<=============== OutgoingSMS Details =================>');
+			$logger->log('debug', 'Mobile : '.$mobile_no);
+			$logger->log('debug', 'Mobile : '.$message);
 		
 			$env = getenv('SCRM_ENVIRONMENT');
 			$feedid = getenv('NETCORE_FEEDID');
@@ -43,12 +45,18 @@ class SendSMS {
 			$url = "http://bulkpush.mytoday.com/BulkSms/SingleMsgApi?feedid=$feedid&username=$username&password=$pwd&To=$mobile_no&Text=$sms_message&jobname=$tag_name";
 			$logger->log('debug', 'Curl URL: '.$url);
 			
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_HTTPGET, 1);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			// $ch = curl_init();
+			// curl_setopt($ch, CURLOPT_URL, $url);
+			// curl_setopt($ch, CURLOPT_HTTPGET, 1);
+			// curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-			$output = curl_exec($ch);
+			// $output = curl_exec($ch);
+
+			require_once('custom/include/CurlReq.php');
+			$curl_req       = new CurlReq();
+
+			$output         = $curl_req->curl_req($url);
+			
 			$xml = simplexml_load_string($output);
 			$output = trim($output);
 			

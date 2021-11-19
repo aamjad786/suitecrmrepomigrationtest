@@ -19,25 +19,29 @@ $sugar_config['addAjaxBannedModules'][1] = 'Neo_Customers';
 $sugar_config['addAjaxBannedModules'][2] = 'scrm_Cases';
 $sugar_config['addAjaxBannedModules'][3] = 'Cases';
 $sugar_config['addAjaxBannedModules'][4] = 'scrm_Escalation_Matrix';
-$sugar_config['EOS_API_URL_PRIMARY'] = 'http://192.168.31.95:3001/Neogroth_API/api/leads';
-$sugar_config['EOS_API_URL_SECONDARY'] = 'http://192.168.31.95:3001/Neogroth_API/api/leads';
+$sugar_config['EOS_API_URL_PRIMARY'] = 'http://192.168.11.13:3001/Neogroth_API/api/leads';
+$sugar_config['EOS_API_URL_SECONDARY'] = 'http://192.168.11.13:3001/Neogroth_API/api/leads';
 $sugar_config['email_confirm_opt_in_email_template_id'] = '';
 $sugar_config['email_allow_send_as_user'] = false;
 $sugar_config['email_xss'] = 'YToxMzp7czo2OiJhcHBsZXQiO3M6NjoiYXBwbGV0IjtzOjQ6ImJhc2UiO3M6NDoiYmFzZSI7czo1OiJlbWJlZCI7czo1OiJlbWJlZCI7czo0OiJmb3JtIjtzOjQ6ImZvcm0iO3M6NToiZnJhbWUiO3M6NToiZnJhbWUiO3M6ODoiZnJhbWVzZXQiO3M6ODoiZnJhbWVzZXQiO3M6NjoiaWZyYW1lIjtzOjY6ImlmcmFtZSI7czo2OiJpbXBvcnQiO3M6ODoiXD9pbXBvcnQiO3M6NToibGF5ZXIiO3M6NToibGF5ZXIiO3M6NDoibGluayI7czo0OiJsaW5rIjtzOjY6Im9iamVjdCI7czo2OiJvYmplY3QiO3M6MzoieG1wIjtzOjM6InhtcCI7czo2OiJzY3JpcHQiO3M6Njoic2NyaXB0Ijt9';
 $sugar_config['verify_client_ip'] = false;
 $sugar_config['Adrenalin Api']="http://192.168.11.186:3001/WebAPI/NEOGROWTH/D26E59DDF39740B2B6789C26A1BBFBC5/DT_668/API0001/20080505010101";
 $sugar_config['AS_CRM_Domain'] = 'crm.advancesuite.in';
+$sugar_config['prod_case_link'] = 'https://crm.advancesuite.in/SuiteCRM/index.php?module=Cases&action=DetailView&record=';
+$sugar_config['uat_case_link'] = 'https://localhost/index.php?module=Cases&action=DetailView&record='; // 'https://uat.advancesuite.in/SuiteCRM/index.php?module=Cases&action=DetailView&record=';
+$sugar_config['dev_case_link'] = 'https://localhost/index.php?module=Cases&action=DetailView&record=';
+    
 
 $sugar_config['ng_khatal_jay'] = 'khataljay@gmail.com';
 
 // Maker checker history permitted users
-$sugar_config['maker_checker_h_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG536","NG2029","NG2064","NG2054");
+$sugar_config['maker_checker_h_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG536","NG2029","NG2064","NG2054",'nucsoft5');
 
 // Maker checker permitted users
 $sugar_config['maker_checker_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG536", "nucsoft1");
 
 // Maker checker menu permitted users
-$sugar_config['maker_checker_menu_permitted_user'] = array('ng1647','ng1273','ng619','ng478','ng866','ng1273','ng1274','ng2054','ng2064','ng2155','ng2054','nucsoft5','nucsoft4');
+$sugar_config['maker_checker_menu_permitted_user'] = array('ng1647','ng1273','ng619','ng478','ng866','ng1273','ng1274','ng2054','ng2064','ng2155','ng2054','nucsoft5');
 
 // Macker_checker PROD checkers
 $sugar_config['prod_checker_user'] = array('ng1647','ng536'); // Manisha,Yogesh
@@ -277,5 +281,136 @@ $sugar_config['case_types'] = array(
     array ( 'parent' => 'paylater_current_available_balance_not_correct' ,    'qrc'=> 'query',     'ftr'=>'ftr' ),
     array ( 'parent' => 'paylater_sms_received_not_purchased' ,    'qrc'=> 'query',     'ftr'=>'non_ftr' ),
     array ( 'parent' => 'paylater_otp_not_received' ,              'qrc'=> 'query',     'ftr'=>'non_ftr' )
+);
+
+$sugar_config['designationToRoleMap'] = array(
+    'Associate Manager - Customer Acquisition'          => 'Customer Acquisition Manager',
+    'Area Sales Manager'                                => 'Customer Acquisition Manager',
+    'Area Manager - Renewals'                           => 'Customer Acquisition Manager',
+    'Area Collection Manager'                           => 'Customer Acquisition Manager',
+    'Channel Sales Manager'                             => 'Customer Acquisition Manager',
+    'Channel Manager-FS2'                               => 'Customer Acquisition Manager',
+    'Executive - Telecalling'                           => 'Customer Acquisition Manager',
+    'Relationship Manager - Telesales'                  => 'Customer Acquisition Manager',
+    'Senior Associate Manager - Customer Acquisition'   => 'Customer Acquisition Manager',
+    'Senior Area Sales Manager'                         => 'Customer Acquisition Manager',
+    'Senior Executive - Bank Coordination'              => 'Customer Acquisition Manager',
+    'Senior Executive - Sales Coordinator'              => 'Customer Acquisition Manager',
+    'City Manager - Sales'                              => 'City Manager',
+    'Channel Development Manager - Insurance'           => 'Cluster Manager',
+    'Cluster Manager - Sales'                           => 'Cluster Manager',
+    'Cluster Manager - Direct Sales'                    => 'Cluster Manager',
+    'Cluster Credit Manager'                            => 'Cluster Manager',
+    'Cluster Manager - Renewals'                        => 'Cluster Manager',
+    'Cluster Manager-Direct Sales'                      => 'Cluster Manager',
+    'Cluster Manager - FS2'                             => 'Cluster Manager',
+    'Senior Manager - Sales Training'                   => 'Cluster Manager',
+    'Regional Sales Manager'                            => 'Regional Manager',
+    'Regional Manager - Finance & Accounts'             => 'Regional Manager',
+    'Regional Credit Manager'                           => 'Regional Manager',
+    'Regional Manager - Collection'                     => 'Regional Manager',
+    'Manager- Sales Force Automation'                   => 'Regional Manager',
+    'Manager - Sales Operations'                        => 'Regional Manager',
+    'Associate Vice President - Sales'                  => 'Regional Manager',
+    'Associate Vice President- Telesales'               => 'Regional Manager',
+    'Assistant Vice President - Direct Sales'           => 'Regional Manager',
+    'Assistant Vice President - Business Alliances'     => 'Regional Manager',
+    'Senior Manager - Sales'                            => 'Regional Manager',
+    'Senior Manager - Direct Sales'                     => 'Regional Manager',
+    'Senior Manager - Merchant Account'                 => 'Regional Manager',
+    'Senior Manager - Collections'                      => 'Regional Manager',
+    'Senior Manager - Technology'                       => 'Regional Manager',
+    'Senior Manager - Human Resource'                   => 'Regional Manager',
+    'Senior Manager - Marketing'                        => 'Regional Manager',
+    'Senior Manager - Sales and Strategy'               => 'Regional Manager',
+    'Senior Manager - Sales & Strategy'                 => 'Regional Manager',
+    'Strategic Alliance'                                => 'Regional Manager',
+    'Manager - Sales Operations & Analytics'            => 'Regional Manager',
+    'Assistant Vice President - Sales'                  => 'Zonal Manager',
+    'Manager- Business Alliance'                        => 'Zonal Manager',
+    'Manager - Business Alliances'                      => 'Zonal Manager',
+    'National Sales Manager - Corporate Channel'        => 'Zonal Manager',
+    'Sales Coordinator'                                 => 'Zonal Manager',
+    'Senior Vice President - Sales'                     => 'Zonal Manager',
+    'Zonal Manager - Finance & Accounts'                => 'Zonal Manager',
+    'Zonal Sales Manager'                               => 'Zonal Manager',
+    'Zonal Business Manager'                            => 'Zonal Manager'
+);
+$sugar_config['AS_renewal_stage_mapping'] = array(
+    205=>"Open",
+    206=>"Submitted",
+    207=>"Rejected",
+    308=>"Sent to Login", //Kanika
+    309=>"Sent to Login",	//Kanika
+    310=>"Credit",	//Kanika
+    311=>"Rejected by Ops",	//Kanika
+    327 => "Sent to Login", 
+    328 => "Sent to Login",
+    412=>"Credit",
+    413=>"Credit",
+    414=>"Credit",
+    415=>"Sanctioned",
+    416=>"Credit",
+    417=>"Rejected by Credit",	//Kanika
+    425=>"Approved",	//Kanika
+    426=>"Credit",
+    444=>"Credit",
+    445=>"Credit",
+    467=>"Credit",
+    475=>"Credit",
+    490=>"Pending Post approval",	//Kanika
+    503 =>"Post Ops Rejected",
+    504 =>"Post Ops Approved",
+    518=>"Sanctioned",
+    519=>"Sanctioned",
+    520=>"Sanctioned",
+    521=>"Sanctioned",
+    522=>"Rejected",
+    623=>"Disbursed",
+    624=>"Disbursed"
+);
+$sugar_config['prod_renewal_sub_stage'] = array(
+    27=>"Loan Applied",
+    28=>"Loan applied",
+    29=>"Doc pick up completed",
+    30=>"Doc pick up completed",
+    31=>"Doc pick up completed",
+    32=>"Doc pick up completed",
+    33=>"Doc pick up completed",
+    34=>"Doc pick up completed",
+    35=>"Loan sanctioned",
+    36=>"Loan disbursed",
+    63=>"Loan applied",
+    64=>"Doc pick up completed",
+    79=>"Doc pick up completed",
+    80=>"Doc pick up completed",
+    81=>"Doc pick up completed",
+    82=>"Doc pick up completed",
+    86=>"Loan sanctioned",
+    99=>"Loan sanctioned",
+    100=>"Loan sanctioned",
+    105=>"Doc pick up completed",
+    106=>"Doc pick up completed"
+);
+$sugar_config['uat_renewal_sub_stage'] = array(
+    27=>"Loan applied",
+    28=>"Loan applied",
+    29=>"Doc pick up completed",
+    30=>"Doc pick up completed",
+    31=>"Doc pick up completed",
+    32=>"Doc pick up completed",
+    33=>"Doc pick up completed",
+    34=>"Doc pick up completed",
+    35=>"Loan sanctioned",
+    36=>"Loan disbursed",
+    61=>"Loan sanctioned",
+    81=>"Loan sanctioned",
+    82=>"Loan sanctioned",
+    85=>"Doc pick up completed",
+    100=>"Loan applied",
+    101=>"Loan applied",
+    102=>"Doc pick up completed",
+    103=>"Doc pick up completed",
+    107=>"Loan sanctioned"
 );
 /***CONFIGURATOR***/
