@@ -78,7 +78,7 @@ function fetchLastRunDate($function_name){
 }
 
 function fetchUserInfoFromAdrenalin($last_run_date){
-    global $logger,$sugar_config;;
+    global $logger,$sugar_config;
     $logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
     $logger->log('debug', 'fetchUserInfoFromAdrenalin Called....!');
     try {
@@ -104,7 +104,7 @@ function fetchUserInfoFromAdrenalin($last_run_date){
         
         // curl_close($curl);
         
-        $url            = getenv('Adrenalin_Api'). $last_run_date . "?type=json";
+        $url            = $sugar_config['Adrenalin Api']. $last_run_date . "?type=json";
         $headers        = array(
             "cache-control: no-cache",
             "content-type: application/json"
