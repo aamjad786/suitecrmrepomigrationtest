@@ -19,14 +19,19 @@ function MeetingEscalation()
 
 
 	$getOppIdQuery="SELECT 
-						op.id as opp_id
+						op.id AS opp_id
 					FROM
 						opportunities op
 							LEFT JOIN
 						meetings m ON op.id = m.parent_id
+							LEFT JOIN
+						users user ON user.id = op.assigned_user_id
+							LEFT JOIN
+						users_cstm u_cstm ON user.id = u_cstm.id_c
 					WHERE
-						m.parent_id IS NULL AND op.deleted = 0
-						AND  DATE_SUB(now(),INTERVAL '05:30' HOUR_MINUTE)>=ADDDATE(op.date_entered,INTERVAL 24 hour)";
+						(m.parent_id IS NULL AND op.deleted = 0
+							AND u_cstm.designation_c LIKE '%Customer Acquisition%')
+							AND DATE_SUB(NOW(),	INTERVAL '05:30' HOUR_MINUTE) >= ADDDATE(op.date_entered,INTERVAL 24 HOUR)";
 
 
 	$result = $db->query($getOppIdQuery);

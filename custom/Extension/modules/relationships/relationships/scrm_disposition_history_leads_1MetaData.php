@@ -1,5 +1,5 @@
 <?php
-// created: 2021-09-04 15:09:03
+// created: 2021-11-18 05:45:54
 $dictionary["scrm_disposition_history_leads_1"] = array (
   'true_relationship_type' => 'one-to-many',
   'from_studio' => true,
