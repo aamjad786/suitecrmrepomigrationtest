@@ -30,7 +30,7 @@ $hook_array['after_save'][] = Array(12, 'send email CCO suspicious trans', 'cust
 $hook_array['after_save'][] = Array(15, 'count no. of edits for category and subcategory', 'custom/modules/Cases/data_sync.php', 'DataSync', 'edit_count'); //added
 $hook_array['after_save'][] = Array(77, 'updateRelatedMeetingsGeocodeInfo', 'modules/Cases/CasesJjwg_MapsLogicHook.php','CasesJjwg_MapsLogicHook', 'updateRelatedMeetingsGeocodeInfo'); 
 $hook_array['after_save'][] = Array(100, 'Save CS Team updated category and sub category', 'custom/modules/Cases/data_sync.php', 'DataSync', 'tempCategoryStore'); //added
-$hook_array['after_save'][] = Array(103, 'Save the old case type', 'custom/modules/Cases/data_sync.php', 'DataSync', 'caseTypeSave');
+//$hook_array['after_save'][] = Array(103, 'Save the old case type', 'custom/modules/Cases/data_sync.php', 'DataSync', 'caseTypeSave');
 $hook_array['after_save'][] = Array(105, 'Save the case owner', 'custom/modules/Cases/data_sync.php', 'DataSync', 'caseOwnerSave');
 //$hook_array['after_save'][] = Array(130, 'SNS function to call email tagging lambda', 'custom/modules/Cases/EmailAutomation.php', 'EmailAutomation', 'call_sns'); //added
 
