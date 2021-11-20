@@ -164,6 +164,17 @@ class UsersViewDetail extends ViewDetail {
     }
 
     function display() {
+        echo $js = <<<onload
+		
+		<script>
+        $(document).ready(function() {
+		
+        $("#tab-actions").hide();
+        });
+        
+        </script>
+
+onload;
         global $current_user;
         if(!$current_user->is_admin)
         {
