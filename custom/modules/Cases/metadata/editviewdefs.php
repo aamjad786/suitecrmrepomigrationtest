@@ -214,10 +214,12 @@ array (
           ),
           1 => 
           array (
-            'name' => 'reassigned_user_id_c',
+            'name' => 'reassigned_user_id',
             'studio' => 'visible',
             'label' => 'LBL_RE_ASSIGNED_TO_NAME',
           ),
+        
+      
         ),
         12 => 
         array (
