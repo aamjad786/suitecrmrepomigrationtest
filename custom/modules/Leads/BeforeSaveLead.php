@@ -51,10 +51,11 @@ class BeforeSaveLead {
 
 		if (empty($bean->fetched_row) && $result->num_rows > 0) {
 
-			if ($_REQUEST['module'] == 'Import') {
+			
 				$this->logger->log('debug', 'Duplicare Leads Found Marking As Deleted For Mobile No: '.$mobile);
 				$bean->deleted = 1;
-			} 
+				$this->logger->log('debug', 'BeforeSaveLead marked as duplicate');
+		
 		}
 
 		$this->logger->log('debug', 'BeforeSaveLead checkDuplicateLead completed');

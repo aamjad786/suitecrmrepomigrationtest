@@ -1,5 +1,5 @@
 <?php
-// created: 2021-11-01 15:19:02
+// created: 2021-11-19 23:51:19
 $mod_strings = array (
   'LBL_EDITVIEW_PANEL5' => 'Additional details',
   'LBL_EDITVIEW_PANEL6' => 'New Panel 6',
@@ -11,7 +11,7 @@ $mod_strings = array (
   'DATE SENT TO EOS' => 'Date Sent To EOS',
   'DATE UPDATED BY EOS' => 'Date Updated By EOS',
   'EOS DISPOSITION' => 'EOS Disposition',
-  'EOS SUB-DISPOSITION' => 'EOS Sun-Disposition',
+  'EOS SUB-DISPOSITION' => 'EOS Sub-Disposition',
   'EOS OPPORTUNITY STATUS' => 'EOS Opportunity Status',
   'EOS OPPORTUNITY SUB-STATUS' => 'EOS Opportunity Sub-Status',
   'LBL_REMARKS' => 'EOS Remarks',
@@ -29,4 +29,5 @@ $mod_strings = array (
   'LBL_CAMPAIGN_TERM' => 'Campaign Term',
   'LBL_CAMPAIGN_CONTENT' => 'Campaign Content',
   'LBL_DIGITAL' => 'Digital:',
+  'LBL_PRIMARY_ADDRESS_STREET' => 'Business Address',
 );
