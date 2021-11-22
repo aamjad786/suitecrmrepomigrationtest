@@ -1,6 +1,5 @@
 <?php
 require_once 'custom/CustomLogger/CustomLogger.php';
-global $logger;
 $logger = new CustomLogger('updaterenewedAppid');
 require_once('include/entryPoint.php');
 
@@ -445,7 +444,6 @@ class Renewals_functions{
     }
 
     function checkRenewedAppIdsFromAudit($last_run_date){
-        global $logger;
         $logger = new CustomLogger('updaterenewedAppid');
         $logger->log('debug', "<--------------called function checkRenewedAppIdsFromAudit---------------->");
         try{
@@ -613,11 +611,11 @@ class Renewals_functions{
     }
 
     function maxCustomerCount(){
-        global $db, $logger;
+        global $db;
         $logger = new CustomLogger('renewalUserAnalytic');
-        $logger->log('debug', "\n-------------maxCustomerCount::Starts------------\n");
+        $logger->log('debug', "-------------maxCustomerCount::Starts------------");
         global $timedate;
-        $logger->log('debug', "\n"."time - ".$timedate->now());
+        $logger->log('debug', "time - ".$timedate->now());
         $max_count = array();
         $loc_caller_query = " 
             INSERT INTO renewals_user_activity 
@@ -665,15 +663,15 @@ class Renewals_functions{
             $city = $row['city'];
             $role = $row['role'];      
             if(empty($renewal_manager_id) || empty($ticket_size) || empty($role) || empty($city)){
-                $logger->log('debug', "\n"."Missing important details. Skipping activity update for manager $renewal_manager_id");
-                $logger->log('debug', "\n"."Manager ticket_size :: $ticket_size, city :: $city, role :: $role");
+                $logger->log('debug', "Missing important details. Skipping activity update for manager $renewal_manager_id");
+                $logger->log('debug', "Manager ticket_size :: $ticket_size, city :: $city, role :: $role");
             }     
-            $logger->log('debug', "\n"."Manager ticket_size :: $ticket_size, city :: $city, role :: $role");
+            $logger->log('debug', "Manager ticket_size :: $ticket_size, city :: $city, role :: $role");
             // echo("Manager ticket_size :: $ticket_size, city :: $city, role :: $role<br>");
             $where_query = "";
             $manager_query = "";
             $where_query = 'AND ' . $this->getQueryManager($city,$ticket_size,1);
-            $logger->log('debug', "\n"."Manager where query :: $where_query"); 
+            $logger->log('debug', "Manager where query :: $where_query"); 
             $manager_query = "
                 INSERT INTO renewals_user_activity 
                 (id,user_id,date_created, activity_key, activity_value)
