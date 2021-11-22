@@ -175,7 +175,7 @@
             {if $USE_GROUP_TABS}
                 <ul class="nav navbar-nav">
                     <li class="navbar-brand-container">
-                            <a class="navbar-brand with-home-icon suitepicon suitepicon-action-home" href="index.php?module=Home&action=index"></a>
+                            <a class="navbar-brand with-home-icon suitepicon suitepicon-action-home" href="index.php?module=Home&action=index"> NeoGrowth Credit Pvt.Ltd.</a>
                     </li>
                     {assign var="groupSelected" value=false}
                     {foreach from=$moduleTopMenu item=module key=name name=moduleList}
