@@ -613,11 +613,11 @@ class Renewals_functions{
     }
 
     function maxCustomerCount(){
-        global $db;
-        $myfile = fopen("Logs/renewalUserAnalytics.log", "a");
-        fwrite($this->log, "\n-------------maxCustomerCount::Starts------------\n");
+        global $db, $logger;
+        $logger = new CustomLogger('renewalUserAnalytic');
+        $logger->log('debug', "\n-------------maxCustomerCount::Starts------------\n");
         global $timedate;
-        fwrite($this->log, "\n"."time - ".$timedate->now());
+        $logger->log('debug', "\n"."time - ".$timedate->now());
         $max_count = array();
         $loc_caller_query = " 
             INSERT INTO renewals_user_activity 
@@ -665,15 +665,15 @@ class Renewals_functions{
             $city = $row['city'];
             $role = $row['role'];      
             if(empty($renewal_manager_id) || empty($ticket_size) || empty($role) || empty($city)){
-                fwrite($this->log, "\n"."Missing important details. Skipping activity update for manager $renewal_manager_id");
-                fwrite($this->log, "\n"."Manager ticket_size :: $ticket_size, city :: $city, role :: $role");
+                $logger->log('debug', "\n"."Missing important details. Skipping activity update for manager $renewal_manager_id");
+                $logger->log('debug', "\n"."Manager ticket_size :: $ticket_size, city :: $city, role :: $role");
             }     
-            fwrite($this->log, "\n"."Manager ticket_size :: $ticket_size, city :: $city, role :: $role");
+            $logger->log('debug', "\n"."Manager ticket_size :: $ticket_size, city :: $city, role :: $role");
             // echo("Manager ticket_size :: $ticket_size, city :: $city, role :: $role<br>");
             $where_query = "";
             $manager_query = "";
             $where_query = 'AND ' . $this->getQueryManager($city,$ticket_size,1);
-            fwrite($this->log, "\n"."Manager where query :: $where_query"); 
+            $logger->log('debug', "\n"."Manager where query :: $where_query"); 
             $manager_query = "
                 INSERT INTO renewals_user_activity 
                 (id,user_id,date_created, activity_key, activity_value)
