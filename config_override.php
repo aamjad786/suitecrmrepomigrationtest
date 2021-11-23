@@ -30,7 +30,7 @@ $sugar_config['AS_CRM_Domain'] = 'crm.advancesuite.in';
 $sugar_config['prod_case_link'] = 'https://crm.advancesuite.in/SuiteCRM/index.php?module=Cases&action=DetailView&record=';
 $sugar_config['uat_case_link'] = 'https://localhost/index.php?module=Cases&action=DetailView&record='; // 'https://uat.advancesuite.in/SuiteCRM/index.php?module=Cases&action=DetailView&record=';
 $sugar_config['dev_case_link'] = 'https://localhost/index.php?module=Cases&action=DetailView&record=';
-    
+$sugar_config['getClosedAsApplications']="http://192.168.11.201:3001/crm/closed_applications?product=neocash&date=";
 
 $sugar_config['ng_khatal_jay'] = 'khataljay@gmail.com';
 
