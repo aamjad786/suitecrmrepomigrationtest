@@ -942,7 +942,7 @@ DISP6;
 			    $('#imageLoading').css('display','block');
 				$("#mail_status").html('');
     			$.ajax({
-	        		url: 'send_merchant_email.php',
+	        		url: 'custom/send_merchant_email.php',
 			        type: 'POST',
 			        data: {
 			        	application_id: $('#app_id').text(),
@@ -987,7 +987,7 @@ DISP6;
 					$('#tr_financial_year').css('visibility','visible');
 				}
 				$.ajax({
-	        		url: 'send_merchant_email.php',
+	        		url: 'custom/send_merchant_email.php',
 			        type: 'POST',
 			        data: {
 			        	document_type: $('input:radio[name="document_type"]:checked').val(),

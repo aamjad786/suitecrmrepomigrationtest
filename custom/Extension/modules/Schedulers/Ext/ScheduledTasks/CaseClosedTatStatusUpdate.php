@@ -18,9 +18,9 @@ function CaseClosedTatStatusUpdate(){
 
         foreach($items as $item){
            
-            $cat = $item->case_subcategory_c;
+            $subcat = $item->case_subcategory_c;
             
-            $tatInDays = CaseTatInDays($item->case_category_c, $cat);
+            $tatInDays = CaseTatInDays($item->case_category_c, $subcat);
 
             if(!empty($tatInDays)){
                 $item->tat_in_days_c = $tatInDays;
