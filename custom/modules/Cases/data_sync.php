@@ -323,6 +323,7 @@ class DataSync{
             global $sugar_config;
             $c = new aCase;
             $c->retrieve($bean->id);
+
             if(empty($bean->fetched_row) && $bean->in_save){
                 // $sub = "Support Case [SR-#$c->case_number] Created for App ID: $bean->merchant_app_id_c ($bean->merchant_name_c) - $bean->case_category_c";
                 require_once('custom/include/SendEmail.php');
@@ -330,6 +331,7 @@ class DataSync{
                 $templ_array = $this->getEmailTemplate($c, 'Case Creation Template Duplicate');
                 $desc = $templ_array['body'];
                 $sub = $templ_array['subject'];
+                
                 if(empty($bean->merchant_app_id_c) || $bean->merchant_app_id_c=="N/A")
                 {
                     $sub=$sub.": SR #$bean->case_number";
