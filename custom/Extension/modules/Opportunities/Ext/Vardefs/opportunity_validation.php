@@ -2,11 +2,11 @@
 $dictionary['Opportunity']['fields']['name']['validation']= array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        console.log("fron src/custom/Extension/modules/Opportunities/Ext/Vardefs/opportunity_validation.php.php added");
+        
         var regEx=/^\d*[a-zA-Z][a-zA-Z \d]*$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
-            add_error_style(formname, nameIndex, "Scheme Should Not Contain Any Special Character!");
+            add_error_style(formname, nameIndex, "Name Should Not Contain Any Special Character Or Space at the start!");
             return false;
         };
         return true;

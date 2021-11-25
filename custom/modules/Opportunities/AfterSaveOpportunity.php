@@ -12,7 +12,12 @@ require_once('include/SugarQueue/SugarJobQueue.php');
 require_once('modules/AOW_WorkFlow/aow_utils.php');
 class AfterSaveOpportunity {
 
-    static $alreadyRan=false;
+    static $assignOpportunityAlreadyRan=false;
+    static $sendSmsToCustomerBasedOnOppStatusAlreadyRan=false;
+    static $assignmentEmailToCAMAlreadyRan=false;
+    static $assignmentSmsToCustomerAlreadyRan=false;
+    
+
 
     function __construct() {
 		$this->logger =new CustomLogger('AfterSaveOpportunity');
@@ -21,12 +26,13 @@ class AfterSaveOpportunity {
     public function assignOpportunity(&$bean, $event, $args) {
         
         $this->logger->log('debug', '<============ AssignOpportunity Logic hook called ===========>');
+        $this->logger->log('debug', 'Opp ID: '.$bean->id);
 
         // Skipping Logic Hooks While Using Bean Inside Logic Hook
         // Reference Link: https://www.sugaroutfitters.com/blog/prevent-a-logic-hook-from-running-multiple-times
-        $this->logger->log('debug', 'AlreadyRan Value: '.self::$alreadyRan);
-        if(self::$alreadyRan == true) return;
-        self::$alreadyRan = true;
+        $this->logger->log('debug', 'assignOpportunityAlreadyRan Value: '.self::$assignOpportunityAlreadyRan);
+        if(self::$assignOpportunityAlreadyRan == true) return;
+        self::$assignOpportunityAlreadyRan = true;
 
         // Assignment Conditions
         global $db,$current_user;
@@ -142,9 +148,9 @@ class AfterSaveOpportunity {
         $this->logger->log('debug', '<============= SendSmsToCustomerBasedOnOppStatus Logic Hook START! =================>');
 
         // Skipping Logic Hooks While Using Bean Inside Logic Hook
-        $this->logger->log('debug', 'AlreadyRan Value: '.self::$alreadyRan);
-        if(self::$alreadyRan == true) return;
-        self::$alreadyRan = true;
+        $this->logger->log('debug', 'sendSmsToCustomerBasedOnOppStatusAlreadyRan Value: '.self::$sendSmsToCustomerBasedOnOppStatusAlreadyRan);
+        if(self::$sendSmsToCustomerBasedOnOppStatusAlreadyRan == true) return;
+        self::$sendSmsToCustomerBasedOnOppStatusAlreadyRan = true;
 
         $oppStatus = isset($bean->opportunity_status_c) ? $bean->opportunity_status_c : "";
         $userId   = $bean->assigned_user_id;
@@ -211,19 +217,20 @@ class AfterSaveOpportunity {
         $this->logger->log('debug', '<============= AssignmentEmailToCAM Logic Hook START! =================>');
 
         // Skipping Logic Hooks While Using Bean Inside Logic Hook
-        $this->logger->log('debug', 'AlreadyRan Value: '.self::$alreadyRan);
-        if(self::$alreadyRan == true) return;
-        self::$alreadyRan = true;
+        $this->logger->log('debug', 'assignmentEmailToCAMAlreadyRan Value: '.self::$assignmentEmailToCAMAlreadyRan);
+        if(self::$assignmentEmailToCAMAlreadyRan == true) return;
+        self::$assignmentEmailToCAMAlreadyRan = true;
         
         $userBean = BeanFactory::getBean('Users', $bean->assigned_user_id);
         $email = new SendEmail();
-
+        // $this->logger->log('debug', 'Assigned user bean data: '.var_export($userBean,true));
         ($bean->control_program_c == "NeoCash Insta") ? $type = " NeoCash Insta" : $type = "";
-        
         $custMobileNo = $bean->pickup_appointment_contact_c;
         $customerName = $bean->name;
-
-        $to = array($userBean->email1);
+        
+        (!empty($userBean->email1)) ? $to = array($userBean->email1) : $to = array();
+        $this->logger->log('debug', 'To Array: '.var_export($to,true));
+        
         $cc = array();
 
         $subject = "New$type Opportunity Assigned - $custMobileNo (Do not reply)";
@@ -249,9 +256,9 @@ class AfterSaveOpportunity {
         $this->logger->log('debug', '<============= assignmentSmsToCustomer Logic Hook START! =================>');
 
         // Skipping Logic Hooks While Using Bean Inside Logic Hook
-        $this->logger->log('debug', 'AlreadyRan Value: '.self::$alreadyRan);
-        if(self::$alreadyRan == true) return;
-        self::$alreadyRan = true;
+        $this->logger->log('debug', 'assignmentSmsToCustomerAlreadyRan Value: '.self::$assignmentSmsToCustomerAlreadyRan);
+        if(self::$assignmentSmsToCustomerAlreadyRan == true) return;
+        self::$assignmentSmsToCustomerAlreadyRan = true;
 
 
         $userId = $bean->assigned_user_id;
@@ -263,7 +270,10 @@ class AfterSaveOpportunity {
 
         $isAssignedUserIsCAM = preg_match("/Customer Acquisition/i", $userBean->designation_c);
         $isAssignmentChanged = !empty($bean->assigned_user_id) && strcmp($newAssignedUser, $oldAssignedUser) != 0;
-
+        
+        $this->logger->log('debug', '$isAssignedUserIsCAM: '.$isAssignedUserIsCAM);
+        $this->logger->log('debug', '$isAssignmentChanged: '.$isAssignmentChanged);
+        
         if ($isAssignedUserIsCAM && $isAssignmentChanged) {
 
             $assignedUserBean = BeanFactory::getBean('Users', $bean->assigned_user_id);

@@ -29,7 +29,10 @@ class AfterSaveLead
 			$this->logger->log('debug', 'Auto Converting Lead For Mobile No: '.$bean->phone_mobile);
 			$this->logger->log('debug', 'Lead ID: '.$bean->id);
 
-			$opportunityBean = $this->convertToOpportunity($bean);
+			$carryAssignUser = trim($bean->lead_source) == 'Self Generated' ? true : false;
+			$this->logger->log('debug', 'carryAssignUser : '.$carryAssignUser);
+
+			$opportunityBean = $this->convertToOpportunity($bean,$carryAssignUser);
 			
 			$accountBean=$this->createAccountForOpp($bean);
 
@@ -59,7 +62,7 @@ class AfterSaveLead
 
 	}
 
-	public function convertToOpportunity($bean) {
+	public function convertToOpportunity($bean,$carryAssignUser) {
 
 		$phone_mobile = $bean->phone_mobile;
 		$loan_amount_c = isset($bean->loan_amount_c) ? $bean->loan_amount_c : "";
@@ -131,8 +134,10 @@ class AfterSaveLead
 		}
 
 		// User Assignment
-		$opportunity_bean->assigned_user_id = $this->first_val_if_present($bean->user_id_c, $bean->assigned_user_id);
-		$opportunity_bean->user_id_c = $bean->assigned_user_id;
+		if($carryAssignUser){
+			$opportunity_bean->assigned_user_id = $this->first_val_if_present($bean->user_id_c, $bean->assigned_user_id);
+			$opportunity_bean->user_id_c = $bean->assigned_user_id;
+		}
 		
 		// EOS Fields
 		$opportunity_bean->date_updated_by_eos_c=$bean->date_updated_by_eos_c;
