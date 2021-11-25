@@ -559,7 +559,7 @@ class CallBackFlow {
 			// print_r($assigned_user_id); echo "<br>";
 			$this->logger->log('debug', "row assigned_user id : " . $row['assigned_user_id']);
 			$bean = BeanFactory::getBean('Cases');
-			$query = "cases.deleted=0 and cases.state!='Closed' and cases.is_call_back_c = 1 and cases.assigned_user_id = '$assigned_user_id'";
+			$query = "cases.deleted=0 and cases.state!='Closed' and cases_cstm.is_call_back_c = 1 and cases.assigned_user_id = '$assigned_user_id'";
 			$case_bean_list = $bean->get_full_list('',$query);
 	        $this->logger->log('debug', "assigned_user id : " . $assigned_user->id);
 	        if(!empty($assigned_user->id)){

@@ -7,7 +7,7 @@ class DataSync{
      * the method that we'll want to call in the logic_hooks.php file.
      */
     public function __construct() {
-		$this->logger = new CustomLogger('casesLogicHooks-'.date('Y-M-d'));
+		$this->logger = new CustomLogger('cases/casesLogicHooks-'.date('Y-M-d'));
 	}
     function CheckUpdatedFields($bean, $event, $arguments){
         $this->logger->log('debug', "---Inside data sync CheckUpdatedFields for case $bean->id---");
@@ -69,6 +69,7 @@ class DataSync{
             }
             // $this->logger->log('debug', "end attended_by_c  $attended_by_c");
         }
+        
         //$bean->call_sns();
         $this->logger->log('debug', "---END data sync CheckUpdatedFields for case $bean->id---");
     }
@@ -330,6 +331,7 @@ class DataSync{
                 $templ_array = $this->getEmailTemplate($c, 'Case Creation Template Duplicate');
                 $desc = $templ_array['body'];
                 $sub = $templ_array['subject'];
+                
                 if(empty($bean->merchant_app_id_c) || $bean->merchant_app_id_c=="N/A")
                 {
                     $sub=$sub.": SR #$bean->case_number";
@@ -820,10 +822,8 @@ class DataSync{
    }
 
     public function getdetail($a,$subcat) {
-        foreach($a as $key => $i)
-        {
-            if(array_search($subcat,$i))
-            {
+        foreach($a as $key => $i) {
+            if(array_search($subcat,$i)) {
                 return $key;
             }
         }
@@ -832,12 +832,10 @@ class DataSync{
 
     public function caseOwnerSave($bean,$event, $arguments){
 
-        global $db,$current_user;
+        global $db;
 
 	    $file=fopen('Logs/caseOwnerLog.log','a');
 
-        $created_by_user = $bean->created_by;
-        
         if(empty($this->checkCaseOwnerIsExist($bean,$event, $arguments)) &&
           !empty($case_owner = $this->CheckIsCsExecutive($bean,$event, $arguments))){
 

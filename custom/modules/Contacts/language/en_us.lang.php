@@ -1,5 +1,5 @@
 <?php
-// created: 2021-09-29 16:37:55
+// created: 2021-11-22 11:46:36
 $mod_strings = array (
   'LBL_PERSONAL_EMAIL' => 'Personal Email',
   'LBL_OFFICIAL_EMAIL' => 'Official Email',
@@ -14,4 +14,6 @@ $mod_strings = array (
   'LBL_HOME_ADDRESS_LINE_2_C' => 'Home Address Line 2',
   'LBL_HOME_ADDRESS_LINE_3_C' => 'Home Address line 3',
   'LBL_WORK_ADDRESS_LINE_1_C' => 'Work Address Line 1',
+  'LBL_MOBILE' => 'Mobile',
+  'LBL_PHONE' => 'Phone',
 );

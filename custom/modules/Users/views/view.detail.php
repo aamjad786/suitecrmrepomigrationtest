@@ -164,6 +164,18 @@ class UsersViewDetail extends ViewDetail {
     }
 
     function display() {
+        echo $js = <<<onload
+		
+		<script>
+        $(document).ready(function() {
+		
+        $("#tab-actions").hide();
+        });
+        
+        </script>
+
+onload;
+       
         if ($this->bean->portal_only == 1 || $this->bean->is_group == 1 ) {
             $this->options['show_subpanels'] = false;
             $this->dv->formName = 'DetailViewGroup';

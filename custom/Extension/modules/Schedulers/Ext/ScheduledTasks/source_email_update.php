@@ -26,7 +26,7 @@
                 
                 $a = $matches[0];
                 
-                $update_case = "update cases_cstm set email_source_c = '".strip_tags($a[0])."' where id = '".$toAddress['parent_id']."'";
+                $update_case = "update cases_cstm set email_source_c = '".strip_tags($a[0])."' where id_c = '".$toAddress['parent_id']."'";
     
                 $logger->log('debug', "***Email tables ***".$update_case);
 
