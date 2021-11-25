@@ -413,4 +413,6 @@ $sugar_config['uat_renewal_sub_stage'] = array(
     103=>"Doc pick up completed",
     107=>"Loan sanctioned"
 );
+$sugar_config['enable_line_editing_detail'] = false;
+$sugar_config['enable_line_editing_list'] = false;
 /***CONFIGURATOR***/
