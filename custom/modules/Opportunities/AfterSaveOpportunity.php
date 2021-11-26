@@ -12,13 +12,6 @@ require_once('include/SugarQueue/SugarJobQueue.php');
 require_once('modules/AOW_WorkFlow/aow_utils.php');
 class AfterSaveOpportunity {
 
-    static $assignOpportunityAlreadyRan=false;
-    static $sendSmsToCustomerBasedOnOppStatusAlreadyRan=false;
-    static $assignmentEmailToCAMAlreadyRan=false;
-    static $assignmentSmsToCustomerAlreadyRan=false;
-    
-
-
     function __construct() {
 		$this->logger =new CustomLogger('AfterSaveOpportunity');
 	}
@@ -27,12 +20,6 @@ class AfterSaveOpportunity {
         
         $this->logger->log('debug', '<============ AssignOpportunity Logic hook called ===========>');
         $this->logger->log('debug', 'Opp ID: '.$bean->id);
-
-        // Skipping Logic Hooks While Using Bean Inside Logic Hook
-        // Reference Link: https://www.sugaroutfitters.com/blog/prevent-a-logic-hook-from-running-multiple-times
-        $this->logger->log('debug', 'assignOpportunityAlreadyRan Value: '.self::$assignOpportunityAlreadyRan);
-        if(self::$assignOpportunityAlreadyRan == true) return;
-        self::$assignOpportunityAlreadyRan = true;
 
         // Assignment Conditions
         global $db,$current_user;
@@ -134,11 +121,19 @@ class AfterSaveOpportunity {
         $this->logger->log('debug', 'Final Assigned SPOC Id: ' . $assignedUserId);
         
         // Actual Updated On assigned_user_id Filed on Opportunity
-        $oppBean = new Opportunity();
-        $oppBean = $oppBean->retrieve($bean->id);
+        $query = "update opportunities set assigned_user_id='$assignedUserId' where id='$bean->id'";
+        $db->query($query);
 
-        $oppBean->assigned_user_id = $assignedUserId;
-        $oppBean->save();
+        $auditid=create_guid();
+
+        $datetime=date("Y-m-d H:i:s");
+        $timestamp=strtotime($datetime);
+        $timestamp = $timestamp - (5*60*60+30*60);//subtract 5h 30min from current time;
+        $timestamp = date("Y-m-d H:i:s", $timestamp);
+
+        $oldAssignedValue=$bean->stored_fetched_row_c['assigned_user_id'];
+        $audit_query ="insert into opportunities_audit values ('$auditid','$bean->id','$timestamp','1','assigned_user_id','relate','$oldAssignedValue','$assignedUserId',null,null)";
+        $db->query($audit_query);
 
         $this->logger->log('debug', '<============= AssignOpportunity Logic Hook END! =================>');
     }
@@ -146,11 +141,6 @@ class AfterSaveOpportunity {
     public function sendSmsToCustomerBasedOnOppStatus(&$bean, $event, $args) {
         
         $this->logger->log('debug', '<============= SendSmsToCustomerBasedOnOppStatus Logic Hook START! =================>');
-
-        // Skipping Logic Hooks While Using Bean Inside Logic Hook
-        $this->logger->log('debug', 'sendSmsToCustomerBasedOnOppStatusAlreadyRan Value: '.self::$sendSmsToCustomerBasedOnOppStatusAlreadyRan);
-        if(self::$sendSmsToCustomerBasedOnOppStatusAlreadyRan == true) return;
-        self::$sendSmsToCustomerBasedOnOppStatusAlreadyRan = true;
 
         $oppStatus = isset($bean->opportunity_status_c) ? $bean->opportunity_status_c : "";
         $userId   = $bean->assigned_user_id;
@@ -215,11 +205,6 @@ class AfterSaveOpportunity {
     public function assignmentEmailToCAM(&$bean, $event, $args) {
 
         $this->logger->log('debug', '<============= AssignmentEmailToCAM Logic Hook START! =================>');
-
-        // Skipping Logic Hooks While Using Bean Inside Logic Hook
-        $this->logger->log('debug', 'assignmentEmailToCAMAlreadyRan Value: '.self::$assignmentEmailToCAMAlreadyRan);
-        if(self::$assignmentEmailToCAMAlreadyRan == true) return;
-        self::$assignmentEmailToCAMAlreadyRan = true;
         
         $userBean = BeanFactory::getBean('Users', $bean->assigned_user_id);
         $email = new SendEmail();
@@ -254,12 +239,6 @@ class AfterSaveOpportunity {
     public function assignmentSmsToCustomer(&$bean, $event, $args) {
 
         $this->logger->log('debug', '<============= assignmentSmsToCustomer Logic Hook START! =================>');
-
-        // Skipping Logic Hooks While Using Bean Inside Logic Hook
-        $this->logger->log('debug', 'assignmentSmsToCustomerAlreadyRan Value: '.self::$assignmentSmsToCustomerAlreadyRan);
-        if(self::$assignmentSmsToCustomerAlreadyRan == true) return;
-        self::$assignmentSmsToCustomerAlreadyRan = true;
-
 
         $userId = $bean->assigned_user_id;
         $userBean = new User();
