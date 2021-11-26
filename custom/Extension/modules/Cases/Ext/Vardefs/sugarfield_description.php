@@ -4,7 +4,7 @@ $dictionary['Case']['fields']['description']['inline_edit']=true;
 $dictionary['Case']['fields']['description']['comments']='Full text of the note';
 $dictionary['Case']['fields']['description']['merge_filter']='disabled';
 $dictionary['Case']['fields']['description']['massupdate']=false;
-$dictionary['Case']['fields']['description']['validation'] = array (
+/*$dictionary['Case']['fields']['description']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
         var regEx=/^[ A-Za-z0-9_.-_-:/&=.<>()|?#,;"%]*$/;
@@ -16,5 +16,5 @@ $dictionary['Case']['fields']['description']['validation'] = array (
         };
         return true;
     }',
-);
+);*/
  ?>

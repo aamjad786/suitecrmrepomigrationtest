@@ -2,7 +2,7 @@
  // created: 2021-08-20 11:22:10
 $dictionary['Case']['fields']['maker_comment_c']['inline_edit']=1;
 $dictionary['Case']['fields']['maker_comment_c']['duplicate_merge_dom_value']=0;
-$dictionary['Case']['fields']['maker_comment_c']['validation'] = array (
+/*$dictionary['Case']['fields']['maker_comment_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
         var regEx=/^[a-zA-Z ]*$/;
@@ -14,5 +14,5 @@ $dictionary['Case']['fields']['maker_comment_c']['validation'] = array (
         };
         return true;
     }',
-);
+);*/
  ?>
