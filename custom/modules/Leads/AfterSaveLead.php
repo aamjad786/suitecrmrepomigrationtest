@@ -16,7 +16,7 @@ class AfterSaveLead
 		
 		$notDeletedAndNew = ($bean->deleted == 0 and empty($bean->opportunity_id));
 
-		$sourceOrDsaMatched = (trim($bean->lead_source) == 'Self Generated' || trim($bean->dsa_code_c) == 'Nine Group');
+		$sourceOrDsaMatched = (trim($bean->lead_source) == 'Self Generated' || trim($bean->dsa_code_c) == 'Nineroot Technologies Private Limited') || trim($bean->dsa_code_c) == 'NINEROOT TECHNOLOGIES PRIVATE LIMITED';
 		$positiveStatusFromEOS = in_array(trim($bean->eos_opportunity_status_c), $positiveEosOppStatusArray);
 
 		$this->logger->log('debug', 'Auto Convertion Conditions=======>');
