@@ -63,16 +63,14 @@ class CustomCaseUpdatesHook
     private function arrangeFilesArray()
     {
         $count = 0;
-        foreach($_FILES['case_update_file'] as $key => $vals){
-            if (array_key_exists('case_update_file', $_FILES)) {
-                foreach($_FILES['case_update_file'] as $key => $vals){
-                    foreach($vals as $index => $val){
-                        if(!array_key_exists('case_update_file'.$index,$_FILES)){
-                            $_FILES['case_update_file'.$index] = array();
-                            $count++;
-                        }
-                        $_FILES['case_update_file'.$index][$key] = $val;
+        if(!empty($_FILES['case_update_file'] )) {
+            foreach ($_FILES['case_update_file'] as $key => $vals) {
+                foreach ($vals as $index => $val) {
+                    if (!array_key_exists('case_update_file' . $index, $_FILES)) {
+                        $_FILES['case_update_file' . $index] = [];
+                        ++$count;
                     }
+                    $_FILES['case_update_file' . $index][$key] = $val;
                 }
             }
         }
@@ -125,8 +123,8 @@ class CustomCaseUpdatesHook
             $case_update->name = substr($text, 0, $this->slug_size) . '...';
         }
         $case_update->description = nl2br($text);
-        $case_update->case_id = $case->id;
         $case_update->is_user_comment_c = true;
+        $case_update->case_id = $case->id;
         $case_update->save();
 
         $fileCount = $this->arrangeFilesArray();

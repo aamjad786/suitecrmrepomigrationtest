@@ -5,7 +5,7 @@
 $hook_array = Array(); 
 // position, file, function 
 $hook_array['after_save'] = Array(); 
-$hook_array['after_save'][] = Array(10, 'Save email case updates', 'modules/AOP_Case_Updates/CaseUpdatesHook.php','CaseUpdatesHook', 'saveEmailUpdate'); 
+$hook_array['after_save'][] = Array(10, 'Save email case updates', 'custom/modules/AOP_Case_Updates/CustomCaseUpdatesHook.php','CaseUpdatesHook', 'saveEmailUpdate'); 
 
 
 
