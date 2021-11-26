@@ -76,7 +76,7 @@ class AfterSaveLead
 		$opportunity_bean = BeanFactory::newBean('Opportunities');
 
 		$opportunity_bean->sales_stage = "Open";
-		$opportunity_bean->name = $bean->salutation . " " . $bean->first_name . " " . $bean->last_name;
+		$opportunity_bean->name = $bean->salutation . "" . $bean->first_name . " " . $bean->last_name;
 		$opportunity_bean->email1 = $bean->email1;
 		$opportunity_bean->leads_description_c = $bean->description;
 		$opportunity_bean->merchant_name_c = $bean->merchant_name_c;
