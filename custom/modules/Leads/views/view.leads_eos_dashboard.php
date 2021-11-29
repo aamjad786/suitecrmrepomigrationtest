@@ -41,10 +41,10 @@ class LeadsViewleads_eos_dashboard extends SugarView {
 		(!empty($_REQUEST['filter_dropdown']) ? $filter = $_REQUEST['filter_dropdown'] : '');
 		(!empty($_REQUEST['sub_filter_dropdown']) ? $subFilter = $_REQUEST['sub_filter_dropdown']  : '');
 
-		echo $fromDate .'<br/>';
-		echo $toDate . '<br/>';
-		echo $filter . '<br/>';
-		echo $subFilter . '<br/>';
+		// echo $fromDate .'<br/>';
+		// echo $toDate . '<br/>';
+		// echo $filter . '<br/>';
+		// echo $subFilter . '<br/>';
 
 echo $html = <<<SEARCHFORM
         
@@ -263,7 +263,7 @@ SEARCHFORM;
 			WHERE
 				date_entered BETWEEN '$fromDate' AND '$toDate'
 					AND deleted = 0";
-	echo $filter;
+	// echo $filter;
 	if(!empty($filter) && !empty($subFilter)){
 
 		$groupColumn='';
@@ -295,7 +295,7 @@ SEARCHFORM;
 	
 	$finalQuery=$query .' '. $groupByClause;
 
-	print_r($finalQuery);
+	// print_r($finalQuery);
 
 	$result = $db->query($finalQuery);
 	
