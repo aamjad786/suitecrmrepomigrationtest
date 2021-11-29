@@ -169,9 +169,9 @@ function formSubmitCheck(){ldelim}if(check_form(\'EditView\')){ldelim}document.E
           ),
           1 => 
           array (
-            'name' => 'visit_location_c',
+            'name' => 'visit_purpose_c',
             'studio' => 'visible',
-            'label' => 'LBL_VISIT_LOCATION',
+            'label' => 'LBL_VISIT_PURPOSE',
           ),
         ),
         4 => 
@@ -182,21 +182,14 @@ function formSubmitCheck(){ldelim}if(check_form(\'EditView\')){ldelim}document.E
             'customCode' => '{include file="modules/Reminders/tpls/reminders.tpl"}',
             'label' => 'LBL_REMINDERS',
           ),
-        ),
-        5 => 
-        array (
-          0 => 
-          array (
-            'name' => 'neo_customers_meetings_1_name',
-          ),
           1 => 
           array (
-            'name' => 'visit_purpose_c',
+            'name' => 'meeting_type_c',
             'studio' => 'visible',
-            'label' => 'LBL_VISIT_PURPOSE',
+            'label' => 'LBL_MEETING_TYPE_C',
           ),
         ),
-        6 => 
+        5 => 
         array (
           0 => 
           array (
@@ -206,9 +199,7 @@ function formSubmitCheck(){ldelim}if(check_form(\'EditView\')){ldelim}document.E
           ),
           1 => 
           array (
-            'name' => 'meeting_type_c',
-            'studio' => 'visible',
-            'label' => 'LBL_MEETING_TYPE_C',
+            'name' => 'neo_customers_meetings_1_name',
           ),
         ),
       ),
