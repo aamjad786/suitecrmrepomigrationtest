@@ -1,11 +1,12 @@
 <?php
-
+require_once 'custom/CustomLogger/CustomLogger.php';
 $job_strings[] = 'UpdateAllSMApplications';
 date_default_timezone_set('Asia/Kolkata');
     
 
 function UpdateAllSMApplications() {
-
+    $logger = new CustomLogger('updatingOnboardingApp');
+    $logger->log('debug', '<======================STARTED==========================>');
     if (!defined('sugarEntry'))
         define('sugarEntry', true);
     require_once('include/entryPoint.php');
@@ -25,7 +26,6 @@ function UpdateAllSMApplications() {
     $min = 0;
     $max = 300;
     $count = 0;
-
     while ($count <= $maxCount) {
         for ($i = $min; $i < $max; $i++) {
             if(!empty($arrayOfAppIds[$i])){
@@ -46,10 +46,11 @@ function UpdateAllSMApplications() {
 }
 
 function updateFromAS($appIDArray) {
+    $logger = new CustomLogger('updatingOnboardingApp');
     global $db;
     if (!empty($appIDArray)) {
 
-        $url = getenv('SCRM_AS_API_BASE_URL') . "/crm/get_disbursed_loans?application_id=[$appIDArray]";
+        $url = "http://192.168.11.56:3001/crm/get_disbursed_loans?application_id=[$appIDArray]";
 
         // $cSession = curl_init();
         $headers = array();
@@ -77,13 +78,16 @@ function updateFromAS($appIDArray) {
         $result         = $curl_req->curl_req($url, 'get', '', $headers, '', '', '', '', false, '', true);
         $result   	    = $result['response'];
         $aHeaderInfo    = $result['header'];
-
+        
+        $logger->log('debug', "curl URL : $url" . $last_run_date . "?type=json");
+        $logger->log('debug', 'onboarding api: ' . var_export($result, true));
         $curlHeaderSize = $aHeaderInfo['header_size'];
-        $sBody = trim(mb_substr($result, $curlHeaderSize));
+       // $sBody = trim(mb_substr($result, $curlHeaderSize));
         $ResponseHeader = explode("\n", trim(mb_substr($result, 0, $curlHeaderSize)));
         unset($ResponseHeader[0]);
         //Parsing response
-        $responseArray = json_decode($sBody, true);
+        $responseArray = json_decode($result, true);
+        $logger->log('debug', 'response array: ' . $responseArray);
         if (!empty($responseArray) && $responseArray['status'] != "failed") {
             foreach ($responseArray as $key => $value) {
                 $data = $value;
@@ -139,7 +143,6 @@ function updateFromAS($appIDArray) {
                     } else {
                         $openingDPDDashGroup = "11 and above";
                     }
-
                     $getAppDataQuery = "SELECT id from smacc_sm_account where app_id = $applicationId";
                     $applicationData = $db->query($getAppDataQuery);
                     while ($row = $db->fetchByAssoc($applicationData)) {
