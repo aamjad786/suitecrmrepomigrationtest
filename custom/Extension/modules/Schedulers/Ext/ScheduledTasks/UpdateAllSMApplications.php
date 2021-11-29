@@ -50,7 +50,7 @@ function updateFromAS($appIDArray) {
     global $db;
     if (!empty($appIDArray)) {
 
-        $url = "http://192.168.11.56:3001/crm/get_disbursed_loans?application_id=[$appIDArray]";
+        $url = $sugar_config['updateAsApplications'] . "application_id=[$appIDArray]";
 
         // $cSession = curl_init();
         $headers = array();
@@ -105,7 +105,7 @@ function updateFromAS($appIDArray) {
                     $fundingDateWithTime = $data['FundedDate'];
                     $processingFees = $data['ProcessingFee'];
                     $gstOnProcessingFee = $data['GSTOnProcessingFee'];
-                    
+                    $rateofinterest = $data['RateOfInterest'];
                     $explodeFundingDate = explode("T", $fundingDateWithTime, 2);
                     $fundingDate = $explodeFundingDate[0];
                     
@@ -163,7 +163,7 @@ function updateFromAS($appIDArray) {
                     $smAccountBean->funded_date = $fundingDateWithTimeFormatted;
                     $smAccountBean->rate_of_interest = $data['Flat'];
                     $smAccountBean->processing_fee = $processingFees+$gstOnProcessingFee;
-
+                    $smAccountBean->applicationId = $applicationId;
                     $smAccountBean->save();
                 }
             }
