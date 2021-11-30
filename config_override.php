@@ -33,7 +33,10 @@ $sugar_config['dev_case_link'] = 'https://localhost/index.php?module=Cases&actio
 $sugar_config['getClosedAsApplications']="http://192.168.11.201:3001/crm/closed_applications?product=neocash&date=";
 $sugar_config['updateAsApplications']="http://192.168.11.201:3001/crm/get_disbursed_loans?";
 $sugar_config['ng_khatal_jay'] = 'khataljay@gmail.com';
-
+$sugar_config['ImportingSMApp1']="http://192.168.11.201:3001/get_application_deal_details?ApplicationID=";
+$sugar_config['ImportingSMApp']="http://192.168.11.201:3001/crm/get_disbursed_loans?";
+$sugar_config['ImportingSMApp2']="http://192.168.11.201:3001/get_control_program?";
+$sugar_config['ImportingSMApp3']="http://192.168.11.201:3001/applications/is_bc_app_id?";
 // Maker checker history permitted users
 $sugar_config['maker_checker_h_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG536","NG2029","NG2064","nucsoft5");
 

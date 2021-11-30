@@ -2,33 +2,21 @@
 
 require_once('custom/include/CurlReq.php');
 require_once 'custom/CustomLogger/CustomLogger.php';
-
-$curl_req = new CurlReq();
+require_once('custom/include/CurlReq.php');
 
 $job_strings[] = 'ImportingSMApplications';
+
 date_default_timezone_set('Asia/Kolkata');
 
 function ImportingSMApplications() {
-
+    global $sugar_config;
     $previousDayDate = date('Y-m-d', strtotime('-1 day'));
-    $url = getenv('SCRM_AS_API_BASE_URL')."/crm/get_disbursed_loans?date=$previousDayDate";
+    $url = $sugar_config['ImportingSMApp'] . "date=$previousDayDate";
 
-    // $cSession = curl_init();
     $headers = array();
     $headers[] = 'Authorization: Basic bmVvZ3Jvd3RoOmNSbUBuZTBnUjB3dGg=';
-    // curl_setopt($cSession, CURLOPT_URL, $url);
-    // curl_setopt($cSession, CURLOPT_HTTPHEADER, $requestHeaders);
-    // curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
-    // curl_setopt($cSession, CURLOPT_VERBOSE, 0);
-    // curl_setopt($cSession, CURLOPT_HEADER, true);
-    // curl_setopt($cSession, CURLOPT_CUSTOMREQUEST, "GET");
-    // curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
-    
-    // $result = curl_exec($cSession);
-    // $httpCode = curl_getinfo($cSession, CURLINFO_HTTP_CODE);
-    // $aHeaderInfo = curl_getinfo($cSession);
+ 
 
-    require_once('custom/include/CurlReq.php');
     $curl_req       = new CurlReq();
 
     $result         = $curl_req->curl_req($url, 'get', '', $headers, '', '', '', '', false, '', true);
@@ -36,7 +24,7 @@ function ImportingSMApplications() {
     $aHeaderInfo    = $result['header'];
 
     $curlHeaderSize = $aHeaderInfo['header_size'];
-    $sBody = trim(mb_substr($result, $curlHeaderSize));
+    //$sBody = trim(substr($result, $curlHeaderSize));
     $ResponseHeader = explode("\n", trim(mb_substr($result, 0, $curlHeaderSize)));
     unset($ResponseHeader[0]);
 
@@ -48,26 +36,41 @@ function ImportingSMApplications() {
     $logger->log('debug', "Result : " . var_export($result, true));
     
     //Parsing response
-    $responseArray = json_decode($sBody, true);
+    $responseArray = json_decode($result, true);
+    $logger->log('debug', "response array------------ =:". json_encode($responseArray));
+    
     if (!empty($responseArray) && $responseArray['status'] != "failed") {
+        
+        $logger->log('debug', "responseArray1 :". $responseArray['Application Id']);
+        
         foreach ($responseArray as $key => $value) {
+        $logger->log('debug', "responseArray :". $responseArray['Application Id']);
             $data = $value;
+            $logger->log('debug', "data :".  var_export($data,true));
+           
+            
+
             if (!empty($data)) {
-                $applicationId = $data['ApplicationID'];
+                $applicationId = $data['Application Id'];
+                $logger->log('debug', "-------application id1-----changed :". $applicationId);
                 global $db;
                 require_once('ApplicationApi.php');
                 $applicationApis = new ApplicationApi();
                 $advance_amount = "";
                 $processingFees = 0;
                 $gstOnProcessingFee = 0;
-                $getApplicationDetailsApi = $applicationApis->getAppData($applicationId, "/get_application_deal_details?ApplicationID=");
+                $getApplicationDetailsApi = $applicationApis->getAppData($applicationId, $sugar_config['ImportingSMApp1']);
                 $json_response = json_decode($getApplicationDetailsApi, true);
+                $logger->log('debug', "-------json response------------ =:". json_encode($json_response ));
                 if(!empty($json_response) && count($json_response)>0){
                     $advance_amount = $json_response[0]['Advance Amount'];
                 }
                 
-                $getCasesQuery = "SELECT * FROM smacc_sm_account where app_id = $applicationId";
+                $getCasesQuery = "SELECT * FROM smacc_sm_account where app_id = $applicationId ";
+                $logger->log('debug', "-------getCasesQuery------------ =:". $getCasesQuery);
                 $response = $db->query($getCasesQuery);
+
+                
                 if ($response->num_rows <= 0) {
                     $merchantname = $data['MerchantName'];
                     $contactNumber = $data['Mobile'];
@@ -91,10 +94,12 @@ function ImportingSMApplications() {
 
                     $explodeFundingDate = explode("T", $fundingDateWithTime, 2);
                     $fundingDate = $explodeFundingDate[0];
-
                     $explodedisbursalDate = explode("T", $disbursalDateWithTime, 2);
+                    
                     $disbursalDate = $explodedisbursalDate[0];
+                    $logger->log('debug', "-------applicationId------------ =:". $applicationId);
                     $diff = date_diff(date_create($disbursalDate), date_create($fundingDate));
+               
                     $gracePeriod = $diff->format("%R%d");
 
                     $derivedDPDDash = $dpdDash - $gracePeriod;
@@ -161,23 +166,9 @@ function ImportingSMApplications() {
                     $smAccountBean->isbalancetransfer = $isBalanceTransfer;
                     $smAccountBean->scheme=$scheme;
                     $smAccountBean->sub_scheme=$subScheme;
-
-    
-                    // $url4 = getenv('SCRM_AS_API_BASE_URL')."/get_merchant_details?ApplicationID=".$applicationId;
-                    // $json_response = json_decode($url4, true);
-				    // if(!empty($json_response) && count($json_response)>0){
-                    //     $applicant_scheme = $json_response[0]['Scheme'];
-                    //     $sub_scheme = $json_response[0]['Sub Scheme'];
-                    //     $first_app_id = $json_response[0]['First Application Id'];
-                    //     $isbalancetranfer = $json_response[0]['Is Balance Transfer'];
-                    // }
-                    // $smAccountBean->scheme=$applicant_scheme;
-                    // $smAccountBean->sub_scheme=$sub_scheme;
-                    // $smAccountBean->isbalancetransfer=$isbalancetranfer;
                         
-
                     # ONBOARDING RESTRUCTURE CONDITION - CSI - 648 
-                    $url2=getenv('SCRM_AS_API_BASE_URL')."/get_control_program?ApplicationID=$applicationId";
+                    $url2=$sugar_config['ImportingSMApp2'] . "ApplicationID=$applicationId";
                     $json_response = json_decode($url2, true);
                     if(!empty($json_response) && count($json_response)>0){
                         $control_program = $json_response[0]['controlProgram'];
@@ -185,7 +176,7 @@ function ImportingSMApplications() {
                     $control_program=strtolower($control_program);
 
                     # Ambit 
-                    $url_ambit=getenv('SCRM_AS_API_BASE_URL')."/applications/is_bc_app_id?application_id=$appid";
+                    $url_ambit=$sugar_config['ImportingSMApp3'] ."application_id=$appid";
                     $json_response = json_decode($url_ambit, true);
                   
                     $is_ambit = 0;
