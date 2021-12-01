@@ -509,8 +509,17 @@ function custompollMonitoredInboxesAOP()
                     } // if
                     $messagesToDelete = array();
                     if ($aopInboundEmailX->isMailBoxTypeCreateCase()) {
-                        require_once 'modules/AOP_Case_Updates/AOPAssignManager.php';
-                        $assignManager = new AOPAssignManager($aopInboundEmailX);
+                        // require_once 'modules/AOP_Case_Updates/AOPAssignManager.php';
+                        // $assignManager = new AOPAssignManager($aopInboundEmailX);
+
+						$users[] = $sugarFolder->assign_to_id;
+                        $distributionMethod = $aopInboundEmailX->get_stored_options("distrib_method", "");
+                        if ($distributionMethod != 'roundRobin') {
+                            $counts = $emailUI->getAssignedEmailsCountForUsers($users);
+                        } else {
+                            $lastRobin = $emailUI->getLastRobin($aopInboundEmailX);
+                        }
+                        $GLOBALS['log']->debug('distribution method id [ ' . $distributionMethod . ' ]');
                     }
                     foreach ($newMsgs as $k => $msgNo) {
                         $uid = $msgNo;
@@ -532,17 +541,46 @@ function custompollMonitoredInboxesAOP()
                                     $messagesToDelete[] = $uid;
                                 }
                                 if ($aopInboundEmailX->isMailBoxTypeCreateCase()) {
-                                    $userId = $assignManager->getNextAssignedUser();
-                                    $validatior = new SuiteValidator();
-                                    if ((!isset($aopInboundEmailX->email) || !$aopInboundEmailX->email ||
-                                        !isset($aopInboundEmailX->email->id) || !$aopInboundEmailX->email->id) &&
-                                        $validatior->isValidId($emailId)
-                                    ) {
-                                        $aopInboundEmailX->email = BeanFactory::newBean('Emails');
-                                        if (!$aopInboundEmailX->email->retrieve($emailId)) {
-                                            throw new Exception('Email retrieving error to handle case create, email id was: ' . $emailId);
+                                    // $userId = $assignManager->getNextAssignedUser();
+                                    // $validatior = new SuiteValidator();
+                                    // if ((!isset($aopInboundEmailX->email) || !$aopInboundEmailX->email ||
+                                    //     !isset($aopInboundEmailX->email->id) || !$aopInboundEmailX->email->id) &&
+                                    //     $validatior->isValidId($emailId)
+                                    // ) {
+                                    //     $aopInboundEmailX->email = BeanFactory::newBean('Emails');
+                                    //     if (!$aopInboundEmailX->email->retrieve($emailId)) {
+                                    //         throw new Exception('Email retrieving error to handle case create, email id was: ' . $emailId);
+                                    //     }
+                                    // }
+									$userId = "";
+                                    if ($distributionMethod == 'roundRobin') {
+                                        if (sizeof($users) == 1) {
+                                            $userId = $users[0];
+                                            $lastRobin = $users[0];
+                                        } else {
+                                            $userIdsKeys = array_flip($users); // now keys are values
+                                            $thisRobinKey = $userIdsKeys[$lastRobin] + 1;
+                                            if (!empty($users[$thisRobinKey])) {
+                                                $userId = $users[$thisRobinKey];
+                                                $lastRobin = $users[$thisRobinKey];
+                                            } else {
+                                                $userId = $users[0];
+                                                $lastRobin = $users[0];
+                                            }
+                                        } // else
+                                    } else {
+                                        if (sizeof($users) == 1) {
+                                            foreach ($users as $k => $value) {
+                                                $userId = $value;
+                                            } // foreach
+                                        } else {
+                                            asort($counts); // lowest to highest
+                                            $countsKeys = array_flip($counts); // keys now the 'count of items'
+                                            $leastBusy = array_shift($countsKeys); // user id of lowest item count
+                                            $userId = $leastBusy;
+                                            $counts[$leastBusy] = $counts[$leastBusy] + 1;
                                         }
-                                    }
+                                    } // else
 									$logger->log('debug', '-->Before handleCreateCase() & userId [ ' . $userId . ' ]');
                                     $aopInboundEmailX->handleCreateCase($aopInboundEmailX->email, $userId);
 									$logger->log('debug', '-->After handleCreateCase()');
