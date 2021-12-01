@@ -453,7 +453,7 @@ function custompollMonitoredInboxesAOP()
 
     require_once('modules/Configurator/Configurator.php');
     $aopInboundEmail = new AOPInboundEmail();
-	
+
 	require_once('modules/Emails/EmailUI.php');
     $emailUI = new EmailUI();
 
@@ -618,6 +618,9 @@ function custompollMonitoredInboxesAOP()
                         $current++;
                     } // foreach
                     // update Inbound Account with last robin
+					if ($aopInboundEmailX->isMailBoxTypeCreateCase() && $distributionMethod == 'roundRobin') {
+                        $emailUI->setLastRobin($aopInboundEmailX, $lastRobin);
+                    } // if
                 } // if
 
                 if (!empty($isGroupFolderExists)) {
