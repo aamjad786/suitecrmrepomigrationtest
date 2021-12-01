@@ -37,6 +37,16 @@ $sugar_config['ImportingSMApp1']="http://192.168.11.201:3001/get_application_dea
 $sugar_config['ImportingSMApp']="http://192.168.11.201:3001/crm/get_disbursed_loans?";
 $sugar_config['ImportingSMApp2']="http://192.168.11.201:3001/get_control_program?";
 $sugar_config['ImportingSMApp3']="http://192.168.11.201:3001/applications/is_bc_app_id?";
+
+$sugar_config['aop'] = array (
+    'distribution_method' => 'roundRobin',
+    'case_closure_email_template_id' => '4d5f4a0b-fcd9-65d2-732b-582081dac1b7',
+    'joomla_account_creation_email_template_id' => '4f6b3dc8-740c-865c-05fd-58208125bc54',
+    'case_creation_email_template_id' => '510c8c5a-c130-9c08-6c30-58208136f377',
+    'contact_email_template_id' => '54da5904-75d2-c334-1b19-582081341395',
+    'user_email_template_id' => '57755f57-5312-9de3-a680-582081f06bbc',
+);
+
 // Maker checker history permitted users
 $sugar_config['maker_checker_h_permitted_user'] = array("NG377", "NG855", "NG950", "NG1007", "NG660", "NG894","NG478","NG866","NG1647","NG536","NG2029","NG2064","nucsoft5");
 
