@@ -453,6 +453,9 @@ function custompollMonitoredInboxesAOP()
 
     require_once('modules/Configurator/Configurator.php');
     $aopInboundEmail = new AOPInboundEmail();
+	
+	require_once('modules/Emails/EmailUI.php');
+    $emailUI = new EmailUI();
 
     $sqlQueryResult = $aopInboundEmail->db->query(
         'SELECT id, name FROM inbound_email WHERE is_personal = 0 AND deleted=0 AND status=\'Active\'' .
