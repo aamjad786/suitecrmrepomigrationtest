@@ -729,10 +729,10 @@ class DataSync{
 
             if(($old_subcategory!=$bean->case_subcategory_c || $old_category!=$bean->case_category_c) && in_array('Customer support executive',$roles)){
                 $count=$bean->category_count_c+1;
-                $this->logger_cat->log('debug', "[ $bean->id ]Old subcat: $old_subcategory  current subcat:$bean->case_subcategory_c \n Old cat: $old_category  current cat:$bean->case_category_c");
                 $query="update cases s join cases_cstm c on s.id=c.id_c set c.category_count_c=$count where id='$bean->id'";
                 $db->query($query);
                 $this->logger_cat = new CustomLogger('cases_category_update');
+                $this->logger_cat->log('debug', "[ $bean->id ]Old subcat: $old_subcategory  current subcat:$bean->case_subcategory_c \n Old cat: $old_category  current cat:$bean->case_category_c");
                 $this->logger->log('debug', "Category count update query : $query");
             }
         }
