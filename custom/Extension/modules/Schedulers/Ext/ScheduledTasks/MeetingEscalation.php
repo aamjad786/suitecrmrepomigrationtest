@@ -14,9 +14,7 @@ function MeetingEscalation()
 	global $db;
 	$email = new SendEmail();
 
-    $body = "Email Body";
-
-
+    $subject = "No Action Taken On Opportunity In The Last 24 Hours";
 
 	$getOppIdQuery="SELECT 
 						op.id AS opp_id
@@ -50,7 +48,15 @@ function MeetingEscalation()
 		$userBean=new User();
 		$assignUserBeanData=$userBean->retrieve($oppBeanData->assigned_user_id);
 
-		$subject = "Meeting Is Not Creating Since 24 Hr. For ".$oppBeanData->pickup_appointment_contact_c;
+		$body ="
+		<pre>Hi,</br>
+        
+			The Opportunity ( $oppBeanData->name -- $oppBeanData->pickup_appointment_contact_c ) has been assigned to CAM ($assignUserBeanData->user_name)
+			and not acted upon in the last 24 hours
+		
+			Thanks,</br>
+			Team NeoGrowth";
+
 
 		// Cluster Manager 
 		$clusterManagerData=$userBean->retrieve($assignUserBeanData->reports_to_id);
