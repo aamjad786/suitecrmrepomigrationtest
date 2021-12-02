@@ -209,7 +209,7 @@ class AOPInboundEmail extends InboundEmail
             }
 
             if($this->isMineField($email->name) || $this->isMineField($c->description) || $this->isMineField($email->to_addrs) || $this->isMineField($email->cc_addrs)) {
-                $this->logger->log('info', "is Minefield");
+                $this->logger->log('info', " $email->name is Minefield");
                 $c->priority = 'P4';
             }
 
@@ -292,7 +292,7 @@ class AOPInboundEmail extends InboundEmail
 
             if ($c->case_source_c == 'merchant') {
                 $this->sendReplyToMerchant($email,$c);
-                $this->logger->log('debug', 'Saved and sent auto-reply email');
+                $this->logger->log('debug', 'Saved and sent auto-reply email'.$c->case_number);
             }
         } 
         else {

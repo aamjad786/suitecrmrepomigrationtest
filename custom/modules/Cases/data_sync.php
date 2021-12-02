@@ -10,7 +10,6 @@ class DataSync{
 		$this->logger = new CustomLogger('cases/casesLogicHooks-'.date('Y-M-d'));
 	}
     function CheckUpdatedFields($bean, $event, $arguments){
-        $this->logger->log('debug', "---Inside data sync CheckUpdatedFields for case $bean->id---");
         if($_REQUEST['module'] != 'Import') {
             
             if(empty($bean->name)){
@@ -71,7 +70,6 @@ class DataSync{
         }
         
         //$bean->call_sns();
-        $this->logger->log('debug', "---END data sync CheckUpdatedFields for case $bean->id---");
     }
 
     function create_case($bean) {
@@ -125,11 +123,9 @@ class DataSync{
             // $bean->attended_by_c = $this->getUserName($bean->assigned_user_id);
             $bean->closed_by_c = $this->getUserName($GLOBALS['current_user']->id);
         }
-        $this->logger->log('debug', "create_case end");
     }
 
     function edit_case($bean) {
-        $this->logger->log('debug', "Editing case $bean->id");
 
         global $current_user, $sugar_config; 
 
@@ -234,11 +230,9 @@ class DataSync{
         }
         $url = (getenv('SCRM_SITE_URL')."/index.php?module=Cases&action=DetailView&record=".$bean->id);
         $this->format_and_send_email_to_user($bean, $sub, $desc, $url, $to_mail_webcallback);
-        $this->logger->log('debug', "edit_case end");
     }
 
     function format_and_send_email_to_user($bean, $sub, $desc, $url, $to_mail_webcallback) {
-        $this->logger->log('debug', "in format_and_send_email_to_user for $bean->id");
 
         if ($desc != ""){
             require_once('custom/include/SendEmail.php');
@@ -277,12 +271,10 @@ class DataSync{
                 }
             }
             $send->send_email_to_user($sub, $desc1, $to, $cc);
-            $this->logger->log('debug', "Description emailed is : $desc1");
         }
     }
     
     function assignDateAction($bean, $event, $arguments){
-        $this->logger->log('debug', "---In assignDateAction for $bean->id ");
 
         $current_date = TimeDate::getInstance()->nowDb();
 
@@ -295,7 +287,7 @@ class DataSync{
         else if($bean->state=='Resolved'){
             $bean->date_attended_c =  $bean->date_modified;
         }
-        $this->logger->log('debug', "---End assignDateAction for $bean->id with state is '$bean->state' and date_attended_c is '$bean->date_attended_c'");
+        $this->logger->log('debug', "---End assignDateAction for $bean->case_number $bean->id with state is '$bean->state' and date_attended_c is '$bean->date_attended_c'");
     }
     
    
@@ -315,11 +307,10 @@ class DataSync{
 
 
     function checkInsertedFields($bean, $event, $arguments){
-        $this->logger->log('debug', "---In checkInsertedFields for $bean->id ");
         if($_REQUEST['module'] != 'Import'){
             if($bean->is_call_back_c == 1){   
                 // CallBackFlow.php. Merchant email is sent from there. 
-                $this->logger->log('debug', "CallBackFlow");
+                $this->logger->log('debug', "[ $bean->case_number ] CallBackFlow");
                 return; 
             }
             global $sugar_config;
@@ -374,7 +365,6 @@ class DataSync{
                 }
             }
         }
-        $this->logger->log('debug', "---End checkInsertedFields for $bean->id ");
     }
 
     public function getTDSRefundEmailContent($bean){
@@ -513,7 +503,6 @@ class DataSync{
     }
 
     function markAlertsAsRead($bean, $event, $arguments){
-        $this->logger->log('debug', "---Start markAlertsAsRead for $bean->id ---");
         // for website call back cases, close the alert when the case is closed
         if(!empty($bean->id) && $bean->is_call_back_c == 1 && $bean->fetched_row['state'] != 'Closed' && $bean->state == 'Closed'){
             $alert_bean = BeanFactory::getBean('Alerts');
@@ -522,36 +511,31 @@ class DataSync{
                 $instanceBean->is_read = 1;
                 $instanceBean->save();
             }
-            $this->logger->log('debug', " closed alerts when the case is closed");
+            $this->logger->log('debug', "[ $bean->case_number ] closed alerts when the case is closed");
         }
-        $this->logger->log('debug', "---End markAlertsAsRead---");
     }
 
     function getPreviousUser($bean, $event, $arguments){
-        $this->logger->log('debug', "--- In getPreviousUser for $bean->id ---");
         $bean->stored_fetched_row_c = $bean->fetched_row;
     }
 
     function resolutioncheck($bean, $event, $arguments){
-        $this->logger->log('debug', "--- In resolutioncheck for $bean->id ---");
         if($bean->state=="Closed"){
             if(empty(trim($bean->resolution))){
-                $this->logger->log('debug', "Resolution comment not present while closing case. Hence, cannot be submitted.");
+                $this->logger->log('debug', "[ $bean->case_number ] Resolution comment not present while closing case. Hence, cannot be submitted.");
                 echo json_encode("Resolution comment not present while closing case. Hence, cannot be submitted.");
 				sugar_die("Resolution comment not present while closing case. Hence, cannot be submitted.");
             }
         }
-        $this->logger->log('debug', "--- ENd resolutioncheck for $bean->id ---");
     }
 
     function classify($bean, $event, $arguments){
-        $this->logger->log('debug', "--- In classify for $bean->id ---");
         global $db;
         if(empty($bean->id)){
             $mailid=$bean->merchant_email_id_c;
             $date = date('Y-m-d', strtotime('-3 day'));
             $q="select count(*) as count from emails e join emails_text et on e.id=et.email_id where from_addr like '%$mailid%' and date_entered>='$date'";
-            $this->logger->log('debug', "Classify check Query: $q ");
+            $this->logger->log('debug', "[ $bean->case_number ] Classify check Query: $q ");
             $result=$db->query($q);
             while (($row = $db->fetchByAssoc($result)) != null) {
                 $count = $row['count'][0];
@@ -559,14 +543,12 @@ class DataSync{
             if ($count>0){
                 $bean->classify_c=1;
                 $bean->bot_comment_c="Skipped classification because customer already mail in last 3 days.";
-                $this->logger->log('debug', "Skipped classification because customer already mail in last 3 days.");
+                $this->logger->log('debug', "[ $bean->case_number ] Skipped classification because customer already mail in last 3 days.");
             }
         }
-        $this->logger->log('debug', "--- END classify for $bean->id with classify_c is '$bean->classify_c' ---");
     }
 
     function checkUnfundedTDScase($bean, $event, $arguments){
-        $this->logger->log('debug', "--- In checkUnfundedTDScase for $bean->id ---");
         require_once('custom/include/CurlReq.php');
         $curl_req = new CurlReq();
         $appid=$bean->merchant_app_id_c;
@@ -579,13 +561,13 @@ class DataSync{
         if ($bean->case_subcategory_c=="financial_live_tds_refund"){
             if($status=="active")
             {
-                $this->logger->log('debug', "--- END 1 checkUnfundedTDScase $status for $bean->id ---");
+                $this->logger->log('debug', "--- END 1 checkUnfundedTDScase $status for [ $bean->case_number ] ---");
                 return;
             }
             else{
                 if($_REQUEST['module'] == 'Import'){
                     $bean->deleted=1;
-                    $this->logger->log('debug', "--- END 2 checkUnfundedTDScase ". $_REQUEST['module']." for $bean->id ---");
+                    $this->logger->log('debug', "--- END 2 checkUnfundedTDScase ". $_REQUEST['module']." for [ $bean->case_number ] ---");
                     return;
                 }
                 //echo $url." --  ".$json_response."  --";
@@ -594,7 +576,7 @@ class DataSync{
             }
         }
         else{
-            $this->logger->log('debug', "--- END 3 checkUnfundedTDScase  for $bean->id ---");
+            $this->logger->log('debug', "--- END 3 checkUnfundedTDScase  for [ $bean->case_number ] ---");
             return;
         }
     }
@@ -605,8 +587,6 @@ class DataSync{
      * 
      */
     function checkAmbit($bean, $event, $arguments){
-        $this->logger->log('debug', "--- In checkAmbit for $bean->id ---");
-
         require_once('custom/include/CurlReq.php');
 
         $curl_req = new CurlReq();
@@ -632,14 +612,12 @@ class DataSync{
             $bean->fi_business_c = 'no';
         }
 
-        $this->logger->log('debug', "--- END checkAmbit for $bean->id and fi_business_c [ $bean->fi_business_c ] ---");
+        $this->logger->log('debug', "--- END checkAmbit for [ $bean->case_number ] and fi_business_c [ $bean->fi_business_c ] ---");
 
         return;
     }
 
     function processorName($bean,$event, $arguments){
-
-        $this->logger->log('debug', "--- In processorName for $bean->id ---");
 
         require_once('custom/include/CurlReq.php');
 
@@ -665,19 +643,18 @@ class DataSync{
                 $bean->processor_name_c = rtrim($bean->processor_name_c, ", ");
             }
         } 
-        $this->logger->log('debug', "--- End processorName for $bean->id and processor_name_c is '$bean->processor_name_c' ---");
+        $this->logger->log('debug', "processorName for [ $bean->case_number ] and processor_name_c is '$bean->processor_name_c' ---");
         return;
     }
 
     function suspicioustrans($bean, $event, $arguments){
         global $timedate, $current_user;
-
-        $this->logger->log('debug', "--- In suspicioustrans $bean->id ---");
         
         $this->logger_susp_mail = new CustomLogger('SuspiciousMail');
         $this->logger_susp_mail->log('info', "---In suspicioustrans $bean->id ---time - ".$timedate->now());
 
         if($bean->case_subcategory_c=="information_suspicious_transaction" and $bean->state!="Closed"){
+            $this->logger->log('debug', "[ $bean->case_number ] suspicioustrans $bean->case_subcategory_c ---");
             $user = BeanFactory::getBean('Users');
             $query = "users.deleted=0 and users.designation='Chief Financial Officer'";
             $old_user = $bean->stored_fetched_row_c['assigned_user_id'];
@@ -685,6 +662,7 @@ class DataSync{
             $items = $user->get_full_list('',$query);
             $id=$items[0]->id;
             if(($bean->assigned_user_id == $id) && strcmp($old_user, $bean->assigned_user_id)!=0) {
+                $this->logger->log('debug', "[ $bean->case_number ] assigned_user_id in suspicioustrans $bean->assigned_user_id ---");
                 $to=$items[0]->email1;
                 $sub= "Consent on Suspicious Transaction Case [SR-#$bean->case_number] App ID: $bean->merchant_app_id_c, $bean->merchant_establisment_c";
                 $desc="<pre>
@@ -717,11 +695,9 @@ class DataSync{
                 $email->send_email_to_user($sub,$desc,$to,array(),$bean);
             }
         }
-        $this->logger->log('debug', "---End suspicioustrans $bean->id ---");
     }
 
     public function edit_count($bean,$event, $arguments){
-        $this->logger->log('debug', "--- In edit_count $bean->id ---");
         if($_REQUEST['module'] != 'Import'){
             global $db,$current_user;
             $old_subcategory=$bean->stored_fetched_row_c['case_subcategory_c'];
@@ -735,16 +711,14 @@ class DataSync{
                 $query="update cases s join cases_cstm c on s.id=c.id_c set c.category_count_c=$count where id='$bean->id'";
                 $db->query($query);
                 $this->logger_cat = new CustomLogger('cases_category_update');
-                $this->logger_cat->log('debug', "[ $bean->id ]Old subcat: $old_subcategory  current subcat:$bean->case_subcategory_c \n Old cat: $old_category  current cat:$bean->case_category_c");
-                $this->logger->log('debug', "Category count update query : $query");
+                $this->logger_cat->log('debug', "[ $bean->case_number ]Old subcat: $old_subcategory  current subcat:$bean->case_subcategory_c \n Old cat: $old_category  current cat:$bean->case_category_c");
+                $this->logger->log('debug', "[ $bean->case_number ] Category count update query : $query");
             }
         }
-        $this->logger->log('debug', "---End edit_count $bean->id ---");
     }
 
 
     public function tempCategoryStore($bean){
-        $this->logger->log('debug', "--- In tempCategoryStore $bean->id ---");
         global $current_user, $db, $sugar_config;
       
         if($bean->case_category_c != $_REQUEST['case_category_c_new_c'] || $bean->case_subcategory_c != $_REQUEST['case_subcategory_c_new_c']){
@@ -800,11 +774,10 @@ class DataSync{
                                             $to,
                                             array(),
                                             $bean);
-                $this->logger->log('debug', "Category changed email sent for case_number '$bean->case_number'");
+                $this->logger->log('debug', "Category changed email sent for[ $bean->case_number ]");
             }
 
         }
-        $this->logger->log('debug', "--- End tempCategoryStore $bean->id ---");
     }
     public function caseTypeSave($bean,$event, $arguments){
         global $sugar_config;
