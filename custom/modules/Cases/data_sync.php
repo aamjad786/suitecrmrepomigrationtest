@@ -834,8 +834,6 @@ class DataSync{
 
         global $db;
 
-	    $file=fopen('Logs/caseOwnerLog.log','a');
-
         if(empty($this->checkCaseOwnerIsExist($bean,$event, $arguments)) &&
           !empty($case_owner = $this->CheckIsCsExecutive($bean,$event, $arguments))){
 
@@ -856,11 +854,13 @@ class DataSync{
         $created_by_user = $bean->created_by;
         
         $query='SELECT au.user_id as user_id FROM acl_roles ar LEFT JOIN acl_roles_users au ON ar.id=au.role_id WHERE ar.name = "Customer support executive Assignment Dynamic" and user_id= "'.$created_by_user.'" and au.deleted=0';
+        $this->loggerCaseOwner->log('debug', "case owner query : $query");
 
         $row = $db->fetchOne($query);
         
         if(!empty($row['user_id'])){
 
+            $this->loggerCaseOwner->log('debug', "case owner = created_by_user : ".$row['user_id']);
             return $this->getUserName($row['user_id']);
 
         } 
@@ -868,6 +868,7 @@ class DataSync{
 	
             if(!empty($bean->assigned_user_id)){
 
+                $this->loggerCaseOwner->log('debug', "case owner = assigned_user_id : $bean->assigned_user_id");
                 return $this->getUserName($bean->assigned_user_id);
 
             }
