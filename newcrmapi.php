@@ -494,11 +494,29 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                     );
                 }else{
                     $logger->log('debug', 'Lead Is Created With Id: '.$id);
+                    
                     $msg = array(
                         'Success' => true,
                         'Message' => 'Lead Created Successfully',
                         'Lead id' => $id,
                     );
+                    
+                    global $db;
+                    $query  = "select opportunity_id as opp_id from leads where deleted = 0 and id = '$id'";
+                    $result = $db->query($query);
+                    $row    = $db->fetchByAssoc($result);
+                    $opp_id = $row['opp_id'];
+
+                    if(!empty($opp_id)){
+
+                        $opp_bean = new Opportunity();
+                        $opp_bean->retrieve($opp_id);
+
+                        $msg['Opportunity id']=$opp_bean->id;
+                                               
+                        $logger->log('debug', 'Lead Is Also Converted to Opportunity With Id: '.$opp_id);
+                    }
+
                 }
             }
 
