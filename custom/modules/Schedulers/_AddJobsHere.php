@@ -517,12 +517,17 @@ function custompollMonitoredInboxesAOP()
 
 						$users[] = $sugarFolder->assign_to_id;
                         $distributionMethod = $aopInboundEmailX->get_stored_options("distrib_method", "");
+
+						$logger->log('debug', 'users : [ ' . var_export($users) . ' ]');
+						$logger->log('debug', 'distribution method id [ ' . $distributionMethod . ' ]');
+
                         if ($distributionMethod != 'roundRobin') {
                             $counts = $emailUI->getAssignedEmailsCountForUsers($users);
+							$logger->log('debug', 'counts : [ ' . var_export($counts) . ' ]');
                         } else {
                             $lastRobin = $emailUI->getLastRobin($aopInboundEmailX);
+							$logger->log('debug', 'lastRobin : [ ' .$lastRobin . ' ]');
                         }
-                        $GLOBALS['log']->debug('distribution method id [ ' . $distributionMethod . ' ]');
                     }
                     foreach ($newMsgs as $k => $msgNo) {
                         $uid = $msgNo;
