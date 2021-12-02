@@ -246,10 +246,12 @@ class DataSync{
             global $sugar_config; 
             $send = new SendEmail();
             $primary_email = $this->getEmailForUser($bean->assigned_user_id);
+            $usr_name = $this->getUserName($bean->assigned_user_id);
 
-            $desc = "Hello ".$primary_email.",<br><br>Following Case changes have happened for Case #[".$bean->case_number."] ".$bean->name.":<br>".$desc;
-            $desc .= "<br/>You may review this Case at:<br/><a href='".$url."'>".$url."</a>";
-            $desc .= "<br/><br/><b>Disclaimer:</b><i>This is an auto generated email, please do not reply.
+            $desc1 = "Hello ".$usr_name.",<br><br>Following Case changes have happened for Case #[".$bean->case_number."] ".$bean->name.":<br>".$desc;
+            $desc1 .= "<br/>You may review this Case at:<br/><a href='".$url."'>".$url."</a>";
+            $desc1 .= "<br/>$desc";
+            $desc1 .= "<br/><br/><b>Disclaimer:</b><i>This is an auto generated email, please do not reply.
             All replies will automatically bounce. Kindly review the case and update your remarks in CRM update text box and assign it back to the user.</i><br/><br/>";
             $to = explode(";",$bean->email_to_c);
             foreach($to as $key=>$each_email){
@@ -274,8 +276,8 @@ class DataSync{
                     unset($cc[$key]);
                 }
             }
-            $send->send_email_to_user($sub, $desc, $to, $cc);
-            $this->logger->log('debug', "Description emailed is : $desc");
+            $send->send_email_to_user($sub, $desc1, $to, $cc);
+            $this->logger->log('debug', "Description emailed is : $desc1");
         }
     }
     
@@ -353,9 +355,10 @@ class DataSync{
                 }
 
                 if(!($c->case_source_c=="merchant" && $c->case_sub_source_c=='email') && empty($c->status)){
+                    $primary_email = $this->getEmailForUser($bean->assigned_user_id);
                     $send->send_email_to_user(  $sub,
                                                 $desc,
-                                                array($bean->merchant_email_id_c),
+                                                array($bean->merchant_email_id_c,$primary_email),
                                                 null,
                                                 $bean,
                                                 $sugar_config['helpdesk_email_arr']
@@ -710,7 +713,7 @@ class DataSync{
                 $desc.= "<pre>You may review this Case at:
                     <a href='$url'>$url</a></pre>";
                 $email = new SendEmail();
-                $user = BeanFactory::getBean($bean->assigned_user_id);
+                // $user = BeanFactory::getBean($bean->assigned_user_id);
                 $email->send_email_to_user($sub,$desc,$to,array(),$bean);
             }
         }
