@@ -554,7 +554,7 @@ EOQ1;
 
                             if(value.parent == sub_category_c){ //check the sub_category_c
 
-                                console.log('qrc_ftr_mapping');
+                                // console.log('qrc_ftr_mapping');
                                 console.log(value);
                                 $("#type").val(value.qrc); //select the option element as a string
                                 if(role_type>1)
@@ -688,7 +688,7 @@ EOQ1;
                    validates();
                  });
 
-                 $('#sub_priority_c').change(function(){
+                 $('#case_details_c').change(function(){
                    validates();
 
                  });
