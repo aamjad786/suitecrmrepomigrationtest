@@ -6242,7 +6242,7 @@ class InboundEmail extends SugarBean
 
 		//TODO figure out if the since date is UDT
 		if($storedOptions['only_since']) {// POP3 does not support Unseen flags
-			if (!isset($storedOptions['only_since_last']) && !empty($storedOptions['only_since_last'])) {
+			if (!isset($storedOptions['only_since_last']) && empty($storedOptions['only_since_last'])) {
 				$q = 'SELECT last_run FROM schedulers WHERE job = \'function::custompollMonitoredInboxesAOP\'';
 				$r = $this->db->query($q, true);
 				$a = $this->db->fetchByAssoc($r);
