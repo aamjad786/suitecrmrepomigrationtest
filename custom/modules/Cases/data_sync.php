@@ -829,15 +829,19 @@ class DataSync{
         }
     }
 
-
     public function caseOwnerSave($bean,$event, $arguments){
 
-        global $db;
+        global $db,$current_user;
 
+	    $file=fopen('Logs/caseOwnerLog.log','a');
+
+        $created_by_user = $bean->created_by;
+        
         if(empty($this->checkCaseOwnerIsExist($bean,$event, $arguments)) &&
           !empty($case_owner = $this->CheckIsCsExecutive($bean,$event, $arguments))){
 
             $query = "update cases_cstm set attended_by_c='".$case_owner."' where id_c='".$bean->id."'";
+		    fwrite($file,"\n Inside the update query -  $query\n");
             $db->query($query);
 
         } 
@@ -849,26 +853,30 @@ class DataSync{
 
         global $db;
         
-        $this->loggerCaseOwner = new CustomLogger('caseOwnerLog');
+        $file=fopen('Logs/caseOwnerLog.log','a');
 
         $created_by_user = $bean->created_by;
         
         $query='SELECT au.user_id as user_id FROM acl_roles ar LEFT JOIN acl_roles_users au ON ar.id=au.role_id WHERE ar.name = "Customer support executive Assignment Dynamic" and user_id= "'.$created_by_user.'" and au.deleted=0';
-        $this->loggerCaseOwner->log('debug', "case owner query : $query");
+
+	    fwrite($file,"\n Inside Check Is Cs Executive - case id   $bean->id\n");
+
+        fwrite($file,"\n Inside Check Is Cs Executive -  $query\n");
 
         $row = $db->fetchOne($query);
         
         if(!empty($row['user_id'])){
 
-            $this->loggerCaseOwner->log('debug', "case owner = created_by_user : ".$row['user_id']);
             return $this->getUserName($row['user_id']);
 
-        } 
-        else {
+        } else {
 	
+	        fwrite($file,"\n Else Inside Check Is Cs Executive - case id   $bean->id\n");
+
+            fwrite($file,"\n Else Inside Check Is Cs Executive -  $bean->assigned_user_id\n");
+
             if(!empty($bean->assigned_user_id)){
 
-                $this->loggerCaseOwner->log('debug', "case owner = assigned_user_id : $bean->assigned_user_id");
                 return $this->getUserName($bean->assigned_user_id);
 
             }
@@ -880,17 +888,25 @@ class DataSync{
         
         global $db;
 
-	    $this->loggerCaseOwner = new CustomLogger('caseOwnerLog');
+	    $file=fopen('Logs/caseOwnerLog.log','a');
 
         $query='SELECT attended_by_c from cases_cstm where id_c="'.$bean->id.'"';
 
-	    $this->loggerCaseOwner->log('debug', "Inside check Case Owner Is Exist -  $query");
+	    fwrite($file,"\n Inside check Case Owner Is Exist -  $query\n");
 
         $row = $db->fetchOne($query);
 
-        if(empty($row['attended_by_c'])|| $row['attended_by_c']==1){
-            return '';
-        } else {
+        $check_user_role='SELECT au.user_id as user_id FROM acl_roles ar LEFT JOIN acl_roles_users au ON ar.id=au.role_id WHERE ar.name = "Customer support executive Assignment Dynamic" and user_id LIKE "%'.$row['attended_by_c'].'%" and au.deleted=0';
+        
+        fwrite($file,"\n Inside check Case Owner role -  $check_user_role\n");
+        $user_role = $db->fetchOne($check_user_role);
+
+        if(empty(trim($row['attended_by_c']))|| $row['attended_by_c']=='Administrator' || $row['attended_by_c']=='' || empty($user_role['user_id'])) {
+
+            return NULL;
+
+	    } else {
+
             return $row['attended_by_c'];
         }
     }
