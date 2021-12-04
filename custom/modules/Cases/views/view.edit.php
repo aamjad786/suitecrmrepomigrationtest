@@ -198,12 +198,12 @@ class CasesViewEdit extends ViewEdit {
          if(status == 'P4'){ // check if it matches the condition: if true,
                 // console.log("priority change P4");
                 addToValidate('EditView','sub_priority_c','enum',true,'Escalataion Source');    // mark sub_priority field required
-                $('#sub_priority_label').html('Escalation Source: <font color="red">*</font>'); // with red * sign next to label
+                $("div[data-label='LBL_SUB_PRIORITY']").html('Escalation Source: <font color="red">*</font>'); // with red * sign next to label
             }
             else{
                 // console.log("priority change not P4");
                 removeFromValidate('EditView','sub_priority_c');  // else remove the validtion applied
-                $('#sub_priority_label').html('Escalation Source: '); // and give the normal label back 
+                $("div[data-label='LBL_SUB_PRIORITY']").html('Escalation Source: '); // and give the normal label back 
             }
         }
 </script>
@@ -492,17 +492,17 @@ EOQ1;
 
                     $(document).ready(function(){
 
-                        $('#update_text').closest('td').html('');
+                        $('#update_text').closest('div').html('');
 
-                        $('#update_text_label').closest('td').html('');
+                        $("div[data-label='LBL_UPDATE_TEXT']").closest('div').html('');
 
-                        $('#internal').closest('td').html('');
+                        $('#internal').closest('div').html('');
 
-                        $('#internal_label').closest('td').html('');
+                        $("div[data-label='LBL_INTERNAL']").closest('div').html('');
 
-                        $('#addFileButton').closest('td').html('');
+                        $('#addFileButton').closest('div').html('');
 
-                        $('#case_update_form_label').closest('td').html('');
+                        $("div[data-label='LBL_CASE_UPDATE_FORM']").closest('div').html('');
 
                         var state=document.getElementById('state');
 
@@ -648,7 +648,7 @@ EOQ1;
                         }
                         else{
                             $("#sub_priority_c").hide();
-                            $("#sub_priority_label").hide();
+                            $("div[data-label='LBL_SUB_PRIORITY']").hide();
                             $("#priority option[value='P4']").remove();                           
                         }
                     }         
@@ -1038,7 +1038,8 @@ EOQ1;
                 if(new_case==1 || csteam)
                 {
                 $(document).ready(function(){
-                    $('#maker_comment_label,#maker_comment_c').hide();
+                    $("div[data-label='LBL_MAKERCOMMENT'],#maker_comment_c").hide();
+                    $().hide();
                     var env = "<?php   echo getenv('SCRM_ENVIRONMENT') ?>";
                     var maker;
                     if(env =='prod'){
@@ -1062,7 +1063,7 @@ EOQ1;
                     }
 
                     if(jQuery.inArray(username, maker) != -1) {
-                        $('#maker_comment_label , #maker_comment_c').show();
+                        $("div[data-label='LBL_MAKERCOMMENT'],#maker_comment_c").show();
                         $('#case_subcategory_c').attr('name', 'case_subcategory_c_new_c');
                         $('#case_category_c').attr('name', 'case_category_c_new_c');
                         enable();
@@ -1105,7 +1106,7 @@ EOQ1;
                         var len = $.trim(maker_remark).length;
                         if(len <=1){ 
                             alert('Please enter maker remark!');
-                            $('#maker_comment_label').html('Maker Remark: <font color="red">*</font>'); 
+                            $("div[data-label='LBL_MAKERCOMMENT']").html('Maker Remark: <font color="red">*</font>'); 
                             $('#maker_comment_c').focus();
                             disableSave();
                         }
@@ -1141,7 +1142,7 @@ EOQ1;
                     }
                 });
                 } else{
-                    $('#maker_comment_label,#maker_comment_c').hide();
+                    $("div[data-label='LBL_MAKERCOMMENT'],#maker_comment_c").hide();
                 }
 
                 
