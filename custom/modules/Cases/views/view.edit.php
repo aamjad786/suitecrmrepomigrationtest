@@ -882,6 +882,8 @@ EOQ1;
                 	//console.log('inside 1111 validateCaseDetails');
                   if( ($('#case_details_c > option').length >1) && $('#case_details_c').val()=='' && $("#not_apply_c").is(":checked")==false){
                       $('#case_details_c').addClass('required');
+                      $("div[data-label='LBL_CASE_DETAILS']").html('Case Details: <font color="red">*</font>'); 
+                      $('#case_details_c').focus();
                       console.log("validateCaseDetails failed");
                       return false;
                       
@@ -889,6 +891,7 @@ EOQ1;
                    }else{
                    	console.log("validateCaseDetails passed");
                       $('#case_details_c').removeClass('required');
+                      $("div[data-label='LBL_CASE_DETAILS']").html('Case Details:'); 
                       return true;
                     }
                 }
@@ -1091,7 +1094,7 @@ EOQ1;
                     if(env =='prod'){
                         maker = ['ng478','ng866','ng887', 'ng2029','ng2054'];
                     } else {
-                        maker = ['ng1273','ng1274','nucsoft4','nucsoft1'];
+                        maker = ['ng1273','ng1274','nucsoft4'];
                     }
                     var cat="<?php echo $this->bean->case_category_c?>";
                     var sub_cat="<?php echo $this->bean->case_subcategory_c?>";
@@ -1101,7 +1104,7 @@ EOQ1;
                         change=1;
                     }
                     var username = "<?php echo strtolower($GLOBALS['current_user']->user_name); ?>";
-                    if(jQuery.inArray(username, maker) != -1 && change==1) {
+                    if(jQuery.inArray(username, maker) != -1 && change==1 && new_case) {
                         var maker_remark = $('#maker_comment_c').val();
                         var len = $.trim(maker_remark).length;
                         if(len <=1){ 
