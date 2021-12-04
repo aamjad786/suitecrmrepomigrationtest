@@ -2,6 +2,7 @@
  // created: 2021-08-20 11:22:10
 $dictionary['Case']['fields']['checker_comment_c']['inline_edit']=1;
 $dictionary['Case']['fields']['checker_comment_c']['duplicate_merge_dom_value']=0;
+$dictionary['Case']['fields']['checker_comment_c']['massupdate']=true;
 $dictionary['Case']['fields']['checker_comment_c']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {

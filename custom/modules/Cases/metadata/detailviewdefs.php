@@ -351,6 +351,21 @@ array (
             'customCode' => '{$fields.date_modified.value} {$APP.LBL_BY} {$fields.modified_by_name.value}',
           ),
         ),
+        8 => 
+        array (
+          0 => 
+          array (
+            'name' => 'partner_name',
+            'comment' => 'Partner Name coming from AS',
+            'label' => 'LBL_PARTNER_NAME',
+          ),
+          1 => 
+          array (
+            'name' => 'fi_business',
+            'comment' => 'FI Business Coming from AS',
+            'label' => 'LBL_FI_BUSINESS',
+          ),
+        ),
       ),
       'lbl_detailview_panel2' => 
       array (
