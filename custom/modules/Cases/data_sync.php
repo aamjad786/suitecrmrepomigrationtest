@@ -828,27 +828,23 @@ class DataSync{
     public function CheckIsCsExecutive($bean,$event, $arguments){
 
         global $db;
-        
+        $created_by_user = $bean->created_by;
+
         $file=fopen('Logs/caseOwnerLog.log','a');
 
-        $created_by_user = $bean->created_by;
-        
         $query='SELECT au.user_id as user_id FROM acl_roles ar LEFT JOIN acl_roles_users au ON ar.id=au.role_id WHERE ar.name = "Customer support executive Assignment Dynamic" and user_id= "'.$created_by_user.'" and au.deleted=0';
 
-	    fwrite($file,"\n Inside Check Is Cs Executive - case id   $bean->id\n");
-
+         fwrite($file,"\n Inside Check Is Cs Executive - case id   $bean->id\n");
         fwrite($file,"\n Inside Check Is Cs Executive -  $query\n");
 
         $row = $db->fetchOne($query);
-        
-        if(!empty($row['user_id'])){
 
+        if(!empty($row['user_id'])){
             return $this->getUserName($row['user_id']);
 
         } else {
-	
-	        fwrite($file,"\n Else Inside Check Is Cs Executive - case id   $bean->id\n");
 
+            fwrite($file,"\n Else Inside Check Is Cs Executive - case id   $bean->id\n");
             fwrite($file,"\n Else Inside Check Is Cs Executive -  $bean->assigned_user_id\n");
 
             if(!empty($bean->assigned_user_id)){
@@ -864,26 +860,15 @@ class DataSync{
         
         global $db;
 
-	    $file=fopen('Logs/caseOwnerLog.log','a');
-
         $query='SELECT attended_by_c from cases_cstm where id_c="'.$bean->id.'"';
-
-	    fwrite($file,"\n Inside check Case Owner Is Exist -  $query\n");
 
         $row = $db->fetchOne($query);
 
-        $check_user_role='SELECT au.user_id as user_id FROM acl_roles ar LEFT JOIN acl_roles_users au ON ar.id=au.role_id WHERE ar.name = "Customer support executive Assignment Dynamic" and user_id LIKE "%'.$row['attended_by_c'].'%" and au.deleted=0';
-        
-        fwrite($file,"\n Inside check Case Owner role -  $check_user_role\n");
-        $user_role = $db->fetchOne($check_user_role);
-
-        if(empty(trim($row['attended_by_c']))|| $row['attended_by_c']=='Administrator' || $row['attended_by_c']=='' || empty($user_role['user_id'])) {
-
+        if(empty(trim($row['attended_by_c']))|| $row['attended_by_c']=='Administrator' || $row['attended_by_c']==''){
             return NULL;
-
-	    } else {
-
+        } else {
             return $row['attended_by_c'];
         }
+        
     }
 }
