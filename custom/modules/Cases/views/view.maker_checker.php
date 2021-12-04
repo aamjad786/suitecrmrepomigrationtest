@@ -36,7 +36,7 @@ class CasesViewMaker_checker extends SugarView {
    
 
     function displayForm(){
-        $env = getenv('SCRM_SITE_URL');
+        
         echo $html = <<<HTMLFORM
         <h1 class='text-center'>Maker & Checker Dashboard</h1><br/>
 HTMLFORM;
@@ -166,15 +166,7 @@ HTMLFORM_2;
         </thead>
         <tbody>';
       
-        $env = getenv('SCRM_ENVIRONMENT');
-        if($env =='prod'){
-            $url = $sugar_config['prod_case_link']; 
-        } else if($env =='uat'){
-            $url = $sugar_config['uat_case_link'];
-        } else {
-            $url = $sugar_config['dev_case_link'];
-        }
-
+        $url = getenv('SCRM_SITE_URL')."index.php?module=Cases&action=DetailView&record=";
         $i=1;
        
         while($row = $db->fetchByAssoc($res)){
