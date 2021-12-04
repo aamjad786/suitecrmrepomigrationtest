@@ -676,12 +676,12 @@ EOQ1;
               // validate();
             	function disableSave(){
                     $("input[type=submit]").attr("disabled", "disabled").css("opacity", "0.5");
-                    $('#save_and_continue').attr("disabled", "disabled").css("opacity", "0.5");
+                    $('.saveAndContinue').attr("disabled", "disabled").css("opacity", "0.5");
                 }
 
                 function enableSave(){
                   $('input[type="submit"]').prop("disabled", false).css("opacity", "1");
-                  $('#save_and_continue').prop("disabled", false).css("opacity", "1");
+                  $('.saveAndContinue').prop("disabled", false).css("opacity", "1");
                 }
 
                  $('#state').change(function(){
