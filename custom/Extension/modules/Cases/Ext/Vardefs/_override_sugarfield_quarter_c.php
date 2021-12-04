@@ -10,7 +10,7 @@ $dictionary['Case']['fields']['quarter_c']['validation'] = array (
         var value=$("#" + nameIndex).val();
         //console.log("field value"+value);
         if (regEx.test(value)== false) {
-            add_error_style(formname, nameIndex, "A-Z, a-z and - allowed.");
+            add_error_style(formname, nameIndex, "Special characters and Numbers are not allowed.");
             return false;
         };
         return true;
