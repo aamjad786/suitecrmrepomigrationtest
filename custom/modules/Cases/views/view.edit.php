@@ -756,7 +756,7 @@ EOQ1;
                         if(state == 'Closed' && len <=1){ 
                             alert('Please add Resolution comment before closing a case');
                             $("input[type=submit]").attr("disabled", "disabled").css("opacity", "0.5");
-                            $('#save_and_continue').attr("disabled", "disabled").css("opacity", "0.5");
+                            $('.saveAndContinue').attr("disabled", "disabled").css("opacity", "0.5");
                             return false;
                         
                         }
@@ -769,7 +769,7 @@ EOQ1;
                         if(state == 'Closed' && len <=1){ 
                             //alert('Please add Resolution comment before closing a cases');
                             $("input[type=submit]").attr("disabled", "disabled").css("opacity", "0.5");
-                            $('#save_and_continue').attr("disabled", "disabled").css("opacity", "0.5");
+                            $('.saveAndContinue').attr("disabled", "disabled").css("opacity", "0.5");
                             return false;
                         } else {
                             enableSave();
@@ -1137,7 +1137,7 @@ EOQ1;
 
                         if(len <=1){ 
                             $("input[type=submit]").attr("disabled", "disabled").css("opacity", "0.5");
-                            $('#save_and_continue').attr("disabled", "disabled").css("opacity", "0.5");
+                            $('.saveAndContinue').attr("disabled", "disabled").css("opacity", "0.5");
                             return false;
                         } else {
                             enableSave();
