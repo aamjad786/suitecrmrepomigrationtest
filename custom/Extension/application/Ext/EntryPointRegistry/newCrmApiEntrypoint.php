@@ -1,5 +1,5 @@
 <?php
-$entry_point_registry['crmapi-2.0'] = array (
+$entry_point_registry['crmapi'] = array (
   'file' => 'newcrmapi.php',
   'auth' => false,
 );
