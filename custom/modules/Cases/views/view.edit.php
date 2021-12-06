@@ -1110,6 +1110,7 @@ EOQ1;
                         if(len <=1){ 
                             alert('Please enter maker remark!');
                             $("div[data-label='LBL_MAKERCOMMENT']").html('Maker Remark: <font color="red">*</font>'); 
+                            $('#maker_comment_c').addClass('required');
                             $('#maker_comment_c').focus();
                             disableSave();
                         }
@@ -1140,6 +1141,7 @@ EOQ1;
                             $('.saveAndContinue').attr("disabled", "disabled").css("opacity", "0.5");
                             return false;
                         } else {
+                            $('#maker_comment_c').removeClass('required');
                             enableSave();
                         }
                     }
