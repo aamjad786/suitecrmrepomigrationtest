@@ -1479,7 +1479,7 @@ class InboundEmail extends SugarBean
                 // new email cache values we should deal with
                 $diff = array_diff_assoc($UIDLs, $cacheUIDLs);
                 $diff = $this->pop3_shiftCache($diff, $cacheUIDLs);
-                require_once('custom/modules/Emails/EmailUI.php');
+                require_once('modules/Emails/EmailUI.php');
                 EmailUI::preflightEmailCache("{$this->EmailCachePath}/{$this->id}");
 
                 if (count($diff) > 50) {

@@ -1089,7 +1089,7 @@ class Email extends Basic
                 $replyToAddress = (isset($storedOptions['reply_to_addr']) ? $storedOptions['reply_to_addr'] : "");
                 $replyToName = (isset($storedOptions['reply_to_name']) ? from_html($storedOptions['reply_to_name']) : "");
             } // if
-            $defaults = $current_user->getPreferredEmail();
+            $defaults = $current_user->getSystemDefaultNameAndEmail();
             // Personal Account doesn't have reply To Name and Reply To Address. So add those columns on UI
             // After adding remove below code
 

@@ -2437,6 +2437,62 @@ SE.composeLayout = {
     },
 
     /**
+    * Move email addresses from CC field to BCC field
+   */
+    moveCcToBCC : function (addrType,idx) {
+
+        var ccVal = $.trim($("#addressCC"+idx).val());
+        var BCCVal =$.trim($("#addressBCC"+idx).val());
+        console.log(BCCVal);
+        if (ccVal.length != 0)
+        {
+            // get rid of first comma in BCC field and last comma in TO field
+            // so we don't end up with double commas in BCC field
+            BCCVal = BCCVal.replace(/^,/, '');
+            ccVal = ccVal.replace(/\,$/, '');
+            ccVal = ccVal.replace('helpdesk@neogrowth.in,', '');
+            ccVal = ccVal.replace('Helpdesk <helpdesk@neogrowth.in>,', '');
+            ccVal = ccVal.replace('Helpdesk <helpdesk@neogrowth.in>', '');
+        
+            $("#addressBCC"+idx).val(ccVal +","+BCCVal);
+            $("#addressCC"+idx).val("");     // empty out the to field
+        }
+        // show the BCC field
+        SE.composeLayout.showHiddenAddress('bcc', SE.composeLayout.currentInstanceId);
+    },
+    /**
+     * Add Registered email addresses from To Address
+    */
+    addToEMail : function (addrType,idx) {
+      
+        var urlParams = new URLSearchParams(window.location.search);
+        var toVal = $.trim($("#addressTO"+idx).val());
+        console.log(urlParams);
+        var case_id= urlParams.get('parent_id');
+        $.ajax({
+            url: 'JavascriptAPICall.php?api=getRegisteredEmail&case_id='+case_id+'',
+            success: function (result) {
+                console.log(result);
+                if(result != 'false'){ 
+                    console.log(result);
+                    $("#addressTO"+idx).val(result);
+                    if(toVal !==''){
+                        $("#addressTO"+idx).val(toVal +","+result);
+                        $('#AddToEmailId').hide();
+                    } else {
+                        $("#addressTO"+idx).val(result);
+                        $('#AddToEmailId').hide();
+                    }
+                } else {
+                    alert("App ID Not found");
+                    $('#AddToEmailId').hide();
+
+                }
+            }
+        });
+    },
+
+  /**
     *  Show the hidden cc or bcc fields
     */
     showHiddenAddress: function(addrType,idx){

@@ -115,6 +115,7 @@ SUGAR.email2.templates['compose'] = '<div id="composeLayout{idx}" class="ylayout
 '							<td class="emailUIField" NOWRAP>' +
 '								<div class="ac_autocomplete">' +
 '                                   <span id="move_to_bcc_span{idx}" style="padding-left:9px"><a href="#" onclick="SE.composeLayout.moveCcToBCC(\'move_to_bcc\',\'{idx}\');">{mod_strings.LBL_CC_MOVE_TO_BCC}</a></span><br />'+
+'                                   <span id="move_to_bcc_span{idx}" style="padding-left:9px"><a href="#" onclick="SE.composeLayout.moveCcToBCC(\'move_to_bcc\',\'{idx}\');">{mod_strings.LBL_CC_MOVE_TO_BCC}</a></span><br />'+
 '									&nbsp;&nbsp;<input class="ac_input" type="text" size="96" id="addressCC{idx}" name="addressCC{idx}"   title="{app_strings.LBL_EMAIL_CC}" onkeyup="SE.composeLayout.showAddressDetails(this);">' +
 '									<span class="rolloverEmail"> <a id="MoreaddressCC{idx}" href="#"  style="display: none;">+<span id="DetailaddressCC{idx}">&nbsp;</span></a> </span>' +
 '									<div class="ac_container" id="addressCcAC{idx}"></div>' +
