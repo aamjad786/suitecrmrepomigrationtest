@@ -156,13 +156,7 @@ HTMLFORM_2;
         </thead>
         <tbody>';
       
-        $env = getenv('SCRM_ENVIRONMENT');
-        if($env =='prod'){
-            $url ='https://crm.advancesuite.in/SuiteCRM/index.php?module=Cases&action=DetailView&record='; 
-        } else {
-            $url = 'https://uat.advancesuite.in/SuiteCRM/index.php?module=Cases&action=DetailView&record=';
-        }
-
+        $url = getenv('SCRM_SITE_URL')."index.php?module=Cases&action=DetailView&record=";
         $i=1;
         while($row = $db->fetchByAssoc($res)){
             $url1 =$url.$row['id'];
