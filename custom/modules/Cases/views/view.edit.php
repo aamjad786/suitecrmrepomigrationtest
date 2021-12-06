@@ -1142,7 +1142,6 @@ EOQ1;
                             return false;
                         } else {
                             $('#maker_comment_c').removeClass('required');
-                            enableSave();
                         }
                     }
                 });
