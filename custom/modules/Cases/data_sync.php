@@ -214,7 +214,7 @@ class DataSync{
                             if ($app_host != 'prod') {
                                 // $this->sendEmail($sugar_config['not_prod_user_email'], $sub1, $desc1, null, array('technology@neogrowth.in'));
                                 $send->send_email_to_user($sub1,$desc1, $sugar_config['not_prod_user_email'], null, $bean);
-                                //$this->sendnetcore($sugar_config['not_prod_netcore_number'], $sms, $bean);
+                                $this->sendnetcore($tag_name="Cust_CRM_41",$sugar_config['not_prod_netcore_number'], $sms, $bean);
                             }
                             else{
                                 $send->send_email_to_user($sub1,$desc1,array($bean->merchant_email_id_c), null, $bean, $sugar_config['helpdesk_email_arr']);
@@ -356,11 +356,19 @@ class DataSync{
                                             );
                     $this->logger->log('debug', "Sent mail with sub $sub to $bean->merchant_email_id_c for $bean->id ");
                 }
-                
+                $user_mobile = $this->getUserPhoneMobile($bean->assigned_user_id);
                 if ($app_host == 'prod') {
                     if($bean->is_call_back_c != 1){
                         $this->logger->log('debug', "sent netcore sms in prod for $bean->id ");
                         $this->sendnetcore($tag_name="sendnetcore", $bean->merchant_contact_number_c, $sms, $bean);
+                        $this->sendnetcore($tag_name="sendnetcore", $user_mobile, $sms, $bean);
+                    }
+                }
+                if ($app_host == 'uat') {
+                    if($bean->is_call_back_c != 1){
+                        $this->logger->log('debug', "sent netcore sms in uat for $bean->id ");
+                        $this->sendnetcore($tag_name="sendnetcore", $bean->merchant_contact_number_c, $sms, $bean);
+                        $this->sendnetcore($tag_name="sendnetcore", $user_mobile, $sms, $bean);
                     }
                 }
             }
@@ -405,12 +413,16 @@ class DataSync{
     }
 
     private function getUserName($user_id){
-        $myfile = fopen("Logs/data_sync.log","a");
-        // fwrite($myfile,$user_id);
         $user = BeanFactory::getBean('Users',$user_id);
-        // fwrite($myfile,"\n".$user->first_name." ".$user->last_name."\n");
         if($user)
             return $user->first_name." ".$user->last_name;
+        return "";
+    }
+
+    private function getUserPhoneMobile($user_id){
+        $user = BeanFactory::getBean('Users',$user_id);
+        if($user)
+            return $user->phone_mobile;
         return "";
     }
     private function getUser($user_id){

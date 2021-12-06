@@ -95,7 +95,7 @@ function CasesEscalationMail(){
                 }
                 // echo "new level is ".$level;
                 $name = $user->first_name . ' ' . $user->last_name;
-                $to = array($ccemails[$level], $user->email1); // user email as per level and assigned user
+                $to = array($ccemails[$level], getEmailForUser($user)); // user email as per level and assigned user
                 $to_name = $ccnames[$level] ." and $name";
                 unset($ccemails[$level]);
                 unset($ccnames[$level]);
@@ -265,6 +265,12 @@ function CasesEscalationMail(){
     return true;
 }
 
+function getEmailForUser($user){
+    if($user){
+        return $user->emailAddress->getPrimaryAddress($user);
+    }
+    return "";
+}
 
 function getCCListFromTable($case,$user, $forMobiles = false){
     $logger = new CustomLogger('CasesEscalationMail');

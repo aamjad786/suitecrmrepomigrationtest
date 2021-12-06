@@ -166,6 +166,8 @@ class CallBackFlow {
 														1
 													);
             $to = $case_bean->merchant_contact_number_c;
+			$reponse = $sms->send_sms_to_user($tag_name="Cust_CRM_10", $to, $message, $case_bean);
+			
         } else{
             $email_result = $email->send_email_to_user($sub,$body,array($sugar_config['non_prod_merchant_email']),null,$case_bean,array(),1);
             $to = $sugar_config['not_prod_netcore_number'];
