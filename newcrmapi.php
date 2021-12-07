@@ -480,6 +480,22 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                         }
                     }
 
+                    // Field Mapping with new schema
+
+                    ($k == 'source_type') ? $k='source_type_c': "";
+                    ($k == 'scheme') ? $k='scheme_c': "";
+                    ($k == 'original_app_id') ? $k='original_app_id_c': "";
+                    ($k == 'is_renewal') ? $k='is_renewal_c': "";
+                    ($k == 'stage_drop_off') ? $k='stage_drop_off_c': "";
+                    ($k == 'control_program') ? $k='control_program_c': "";
+                    ($k == 'app_form_link') ? $k='app_form_link_c': "";
+                    ($k == 'gst_registration') ? $k='gst_registration_c': "";
+                    ($k == 'sales_3_month') ? $k='sales_3_month_c': "";
+                    ($k == 'indicative_deal_amount') ? $k='indicative_deal_amount_c': "";
+                    ($k == 'Alliance_Lead_Docs_shared') ? $k='Alliance_Lead_Docs_shared_c': "";
+                    ($k == 'turnover') ? $k='turnover_c': "";
+
+
                     $lead->{$k} = $v;
                 }
 
@@ -494,7 +510,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                     );
                 }else{
                     $logger->log('debug', 'Lead Is Created With Id: '.$id);
-                    
+
                     $msg = array(
                         'Success' => true,
                         'Message' => 'Lead Created Successfully',
@@ -644,7 +660,9 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                     if ($k == 'pickup_appointment_city_c' or $k == 'phone_mobile') {
                         continue;
                     }
-    
+                    
+                    ($k == 'Alliance_Lead_Docs_shared') ? $k='Alliance_Lead_Docs_shared_c': "";
+                    
                     $lead->{$k} = $v;
                 }
 
@@ -724,16 +742,55 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                 $output[] = $row;
             }
             if (!empty($output)) {
-                foreach ($output[0] as $k=>$v)
-                {
+
+                function change_array_key($array,$newkey,$oldkey){
+                    $array[0][$newkey] = $array[0][$oldkey];
+                    unset($array[0][$oldkey]);
+                    return $array;
+                }
+
+                foreach ($output[0] as $k=>$v){
+
                     if ($k=='disposition_c'){
                         $output[0][$k]=$app_list_strings['cstm_disposition_list'][$v];
                     }
-                    else if($k=='sub_disposition_c')
-                    {
+
+                    else if($k=='sub_disposition_c'){
                         $output[0][$k]=$GLOBALS['app_list_strings']['cstm_subdisposition_list'][$v];
                     }
+
+                    // Mapping new to old parameter
+                    ($k == 'utm_adgroup_c') ? $output= change_array_key($output,'utm_adgroup','utm_adgroup_c'):"";
+                    ($k == 'utm_term_c') ? $output= change_array_key($output,'utm_term','utm_term_c'):"";
+                    ($k == 'utm_content_c') ? $output= change_array_key($output,'utm_content','utm_content_c'):"";
+                    ($k == 'original_app_id_c') ? $output= change_array_key($output,'original_app_id','original_app_id_c'):"";
+                    ($k == 'is_renewal_c') ? $output= change_array_key($output,'is_renewal','is_renewal_c'):"";
+                    ($k == 'gst_registration_c') ? $output= change_array_key($output,'gst_registration','gst_registration_c'):"";
+                    ($k == 'product_type_c') ? $output= change_array_key($output,'product_type','product_type_c'):"";
+                    ($k == 'pushed_lead_c') ? $output= change_array_key($output,'pushed_lead','pushed_lead_c'):"";
+                    ($k == 'push_count_c') ? $output= change_array_key($output,'push_count','push_count_c'):"";
+                    ($k == 'bank_account_name_c') ? $output= change_array_key($output,'bank_account_name','bank_account_name_c'):"";
+                    ($k == 'bank_account_type_c') ? $output= change_array_key($output,'bank_account_type','bank_account_type_c'):"";
+                    ($k == 'bank_account_count_c') ? $output= change_array_key($output,'bank_account_count','bank_account_count_c'):"";
+                    ($k == 'accept_online_c') ? $output= change_array_key($output,'accept_online','accept_online_c'):"";
+                    ($k == 'indicative_deal_amount_c') ? $output= change_array_key($output,'indicative_deal_amount','indicative_deal_amount_c'):"";
+                    ($k == 'source_type_c') ? $output= change_array_key($output,'source_type','source_type_c'):"";
+                    ($k == 'turnover_c') ? $output= change_array_key($output,'turnover','turnover_c'):"";
+                    ($k == 'hear_about_us_c') ? $output= change_array_key($output,'hear_about_us','hear_about_us_c'):"";
+                    ($k == 'mention_the_detail_c') ? $output= change_array_key($output,'mention_the_detail','mention_the_detail_c'):"";
+                    ($k == 'scheme_c') ? $output= change_array_key($output,'scheme','scheme_c'):"";
+                    ($k == 'loan_moratorium_c') ? $output= change_array_key($output,'loan_moratorium','loan_moratorium_c'):"";
+                    ($k == 'sales_3_month_c') ? $output= change_array_key($output,'sales_3_month','sales_3_month_c'):"";
+                    ($k == 'has_shop_c') ? $output= change_array_key($output,'has_shop','has_shop_c'):"";
+                    ($k == 'Alliance_Lead_Docs_shared_c') ? $output= change_array_key($output,'Alliance_Lead_Docs_shared','Alliance_Lead_Docs_shared_c'):"";
+                    ($k == 'average_monthly_sales_c') ? $output= change_array_key($output,'average_monthly_sales','average_monthly_sales_c'):"";
+                    ($k == 'control_program_c') ? $output= change_array_key($output,'control_program','control_program_c'):"";
+                    ($k == 'stage_drop_off_c') ? $output= change_array_key($output,'stage_drop_off','stage_drop_off_c'):"";
+                    ($k == 'app_form_link_c') ? $output= change_array_key($output,'app_form_link','app_form_link_c'):"";              
                 }
+                
+                $logger->log('debug', 'Lead Fetch Response =====>'.var_export($output, true));
+
                 $msg = array(
                     'Success' => true,
                     'Message' => 'Leads records',
@@ -858,21 +915,21 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                     if (!empty($rawData->opportunity_stage)) $oppBean->sales_stage = $rawData->opportunity_stage;
                     if (!empty($rawData->amount)) $oppBean->amount = $rawData->amount;
                     if (!empty($rawData->feedback)) $oppBean->pickup_appointment_feedback_c = $rawData->feedback;
-                    if (!empty($rawData->remarks_c)) $oppBean->remarks_c = $rawData->remarks_c;
-                    if (!empty($rawData->source_type_c)) $oppBean->source_type_c = $rawData->source_type_c;
+                    if (!empty($rawData->remarks)) $oppBean->remarks_c = $rawData->remarks;
+                    if (!empty($rawData->source_type)) $oppBean->source_type_c = $rawData->source_type;
                     if (!empty($rawData->loan_amount_sanctioned_c)) $oppBean->loan_amount_sanctioned_c = $rawData->loan_amount_sanctioned_c;
                     if (!empty($rawData->user_id)) $oppBean->assigned_user_id = $rawData->user_id;
                     if (!empty($rawData->pickup_appointment_city_c)) $oppBean->pickup_appointment_city_c = $rawData->pickup_appointment_city_c;
                     if (!empty($rawData->application_id)) $oppBean->application_id_c = $rawData->application_id;
                     if (!empty($rawData->opportunity_status)) $oppBean->opportunity_status_c = $rawData->opportunity_status;
-                    if (!empty($rawData->sub_status_c)) $oppBean->sub_status_c = $rawData->sub_status_c;
+                    if (!empty($rawData->sub_status)) $oppBean->sub_status_c = $rawData->sub_status;
                     if (!empty($rawData->pickup_appointment_date_c)) $oppBean->pickup_appointment_date_c = $rawData->pickup_appointment_date_c;
-                    if (!empty($rawData->control_program_c)) $oppBean->control_program_c = $rawData->control_program_c;
-                    if (!empty($rawData->stage_drop_off_c)) $oppBean->stage_drop_off_c = $rawData->stage_drop_off_c;
-                    if (!empty($rawData->app_form_link_c)) $oppBean->app_form_link_c = $rawData->app_form_link_c;
+                    if (!empty($rawData->control_program)) $oppBean->control_program_c = $rawData->control_program;
+                    if (!empty($rawData->stage_drop_off)) $oppBean->stage_drop_off_c = $rawData->stage_drop_off;
+                    if (!empty($rawData->app_form_link)) $oppBean->app_form_link_c = $rawData->app_form_link;
                     if (!empty($rawData->Address_pin)) $oppBean->pickup_appointment_pincode_c = $rawData->Address_pin;
                     if (!empty($rawData->Address_Street)) $oppBean->pickup_appointment_address_c = $rawData->Address_Street;
-                    if (!empty($rawData->reject_reason_c)) $oppBean->reject_reason_c = $rawData->reject_reason_c;
+                    if (!empty($rawData->reject_reason)) $oppBean->reject_reason_c = $rawData->reject_reason;
                     if (!empty($rawData->is_eligible)) $oppBean->is_eligible_c = $rawData->is_eligible;
                     if (!empty($rawData->alliance_opportunities_status)) $oppBean->alliance_opp_status_c = $rawData->alliance_opportunities_status;
                    
@@ -973,6 +1030,51 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                 $output[] = $row;
             }
             if (!empty($output)) {
+
+                function change_array_key($array,$newkey,$oldkey){
+                    $array[0][$newkey] = $array[0][$oldkey];
+                    unset($array[0][$oldkey]);
+                    return $array;
+                }
+
+                foreach ($output[0] as $k=>$v){
+                    
+                    // Mapping new to old parameter
+                    ($k == 'original_app_id_c') ? $output= change_array_key($output,'original_app_id','original_app_id_c'):"";
+                    ($k == 'is_renewal_c') ? $output= change_array_key($output,'is_renewal','is_renewal_c'):"";
+                    ($k == 'date_funded_c') ? $output= change_array_key($output,'date_funded','date_funded_c'):"";
+                    ($k == 'insurance_c') ? $output= change_array_key($output,'insurance','insurance_c'):"";
+                    ($k == 'APR_c') ? $output= change_array_key($output,'APR','APR_c'):"";
+                    ($k == 'processing_fees_c') ? $output= change_array_key($output,'processing_fees','processing_fees_c'):"";
+                    ($k == 'product_type_c') ? $output= change_array_key($output,'product_type','product_type_c'):"";
+                    ($k == 'sub_status_c') ? $output= change_array_key($output,'sub_status','sub_status_c'):"";
+                    ($k == 'scheme_c') ? $output= change_array_key($output,'scheme','scheme_c'):"";
+                    ($k == 'Alliance_Lead_Docs_shared_c') ? $output= change_array_key($output,'Alliance_Lead_Docs_shared','Alliance_Lead_Docs_shared_c'):"";
+                    ($k == 'sms_count_c') ? $output= change_array_key($output,'sms_count','sms_count_c'):"";
+                    ($k == 'source_type_c') ? $output= change_array_key($output,'source_type','source_type_c'):"";
+                    ($k == 'seller_id_online_platform_c') ? $output= change_array_key($output,'seller_id_online_platform','seller_id_online_platform_c'):"";
+                    ($k == 'seller_partner_rating_online_platform_c') ? $output= change_array_key($output,'seller_partner_rating_online_platform','seller_partner_rating_online_platform_c'):"";
+                    ($k == 'seller_customer_rating_online_platform_c') ? $output= change_array_key($output,'seller_customer_rating_online_platform','seller_customer_rating_online_platform_c'):"";
+                    ($k == 'business_age_in_months_c') ? $output= change_array_key($output,'business_age_in_months','business_age_in_months_c'):"";
+                    ($k == 'settlement_cycle_in_days_c') ? $output= change_array_key($output,'settlement_cycle_in_days','settlement_cycle_in_days_c'):"";
+                    ($k == 'partner_id_c') ? $output= change_array_key($output,'partner_id','partner_id_c'):"";
+                    ($k == 'industry_c') ? $output= change_array_key($output,'industry','industry_c'):"";
+                    ($k == 'sales_3_month_c') ? $output= change_array_key($output,'sales_3_month','sales_3_month_c'):"";
+                    ($k == 'push_count_c') ? $output= change_array_key($output,'push_count','push_count_c'):"";
+                    ($k == 'date_sent_to_EOS_c') ? $output= change_array_key($output,'date_sent_to_EOS','date_sent_to_EOS_c'):"";
+                    ($k == 'date_updated_by_EOS_c') ? $output= change_array_key($output,'date_updated_by_EOS','date_updated_by_EOS_c'):"";
+                    ($k == 'eos_disposition_c') ? $output= change_array_key($output,'eos_disposition','eos_disposition_c'):"";
+                    ($k == 'eos_sub_disposition_c') ? $output= change_array_key($output,'eos_sub_disposition','eos_sub_disposition_c'):"";
+                    ($k == 'control_program_c') ? $output= change_array_key($output,'control_program','control_program_c'):"";
+                    ($k == 'stage_drop_off_c') ? $output= change_array_key($output,'stage_drop_off','stage_drop_off_c'):"";
+                    ($k == 'app_form_link_c') ? $output= change_array_key($output,'app_form_link','app_form_link_c'):"";
+                    ($k == 'reject_reason_c') ? $output= change_array_key($output,'reject_reason','reject_reason_c'):"";
+                    ($k == 'eos_sub_status_c') ? $output= change_array_key($output,'eos_sub_status','eos_sub_status_c'):"";
+                    ($k == 'eos_opportunity_status_c') ? $output= change_array_key($output,'eos_opportunity_status','eos_opportunity_status_c'):"";
+                    ($k == 'sent_count_c') ? $output= change_array_key($output,'sent_count','sent_count_c'):"";
+                    
+                }
+
                 $msg = array(
                     'Success' => true,
                     'Message' => 'My Opportunites list',
