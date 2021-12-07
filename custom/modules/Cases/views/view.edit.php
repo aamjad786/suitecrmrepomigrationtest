@@ -1033,7 +1033,7 @@ EOQ1;
                 <?php $new = empty($this->bean->id)?0:1;
                 $new = empty($this->bean->case_category_c)?0:1;
                 $new = empty($this->bean->case_subcategory_c)?0:1;
-                $new = $this->bean->category_count_c<1?0:1;
+                $new = $this->bean->case_category_counts_c<1?0:1;
                 $csteamcheck=!in_array('Customer support executive',$roles);
                 ?>
                 var new_case="<?php echo $new?>";

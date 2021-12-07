@@ -719,8 +719,8 @@ class DataSync{
             $roles = $groupFocus->getUserRoles($current_user->id);
 
             if(($old_subcategory!=$bean->case_subcategory_c || $old_category!=$bean->case_category_c) && in_array('Customer support executive',$roles)){
-                $count=$bean->category_count_c+1;
-                $query="update cases s join cases_cstm c on s.id=c.id_c set c.category_count_c=$count where id='$bean->id'";
+                $count=$bean->case_category_counts_c+1;
+                $query="update cases_cstm set case_category_counts_c=$count where id_c='$bean->id'";
                 $db->query($query);
                 $this->logger_cat = new CustomLogger('cases_category_update');
                 $this->logger_cat->log('debug', "[ $bean->case_number ]Old subcat: $old_subcategory  current subcat:$bean->case_subcategory_c \n Old cat: $old_category  current cat:$bean->case_category_c");
