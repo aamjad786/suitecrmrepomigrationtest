@@ -29,7 +29,9 @@ $apiModule = array(
     'Opportunity_Status',
     'Neo_Customers',
     "Users",
-    'Paylater_Open'
+    'Paylater_Open',
+    'Dsa_leads',
+    'Check_Duplicate_Lead'
 );
 $apiAction = array(
     'Create',
@@ -803,6 +805,156 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                 );
             }
 
+        }
+    }
+    else if($module == "Dsa_leads" && $action == 'Fetch'){
+        
+        $logger->log('debug', 'Dsa_leads Lead Fetch API Request =====>'.var_export($rawData, true));
+        
+        if(empty($rawData->dsa_code)){
+            $msg = array(
+                'Success' => false,
+                'Message' => 'dsa_code field is missing'
+            );
+        } else {
+            
+            $dsa_code=$rawData->dsa_code;
+    
+            if(!empty($dsa_code)){
+                
+                global $db;
+
+                $query ="SELECT 
+                    l.id AS lead_id,
+                    o.id AS opportunity_id,
+                    l.date_entered,
+                    l.assigned_user_id AS lead_assigned_user,
+                    l.description AS lead_description,
+                    l.first_name AS lead_first_name,
+                    l.last_name AS lead_last_name,
+                    l.title AS lead_title,
+                    l.phone_mobile AS lead_phone_number,
+                    l.primary_address_street AS lead_primary_address_street,
+                    l.primary_address_city AS lead_primary_address_city,
+                    l.lead_source AS lead_lead_source,
+                    lc.source_type_c AS lead_source_type,
+                    lc.dsa_id_c AS lead_dsa_id,
+                    lc.business_type_c AS lead_business_type_c,
+                    lc.disposition_c AS lead_disposition_c,
+                    lc.industry_type_c AS lead_industry_type_c,
+                    lc.loan_amount_c AS lead_loan_amount_c,
+                    lc.merchant_name_c AS lead_merchant_name_c,
+                    lc.merchant_type_c AS lead_merchant_type_c,
+                    lc.sub_source_c AS lead_sub_source_c,
+                    lc.dsa_code_c AS lead_dsa_code_c,
+                    lc.sub_disposition_c AS sub_disposition_c,
+                    lc.customer_id_c AS lead_customer_id_c,
+                    lc.nature_of_business_c AS lead_nature_of_business_c,
+                    o.name AS opportunity_name,
+                    o.description AS opportunity_description,
+                    o.assigned_user_id AS opportunity_assigned_user_id,
+                    o.opportunity_type AS opportunity_type,
+                    o.campaign_id AS opportunity_campaign_id,
+                    o.lead_source AS opportunity_lead_source,
+                    o.amount AS opportunity_amount,
+                    oc.original_app_id_c AS opportunity_original_app_id,
+                    oc.is_renewal_c AS is_renewal,
+                    oc.date_funded_c AS opportunity_id,
+                    insurance_c,
+                    oc.product_type_c AS opportunity_product_type,
+                    oc.source_type_c AS opportunity_source_type,
+                    industry_c,
+                    oc.control_program_c AS opportunity_control_program,
+                    oc.stage_drop_off_c AS stage_drop_off,
+                    oc.app_form_link_c AS app_form_link,
+                    oc.eos_disposition_c,
+                    oc.eos_sub_disposition_c,
+                    reject_reason_c,
+                    is_eligible_c,
+                    oc.loan_amount_c AS loan_amount_c,
+                    pickup_appointment_date_c,
+                    pickup_appointment_address_c,
+                    pickup_appointment_pincode_c,
+                    pickup_appointment_contact_c,
+                    application_id_c,
+                    oc.merchant_name_c AS opportunity_merchant_name_c,
+                    pickup_appointment_city_c,
+                    oc.sub_source_c AS opportunity_sub_source_c,
+                    oc.dsa_code_c AS dsa_code_c,
+                    oc.loan_amount_sanctioned_c AS loan_amount_sanctioned_c,
+                    opportunity_status_c
+                FROM
+                    leads l
+                        JOIN
+                    leads_cstm lc ON l.id = lc.id_c
+                        JOIN
+                    opportunities o ON l.opportunity_id = o.id
+                        JOIN
+                    opportunities_cstm oc ON l.opportunity_id = oc.id_c
+                    
+                    WHERE
+                        lc.dsa_code_c LIKE '%".$dsa_code."%'";
+            
+            
+            $res = $db->query($query);
+            $output=array();
+            
+            $logger->log('debug', 'Dsa_leads Lead Fetch Query: '.$query);
+            $logger->log('debug', 'Dsa_leads Lead Fetch Query: '.var_export($res,true));
+                 while($row = $db->fetchByAssoc($res)){                
+                     $output = $row;
+                     $logger->log('debug', 'Dsa_leads Output inside while: '.$row);
+                }
+
+                $logger->log('debug', 'Dsa_leads Output: '.var_export($output,true));
+
+                if (!empty($output)) {
+                    $msg = array(
+                        'Success' => true,
+                        'Message' => 'My Opportunites list',
+                        'Opportunities' => $output
+                    );
+                }else{
+                    $msg = array(
+                        'Success' => false,
+                        'Message' => 'No such opportunity found'
+                    );
+                } 
+
+                
+            }  
+        }
+    }
+    else if($module == "Check_Duplicate_Lead" && $action == "Fetch"){
+        
+        $logger->log('debug', 'Check_Duplicate_Lead Fetch API Request =====>'.var_export($rawData, true));
+
+        if (validate_mobile(trim($rawData->phone_mobile)) != 1) {
+            $logger->log('error', 'Invalid Mobile Number Present In The Request....!');
+
+            $msg = array(
+                'Success' => false,
+                'Message' => 'Please enter a valid 10 digit Mobile Number.'
+            );
+        }else{
+
+            $lead_id = checkDuplicateLead($rawData->phone_mobile,'');
+
+            if(!empty($lead_id)){
+                $msg = array(
+                      'Success' => false,
+                      'Message'=>"Sorry, we have a record in our database that matches your lead details. Please re-check and create again.",
+                      'Info' => "Lead already exist with similar details id = '$lead_id'",
+                      'lead_id' =>$lead_id
+                  );
+              } else {
+                $msg = array(
+                    'Success' => true,
+                    'Message'=>"we don't have a record in our database.",
+                    'Info' => "Lead not exist with the mobile number",
+                    'mobile_number' =>$rawData->phone_mobile
+                );
+              }
         }
     }
     else if ($module == "Opportunities" && $action == 'Update') {
