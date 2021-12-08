@@ -15,7 +15,7 @@ function PushInstaLeads()
 
 	$DayDate = date('Y-m-d H:i:s', strtotime('-360 minutes'));
 	$lead_list = $bean->get_full_list("", "leads.deleted=0 and 
-										   leads.opportunity_id is null and
+										   (leads.opportunity_id is null or leads.opportunity_id='') and
 										   leads.date_entered>'2021-04-15' and
 										   leads.date_entered<'$DayDate' and 
 										   leads_cstm.control_program_c='NeoCash Insta' and 
