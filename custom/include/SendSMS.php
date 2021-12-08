@@ -62,7 +62,7 @@ class SendSMS {
 			
 			$logger->log('debug', 'SMS Curl Response: '.print_r($output, true));
 			
-			curl_close($ch);
+			//curl_close($ch);
 
 			if (!empty($output)) {
 				

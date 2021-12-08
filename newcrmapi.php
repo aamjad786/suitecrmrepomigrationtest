@@ -29,7 +29,6 @@ $apiModule = array(
     'Opportunity_Status',
     'Neo_Customers',
     "Users",
-    'Paylater_Open'
 );
 $apiAction = array(
     'Create',
@@ -1232,7 +1231,8 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         
         }
     }*/
-    else if ($module == "Cases" && $action == 'Create') {
+    else if ($module == "Cases" && $action == 'Create') { 
+        //financial_year,quarter,digitally_signed,is_call_back,call_back_30_min,
         $logger->log('debug', 'Create Case API Request =====>'.var_export($rawData, true));
         
         $merchant_name_c            = get_var_value($rawData->merchant_name_c);
@@ -1251,14 +1251,14 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         $call_back_start_time_c     = get_var_value($rawData->call_back_start_time_c);
         $call_back_duration_c       = get_var_value($rawData->call_back_duration_c);
         //dont delete or modify this field '$is_call_back_c', based on this in data_sync we are skipping assigned_user_id = null
-        $is_call_back_c             = get_var_value($rawData->is_call_back_c);
-        $call_back_30_min_c         = get_var_value($rawData->call_back_30_min_c);
+        $is_call_back_c             = get_var_value($rawData->is_call_back);
+        $call_back_30_min_c         = get_var_value($rawData->call_back_30_min);
         $custom_case_type           = get_var_value($rawData->custom_case_type);
         $custom_s3_url              = get_var_value($rawData->custom_s3_url);
         $type                       = get_var_value($rawData->type);
-        $financial_year_c           = get_var_value($rawData->financial_year_c);
-        $digitally_signed_c         = get_var_value($rawData->digitally_signed_c);
-        $quarter_c                  = get_var_value($rawData->quarter_c);
+        $financial_year_c           = get_var_value($rawData->financial_year);
+        $digitally_signed_c         = get_var_value($rawData->digitally_signed);
+        $quarter_c                  = get_var_value($rawData->quarter);
         $agent_user_id              = "";
         $recordExits                = FALSE;
 
@@ -1512,7 +1512,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             );
         }
     }
-    else if($module == "Users" && $action == "Create"){
+    /*else if($module == "Users" && $action == "Create"){
         $logger->log('debug', 'Create Users API Request =====>'.var_export($rawData, true));
         try {
             // print_r($rawData->nguid);
@@ -1716,155 +1716,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             'Success' => $success,
             'Message' => $message,
         );
-    } 
-    else if($module == "Paylater_Open" && $action == 'Create') {
-        $logger->log('debug', 'Create Paylater_open API Request =====>'.var_export($rawData, true));
-        $paylaterOpen = new neo_Paylater_Open();
-        $name_value_list = array();
-        $logger->log('debug', "\n".date('Y-m-d h:i:s'));
-        $logger->log('debug', var_export($rawData, true));
-        $productType = "";
-        if(isset($rawData) && !empty($rawData)){
-            foreach ($rawData as $key => $value) {
-                if ($key == "application_id") {
-                    $applicationId = $value;
-                }
-                if ($key == "product") {
-                    $env = getenv('SCRM_ENVIRONMENT');
-                    if (in_array($env, array('prod'))) {
-                        if ($value == 3) {
-                            $productType = "paylater_open";
-                        } else if ($value == 4) {
-                            $productType = "purchase_finance";
-                        }
-                    } else {
-                        if ($value == 2) {
-                            $productType = "paylater_open";
-                        } else if ($value == 4) {
-                            $productType = "purchase_finance";
-                        }
-                    }
-                } else {
-                    $paylaterOpen->{$key} = $value;
-                }
-            }
-            $paylaterOpen->status ='IN_PROGRESS';
-            $paylaterOpen->product = $productType;
-    
-    //        require_once 'modules/Cases/Case.php';
-    //        $objCase = new aCase();
-    //        $userToAssign = $objCase->getUserToAssign();
-    //        $name_value_list[] = array('name'=>'assigned_user_id','value'=>$userToAssign);
-            
-            $logger->log('debug', "Data going to be saved in Neo Paylater Open");
-            $logger->log('debug', var_export($name_value_list, true));  
-                    
-            if(!empty($paylaterOpen)) {
-                $queryToGetPaylaterOpen = "select id from neo_paylater_open where application_id = '$applicationId'";
-                $results = $db->query($queryToGetPaylaterOpen);
-                $numberOfRows = $results->num_rows;
-    
-                if($numberOfRows <= 0){
-                    $id =  $paylaterOpen->save();
-                    if($id){
-                        $msg = array(
-                            'Success' => true,
-                            'Message' => 'Paylater Open application Created Successfully',
-                            'Paylater Open ID' => $id
-                        );
-                    }else{
-                        $msg = array(
-                            'Success' => false,
-                            'Message' => 'Paylater Open application is Not Created',
-                            'Paylater Open ID' => $id
-                        );
-                    } 
-                } else {
-                    $msg = array(
-                        'Success' => false,
-                        'Message' => 'Application ID '.$applicationId.' already exists in CRM',
-                        'Paylater Open ID' => $id
-                    );
-                }
-            } 
-        }
-    } else if($module == "Paylater_Open" && $action == 'Update'){
-        $logger->log('debug', 'Update Paylater_open API Request =====>'.var_export($rawData, true));
-        print_r("INSIDE PAYLATER OPEN");
-        $logger->log('debug', "\n".date('Y-m-d h:i:s'));
-        $logger->log('debug', var_export($rawData, true));
-        foreach($rawData as $key=>$value){
-            $name_value_list[] = array('name'=>$key,'value'=>$value);
-            if($key=='application_number'){
-                $applicationNumber = $value;
-            }
-            if($key=='email'){
-               $email = $value;
-            }
-        }
-        
-        $logger->log('debug', "\n Application $applicationNumber");
-        $logger->log('debug', "\n EMail  $email");
-    
-        if(!empty($applicationNumber) && !empty($email)){
-            $queryToGetId = "select id from neo_paylater_open where application_id = '$applicationNumber' AND ((email_id = '$email') OR (alternate_email_id = '$email'))";
-            $results = $db->query($queryToGetId);
-            while($row = $db->fetchByAssoc($results)){
-                if(!empty($row['id'])){
-                    $paylaterOpenId = $row['id'];
-                }
-            }
-            if(!empty($paylaterOpenId)){
-                $queryToUpdateEmailVerification = "UPDATE neo_paylater_open 
-                SET is_primary_email_verified = CASE  
-                    WHEN email_id = '$email' THEN 1
-                    else
-                     is_primary_email_verified
-                  END,
-                is_secondary_email_verified = CASE  
-                    WHEN alternate_email_id = '$email' THEN 1
-                    else
-                     is_secondary_email_verified
-                  END,
-                email_verification_status = '1'
-                where id = '$paylaterOpenId'";
-                $response = $db->query($queryToUpdateEmailVerification);
-            } else {
-                $message = "Record not found";
-            }        
-            print_r($response);
-        }    
-    }
-    else if($module == "Paylater_Open" && $action == 'Transacting'){
-            global $db;
-            $query = "update neo_paylater_open set transaction_status='' where transaction_status='not_transacting'";
-            $db->query($query);
-            $applications = $rawData->paylater_accounts;
-            $applicationIds = '';
-            foreach ($applications as $key => $value) {
-                if($key != 0){
-                    $applicationIds .= ",$value";
-                } else {
-                    $applicationIds .= "$value";
-                }
-            }
-            $queryToUpdate = "update neo_paylater_open set transaction_status='not_transacting' where application_id IN ($applicationIds)";
-            $response = $db->query($queryToUpdate);
-            if($response){
-                $msg = array(
-                    'Success' => true,
-                    'Message' => 'Application updated successfully',
-                );
-            } else {
-                $msg = array(
-                    'Success' => false,
-                    'Message' => 'Application update failed',
-                );
-            }
-            echo json_encode($msg);
-            exit;
-        }
-    }    
+    }*/ 
     else {
         $msg = array(
             'Success' => false,
