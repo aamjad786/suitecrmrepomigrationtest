@@ -24,9 +24,10 @@ class payLaterOpenBeforeSaveEvents {
 
     function getEmailContent($applicationId) {
         require_once 'custom/include/CurlReq.php';
+        $bearerPassword = getenv('LMS_BEARER_PASSWORD');
         $curl = new CurlReq();
         $header = array(
-            "authorization: Bearer NeoPaylater@321",
+            "authorization: Bearer $bearerPassword",
             'content-type' => 'application/json'
         );
         $url = getenv('SCRM_LMM_URI') ."/api/v2/paylater_accounts/".$application_id;
