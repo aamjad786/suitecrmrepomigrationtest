@@ -15,7 +15,7 @@ function PushLeads()
 	$bean = BeanFactory::getBean('Leads');
 
 	$lead_list = $bean->get_full_list("", "leads.deleted=0 and 
-										   leads.opportunity_id is null and
+										   (leads.opportunity_id IS NULL OR leads.opportunity_id='') and
 										   (leads_cstm.control_program_c!='NeoCash Insta' or leads_cstm.control_program_c is null) and 
 										   (leads_cstm.pushed_lead_c=0 or leads_cstm.pushed_lead_c is null) and 
 										   (leads_cstm.push_count_c<=5 or leads_cstm.push_count_c is null)");
