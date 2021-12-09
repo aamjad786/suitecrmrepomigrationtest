@@ -3,7 +3,7 @@ if(!defined('sugarEntry')) define('sugarEntry', true);
 //ini_set('display_errors','On');
 ini_set('memory_limit','-1');
 require_once('include/SugarCharts/SugarChartFactory.php');
-//require_once('include/MVC/View/SugarView.php');
+require_once('include/MVC/View/SugarView.php');
 include_once('include/SugarPHPMailer.php');
 include_once('modules/Administration/Administration.php');
 require_once 'custom/include/SendEmail.php';
@@ -52,7 +52,7 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
     }
 
     function SendSuccessEmail(){
-    	global $sugar_config;
+    	global $sugar_config, $current_user;
         $send = new SendEmail();
         $template = new EmailTemplate();
         $template->retrieve_by_string_fields(array('name' => 'Role Assignment' ));
@@ -106,7 +106,7 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
         $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
         
         global $sugar_config;
-        $httpServer = $sugar_config['host_name'];
+        $httpServer = "$localhost";
 
         $url = $protocol . $httpServer . $_SERVER['REQUEST_URI'];
     	$url = substr($url,0,strpos($url,"?"))."?entryPoint=UserRoleAssignment";
@@ -153,7 +153,7 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
         }
     }
 
-	function x($ngid, $sg, $remove=0){
+	function assignsg($ngid, $sg, $remove=0){
         global $db;
         $q1 = "SELECT id FROM users WHERE user_name='$ngid' and deleted=0";
         $result = $db->query($q1);
@@ -186,7 +186,7 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
         $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
         global $sugar_config;
-        $httpHost = $sugar_config['host_name'];
+        $httpHost = "localhost";
 
         $url = $protocol . $httpHost . $_SERVER['REQUEST_URI'];
     	$url = substr($url,0,strpos($url,"?"))."?entryPoint=UserRoleAssignment";
@@ -217,6 +217,7 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
 
         $result     = $curl_req->curl_req($url, 'post', $params, $headers, $useragent, $strCookie, '', '', true);
         $response   = $result['response'];
+
         $err        = $result['error'];
 
 		if(strpos(html_entity_decode($response), 'Added') !== false) {
@@ -632,6 +633,7 @@ DEPARTMENTFORM1;
 			<td>
 				<select name='sg' id='sg' value='$_REQUEST[sg]'>
 					<option value="">Select a Security Group</option>
+                    <option value="case agent">case agent</option>
                     <option value="Loc - Vijayawada">Loc - Vijayawada</option>
                     <option value="Loc - Coimbatore">Loc - Coimbatore</option>
                     <option value="Loc - Madurai">Loc - Madurai</option>
@@ -743,7 +745,7 @@ JS;
                         echo "<br>";
                     }
                 }
-                echo "Successfully uploaded";
+               
 			}
 			else{
                 echo "<p style='color:red'>Employee ID cannot be empty</p>";
