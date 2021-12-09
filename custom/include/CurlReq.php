@@ -3,6 +3,7 @@ if(!defined('sugarEntry') || !sugarEntry) {
 	define('sugarEntry', true);
 }
 // require_once('include/entryPoint.php');
+require_once 'custom/CustomLogger/CustomLogger.php';
 
 class CurlReq {
 
