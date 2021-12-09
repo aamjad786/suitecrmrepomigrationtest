@@ -23,6 +23,7 @@ class payLaterOpenBeforeSaveEvents {
     }
 
     function getEmailContent($applicationId) {
+        global $sugar_config;
         require_once 'custom/include/CurlReq.php';
         $bearerPassword = getenv('LMS_BEARER_PASSWORD');
         $curl = new CurlReq();
@@ -30,7 +31,7 @@ class payLaterOpenBeforeSaveEvents {
             "authorization: Bearer $bearerPassword",
             'content-type' => 'application/json'
         );
-        $url = getenv('SCRM_LMM_URI') ."/api/v2/paylater_accounts/".$application_id;
+        $url = $sugar_config('SCRM_LMM_URI') ."/api/v2/paylater_accounts/".$application_id;
 //        $url = "https://uat.advancesuite.in:3039/api/v2/paylater_accounts/".$applicationId;
         $response = $curl->curl_req($url, 'get', null, $header);
         $responseArray = json_decode($response);
