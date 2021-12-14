@@ -97,7 +97,7 @@ function updateFromAS($appIDArray) {
                 $gstOnProcessingFee = 0;
                
                 if (!empty($data)) {
-                   $applicationId = $data['Application Id'];
+                   $applicationId = $data['ApplicationId'];
                   
                     $openingDpdDashGroup = $data['OpeningDPDDashGroup'];
                   
