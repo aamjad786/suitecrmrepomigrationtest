@@ -20,7 +20,9 @@ function UpdateAllSMApplications() {
     while ($row = $db->fetchByAssoc($appIds)) {
         array_push($arrayOfAppIds, $row['app_id']);
     }
+    
     $size = sizeof($arrayOfAppIds);
+   
     $maxCount = $size / 300;
 
     $min = 0;
@@ -47,10 +49,10 @@ function UpdateAllSMApplications() {
 
 function updateFromAS($appIDArray) {
     $logger = new CustomLogger('updatingOnboardingApp');
-    global $db;
+    global $db,$sugar_config;
     if (!empty($appIDArray)) {
 
-        $url = $sugar_config['updateAsApplications'] . "application_id=[$appIDArray]";
+        $url = getenv('SCRM_AS_API_BASE_URL') . "/crm/get_disbursed_loans?application_id=[$appIDArray]";
 
         // $cSession = curl_init();
         $headers = array();
@@ -93,9 +95,12 @@ function updateFromAS($appIDArray) {
                 $data = $value;
                 $processingFees = 0;
                 $gstOnProcessingFee = 0;
+               
                 if (!empty($data)) {
-                    $applicationId = $data['ApplicationID'];
+                   $applicationId = $data['ApplicationId'];
+                  
                     $openingDpdDashGroup = $data['OpeningDPDDashGroup'];
+                  
                     $dpdDash = $data['DPDDash'];
                     $lbal = $data['LBAL'];
                     $dVariance = $data['DVariance'];

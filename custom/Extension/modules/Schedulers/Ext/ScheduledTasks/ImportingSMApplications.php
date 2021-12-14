@@ -11,7 +11,7 @@ date_default_timezone_set('Asia/Kolkata');
 function ImportingSMApplications() {
     global $sugar_config;
     $previousDayDate = date('Y-m-d', strtotime('-1 day'));
-    $url = $sugar_config['ImportingSMApp'] . "date=$previousDayDate";
+    $url = getenv('SCRM_AS_API_BASE_URL')."/crm/get_disbursed_loans?date=$previousDayDate";
 
     $headers = array();
     $headers[] = 'Authorization: Basic bmVvZ3Jvd3RoOmNSbUBuZTBnUjB3dGg=';
@@ -59,7 +59,7 @@ function ImportingSMApplications() {
                 $advance_amount = "";
                 $processingFees = 0;
                 $gstOnProcessingFee = 0;
-                $getApplicationDetailsApi = $applicationApis->getAppData($applicationId, $sugar_config['ImportingSMApp1']);
+                $getApplicationDetailsApi = $applicationApis->getAppData($applicationId, "/get_application_deal_details?ApplicationID=");
                 $json_response = json_decode($getApplicationDetailsApi, true);
                 $logger->log('debug', "-------json response------------ =:". json_encode($json_response ));
                 if(!empty($json_response) && count($json_response)>0){
@@ -168,7 +168,7 @@ function ImportingSMApplications() {
                     $smAccountBean->sub_scheme=$subScheme;
                         
                     # ONBOARDING RESTRUCTURE CONDITION - CSI - 648 
-                    $url2=$sugar_config['ImportingSMApp2'] . "ApplicationID=$applicationId";
+                    $url2=getenv('SCRM_AS_API_BASE_URL')."/get_control_program?ApplicationID=$applicationId";
                     $json_response = json_decode($url2, true);
                     if(!empty($json_response) && count($json_response)>0){
                         $control_program = $json_response[0]['controlProgram'];
@@ -176,7 +176,7 @@ function ImportingSMApplications() {
                     $control_program=strtolower($control_program);
 
                     # Ambit 
-                    $url_ambit=$sugar_config['ImportingSMApp3'] ."application_id=$appid";
+                    $url_ambit=getenv('SCRM_AS_API_BASE_URL')."/applications/is_bc_app_id?application_id=$appid";
                     $json_response = json_decode($url_ambit, true);
                   
                     $is_ambit = 0;

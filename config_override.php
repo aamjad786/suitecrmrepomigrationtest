@@ -19,21 +19,26 @@ $sugar_config['addAjaxBannedModules'][1] = 'Neo_Customers';
 $sugar_config['addAjaxBannedModules'][2] = 'scrm_Cases';
 $sugar_config['addAjaxBannedModules'][3] = 'Cases';
 $sugar_config['addAjaxBannedModules'][4] = 'scrm_Escalation_Matrix';
-$sugar_config['EOS_API_URL_PRIMARY'] = 'http://192.168.11.13:3001/Neogroth_API/api/leads';
-$sugar_config['EOS_API_URL_SECONDARY'] = 'http://192.168.11.13:3001/Neogroth_API/api/leads';
 $sugar_config['email_confirm_opt_in_email_template_id'] = '';
 $sugar_config['email_allow_send_as_user'] = false;
 $sugar_config['email_xss'] = 'YToxMzp7czo2OiJhcHBsZXQiO3M6NjoiYXBwbGV0IjtzOjQ6ImJhc2UiO3M6NDoiYmFzZSI7czo1OiJlbWJlZCI7czo1OiJlbWJlZCI7czo0OiJmb3JtIjtzOjQ6ImZvcm0iO3M6NToiZnJhbWUiO3M6NToiZnJhbWUiO3M6ODoiZnJhbWVzZXQiO3M6ODoiZnJhbWVzZXQiO3M6NjoiaWZyYW1lIjtzOjY6ImlmcmFtZSI7czo2OiJpbXBvcnQiO3M6ODoiXD9pbXBvcnQiO3M6NToibGF5ZXIiO3M6NToibGF5ZXIiO3M6NDoibGluayI7czo0OiJsaW5rIjtzOjY6Im9iamVjdCI7czo2OiJvYmplY3QiO3M6MzoieG1wIjtzOjM6InhtcCI7czo2OiJzY3JpcHQiO3M6Njoic2NyaXB0Ijt9';
 $sugar_config['verify_client_ip'] = false;
-$sugar_config['Adrenalin Api']="http://192.168.11.13:3001/WebAPI/NEOGROWTH/D26E59DDF39740B2B6789C26A1BBFBC5/DT_668/API0001/20080505010101";
 $sugar_config['AS_CRM_Domain'] = 'crm.advancesuite.in';
-$sugar_config['getClosedAsApplications']="http://192.168.11.201:3001/crm/closed_applications?product=neocash&date=";
-$sugar_config['updateAsApplications']="http://192.168.11.201:3001/crm/get_disbursed_loans?";
 $sugar_config['ng_khatal_jay'] = 'khataljay@gmail.com';
-$sugar_config['ImportingSMApp1']="http://192.168.11.201:3001/get_application_deal_details?ApplicationID=";
-$sugar_config['ImportingSMApp']="http://192.168.11.201:3001/crm/get_disbursed_loans?";
-$sugar_config['ImportingSMApp2']="http://192.168.11.201:3001/get_control_program?";
-$sugar_config['ImportingSMApp3']="http://192.168.11.201:3001/applications/is_bc_app_id?";
+// URL
+$sugar_config['EOS_API_URL_PRIMARY'] = 'http://125.16.125.52/Neogroth_API/api/leads';
+$sugar_config['EOS_API_URL_SECONDARY'] = 'http://114.143.182.243/Neogroth_API/api/leads';
+$sugar_config['Adrenalin Api']="https://hrcloud.myadrenalin.com/WebAPI/NEOGROWTH/D26E59DDF39740B2B6789C26A1BBFBC5/DT_668/API0001/";
+$sugar_config['SCRM_EDW_API_BASE_URL']='http://dev.advancesuite.in:3006';
+$sugar_config['SCRM_AS_API_OZONTEL_URL']='http://30mins.advancesuite.in:91';
+$sugar_config['SCRM_OZONTEL_API_KEY']='KK6c2a74f7da9381fa80451cd0b0650de5';
+$sugar_config['SCRM_AS_API_RENEWALS_AUTH_KEY']='Basic bmVvZ3Jvd3RoOmNSbUBuZTBnUjB3dGg';
+$sugar_config['SCRM_AS_VERIFICATION_KEY']='b3f337978627a3ad51dc43a3899ac8c0aede0a28';
+$sugar_config['SCRM_AS_POST_USER']='800AE635-92A4-48DB-91CD-C15BD9A29CF5';
+$sugar_config['SCRM_AWS_ACCESS_SECRET']='p6uivKuIZJcyxNTUGyIl+7pO8nJMNMB/qz8EHDo0';
+$sugar_config['SCRM_AWS_ACCESS_KEY']='AKIAJ7SYEKGQSM4SF6MQ';
+$sugar_config['SCRM_CA_PASSCODE']='Basic Q0E6Q0EwUEEkUw';
+$sugar_config['SCRM_PAYTM_PASSCODE']='PNAEYO';
 
 $sugar_config['aop'] = array (
     'distribution_method' => 'roundRobin',

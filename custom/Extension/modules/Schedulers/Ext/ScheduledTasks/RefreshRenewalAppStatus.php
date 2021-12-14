@@ -20,7 +20,7 @@ function getASRejectionReasons($rejections,$app_id){
     $logger->log('debug', "Rejection IDs: ".print_r($rejection_ids,true));
     if (!empty($rejection_ids)){
         foreach($rejection_ids as $reject_id){
-        	$as_api_url 		= getenv('SCRM_AS_API_BASE_URL')."applications/$app_id/get_rejection_reason?rejection_id=".$reject_id;
+        	$as_api_url 		= getenv('SCRM_AS_API_BASE_URL')."/applications/$app_id/get_rejection_reason?rejection_id=".$reject_id;
         	$rejection_reason 	= $cl->curl_req($as_api_url,'get');
 
 			$logger->log('debug', "curl URL : $as_api_url");
@@ -40,7 +40,7 @@ function getASAppStageDetails($app_id){
 	$logger->log('debug',"------------getASAppStageDetails--------------");
 	require_once 'custom/include/CurlReq.php';
     $cl 				= new CurlReq();
-	$as_api_url 		= getenv('SCRM_AS_API_BASE_URL')."external_interfaces/get_application_status?application_id=".$app_id;
+	$as_api_url 		= getenv('SCRM_AS_API_BASE_URL')."/external_interfaces/get_application_status?application_id=".$app_id;
     $as_api_response 	= json_decode($cl->curl_req($as_api_url,'get'));
     $code 				= 205;
     $stage 				= "Open";
@@ -135,7 +135,7 @@ function RefreshRenewalAppStatus() {
 	    					if($custom_status=="Loan disbursed"){
 								require_once 'custom/include/CurlReq.php';
 								$Curl_Req 	= new CurlReq();
-								$url 		= getenv('SCRM_AS_API_BASE_URL')."applications/$app_id/get_funded_amount";
+								$url 		= getenv('SCRM_AS_API_BASE_URL')."/applications/$app_id/get_funded_amount";
 								$output 	= $Curl_Req->curl_req($url);
 								$output 	= json_decode($output);
 								if(!empty($output) && property_exists($output, 'funding_amount')) {

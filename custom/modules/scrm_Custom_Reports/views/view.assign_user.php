@@ -3,14 +3,11 @@ if(!defined('sugarEntry')) define('sugarEntry', true);
 //ini_set('display_errors','On');
 ini_set('memory_limit','-1');
 require_once('include/SugarCharts/SugarChartFactory.php');
-//require_once('include/MVC/View/SugarView.php');
+require_once('include/MVC/View/SugarView.php');
 include_once('include/SugarPHPMailer.php');
 include_once('modules/Administration/Administration.php');
-require_once 'custom/include/SendEmail.php';
+require_once ('custom/include/SendEmail.php');
 require_once('modules/EmailTemplates/EmailTemplate.php');
-require_once 'custom/CustomLogger/CustomLogger.php';
-global $logger;
-$logger = new CustomLogger('UpdateAdrenalinUserInfoScheduler');
 
 class scrm_Custom_ReportsViewassign_user extends SugarView {
 	
@@ -52,7 +49,7 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
     }
 
     function SendSuccessEmail(){
-    	global $sugar_config;
+    	global $current_user;
         $send = new SendEmail();
         $template = new EmailTemplate();
         $template->retrieve_by_string_fields(array('name' => 'Role Assignment' ));
@@ -65,11 +62,9 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
         $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         if (strpos($url, 'dev') !== false) {
             $send->send_email_to_user($email_subject,$body,array($sugar_config['ng_ramesh_a']),array($sugar_config['ng_nikhil.kumar'],$sugar_config['ng_hemanth_vaddi']));
-        }
-        else if (strpos($url, $sugar_config['AS_CRM_Domain']) !== false) {
+        }else if (strpos($url, $sugar_config['AS_CRM_Domain']) !== false) {
             $send->send_email_to_user($email_subject,$body,array($sugar_config['ng_ramesh_a']),array($sugar_config['ng_nikhil.kumar'],$sugar_config['ng_hemanth_vaddi']));
-        }
-        else{
+        }else{
             $send->send_email_to_user($email_subject,$body,array($sugar_config['ng_hemanth_vaddi']),array($sugar_config['ng_nikhil.kumar']));
         }
     }
@@ -104,10 +99,8 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
             echo "<p>Removing $ngid from $role role.....</p>";
         }
         $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-        
         global $sugar_config;
-        $httpServer = $sugar_config['host_name'];
-
+        $httpServer = $_SERVER['HTTP_HOST'];
         $url = $protocol . $httpServer . $_SERVER['REQUEST_URI'];
     	$url = substr($url,0,strpos($url,"?"))."?entryPoint=UserRoleAssignment";
         $useragent = $_SERVER['HTTP_USER_AGENT'];
@@ -118,26 +111,24 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
         );
         $params = "userID=$userID&roleID=$roleID&remove=$remove";
         session_write_close();
-        // $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-		// curl_setopt($ch,CURLOPT_URL,$url);
-		// curl_setopt($ch,CURLOPT_USERAGENT, $useragent);
-		// curl_setopt($ch, CURLOPT_COOKIE, $strCookie );
-        // curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // $response = curl_exec($ch);
-        // $err = curl_error($ch);
-        // curl_close($ch);
-
+       // $ch = curl_init();
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		//curl_setopt($ch,CURLOPT_URL,$url);
+		//curl_setopt($ch,CURLOPT_USERAGENT, $useragent);
+	    //curl_setopt($ch, CURLOPT_COOKIE, $strCookie );
+        //curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        //curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        //$response = curl_exec($ch);
+        //$err = curl_error($ch);
+        //curl_close($ch);
         require_once('custom/include/CurlReq.php');
         $curl_req   = new CurlReq();
 
         $result     = $curl_req->curl_req($url, 'post', $params, $headers, $useragent, $strCookie, '', '', true);
         $response   = $result['response'];
-        $err        = $result['error'];
-
+        $err        = $result['error'];        
 		if(strpos(html_entity_decode($response), 'Added') !== false) {
             echo "<p style='color:green'>Successfully Assigned.</p>";
             return 1;
@@ -153,7 +144,7 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
         }
     }
 
-	function x($ngid, $sg, $remove=0){
+	function assignSG($ngid, $sg, $remove=0){
         global $db;
         $q1 = "SELECT id FROM users WHERE user_name='$ngid' and deleted=0";
         $result = $db->query($q1);
@@ -185,9 +176,7 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
 
         $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
-        global $sugar_config;
-        $httpHost = $sugar_config['host_name'];
-
+        $httpHost = $_SERVER['HTTP_HOST'];
         $url = $protocol . $httpHost . $_SERVER['REQUEST_URI'];
     	$url = substr($url,0,strpos($url,"?"))."?entryPoint=UserRoleAssignment";
 
@@ -199,27 +188,26 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
         );
         $params = "userID=$userID&sgID=$sgID&remove=$remove";
         session_write_close();
-        // $ch = curl_init();
-		// curl_setopt($ch,CURLOPT_URL,$url);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-		// curl_setopt($ch,CURLOPT_USERAGENT, $useragent);
-		// curl_setopt($ch, CURLOPT_COOKIE, $strCookie );
-        // curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // $response = curl_exec($ch);
-        // $err = curl_error($ch);
-        // curl_close($ch);
-
+        //$ch = curl_init();
+		//curl_setopt($ch,CURLOPT_URL,$url);
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		//curl_setopt($ch,CURLOPT_USERAGENT, $useragent);
+		//curl_setopt($ch, CURLOPT_COOKIE, $strCookie );
+        //curl_setopt($ch, CURLOPT_POSTFIELDS, "userID=$userID&sgID=$sgID&remove=$remove");
+        //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        //curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        //$response = curl_exec($ch);
+        //$err = curl_error($ch);
+        //curl_close($ch);
         require_once('custom/include/CurlReq.php');
         $curl_req   = new CurlReq();
 
         $result     = $curl_req->curl_req($url, 'post', $params, $headers, $useragent, $strCookie, '', '', true);
         $response   = $result['response'];
-        $err        = $result['error'];
 
-		if(strpos(html_entity_decode($response), 'Added') !== false) {
+        $err        = $result['error'];
+        		if(strpos(html_entity_decode($response), 'Added') !== false) {
             echo "<p style='color:green'>Successfully Assigned.</p>";
             return 1;
 		}else if(strpos(html_entity_decode($response), 'Removed') !== false){
@@ -247,11 +235,9 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
     }
 
     function pullUser($ngid){
-        global $logger;
         require_once('PullUser.php');
         $pullUser = new PullUser();
         if(!empty($pullUser->insertUser($ngid))){
-            $logger->log('debug', 'Successfully pulled User'. $ngid);
             echo "<p>Successfully pulled User $ngid</p>";
             return true;           
         }
@@ -288,7 +274,6 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
     }
 
 	function updateManager($usr_ng_id, $mgr_ng_id){
-        global $logger;
         $usr = $this->getUserBean($usr_ng_id);
         $mgr = $this->getUserBean($mgr_ng_id);
 
@@ -304,12 +289,8 @@ class scrm_Custom_ReportsViewassign_user extends SugarView {
             $updated_count++;
 			$usr->reports_to_id=$mgr->id;
             $usr->save();
-            
-        $logger->log('debug', 'Updated'. $mgr_ng_id .'as manager of'. $usr_ng_id);
-        
             echo "<p style='color:green'>Updated $mgr_ng_id as manager of $usr_ng_id</p>";
 		}else{
-            $logger->log('error', 'Failed to create relationship for'. $usr_ng_id); 
             echo "<p style='color:red'>Failed to create relationship for $usr_ng_id</p>";
         }
     }
@@ -532,12 +513,12 @@ DEPARTMENTFORM1;
         return $users;
     }
     function display() {
-        global $current_user, $sugar_config;
-        global $db;
+        global $db,$current_user, $sugar_config;
+        
         $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         $roles = ACLRole::getUserRoleNames($current_user->id);
         if (strpos($url, $sugar_config['AS_CRM_Domain']) !== false) {
-            $permitted_users = $sugar_config['CR_assign_user_permitted_user'];
+            $permitted_users = array($sugar_config['CR_assign_user_permitted_user']);
             if (!$current_user->is_admin && !in_array(strtoupper($current_user->user_name), ($permitted_users))  && !$this->isAdminRoleUser($roles)) {
                 // print_r("here too:P");
                 die("<p style='color:red'>You cannot access this page. Please contact admin</p>");
@@ -632,6 +613,11 @@ DEPARTMENTFORM1;
 			<td>
 				<select name='sg' id='sg' value='$_REQUEST[sg]'>
 					<option value="">Select a Security Group</option>
+                    <option value="Sales Team">Sales Team</option>
+					<option value="case agent">Case Agent</option>
+					<option value="case manager">Case Manager</option>
+					<option value="No Access Group">No Access Group</option>
+                    <option value="case agent">case agent</option>
                     <option value="Loc - Vijayawada">Loc - Vijayawada</option>
                     <option value="Loc - Coimbatore">Loc - Coimbatore</option>
                     <option value="Loc - Madurai">Loc - Madurai</option>
@@ -743,7 +729,6 @@ JS;
                         echo "<br>";
                     }
                 }
-                echo "Successfully uploaded";
 			}
 			else{
                 echo "<p style='color:red'>Employee ID cannot be empty</p>";
@@ -863,32 +848,30 @@ HTMLFORM2;
     }
 }
 function getDataFromAS($ngId) {
-    global $logger;
-    $logger->log('debug', 'fetchUserInfoFromAD Called....!');
     try {
         $url            = getenv('SCRM_AD_UTILITY_HOST').'json2ldap';
         $params         = "{\n  \"method\"  : \"ldap.search\",\n  \"params\"  : { \n  \"filter\": \"(sAMAccountName=$ngId)\",\n  \"attributes\": \"*\",\n    \"binaryAttributes\": [\"objectGUID\", \"objectSid\"]\n  },\n  \"decoded\" : true\n}";
         $max_redirects  = 10;
         $timeout        = 30;
-        // $curl   = curl_init();
-        // curl_setopt_array($curl, array(
-        //     CURLOPT_PORT            => "",
-        //     CURLOPT_URL             => $url,
-        //     CURLOPT_RETURNTRANSFER  => true,
-        //     CURLOPT_ENCODING        => "",
-        //     CURLOPT_MAXREDIRS       => $max_redirects,
-        //     CURLOPT_TIMEOUT         => $timeout,
-        //     CURLOPT_HTTP_VERSION    => CURL_HTTP_VERSION_1_1,
-        //     CURLOPT_CUSTOMREQUEST   => "POST",
-        //     CURLOPT_POSTFIELDS      => $params,
-        //     CURLOPT_HTTPHEADER      => array(
-        //         "cache-control: no-cache",
-        //         "content-type: application/json"
-        //     ),
-        // ));
-        // $results    = curl_exec($curl);
-        // $err        = curl_error($curl);
-        // curl_close($curl);
+        //$curl = curl_init();
+        //curl_setopt_array($curl, array(
+           // CURLOPT_PORT => "3009",
+           // CURLOPT_URL => getenv("SCRM_AD_UTILITY_HOST")."/json2ldap",
+           // CURLOPT_RETURNTRANSFER => true,
+           // CURLOPT_ENCODING => "",
+            //CURLOPT_MAXREDIRS => 10,
+            //CURLOPT_TIMEOUT => 30,
+            //CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            //CURLOPT_CUSTOMREQUEST => "POST",
+           // CURLOPT_POSTFIELDS => "{\n  \"method\"  : \"ldap.search\",\n  \"params\"  : { \n  \"filter\": \"(sAMAccountName=$ngId)\",\n  \"attributes\": \"*\",\n    \"binaryAttributes\": [\"objectGUID\", \"objectSid\"]\n  },\n  \"decoded\" : true\n}",
+           // CURLOPT_HTTPHEADER => array(
+            //    "cache-control: no-cache",
+            //    "content-type: application/json"
+           // ),
+      //  ));
+        //$results = curl_exec($curl);
+        //$err = curl_error($curl);
+        //curl_close($curl);
 
         require_once('custom/include/CurlReq.php');
         $curl_req   = new CurlReq();
@@ -896,23 +879,16 @@ function getDataFromAS($ngId) {
         $result     = $curl_req->curl_req($url, 'post', $params, $headers, '', '', $max_redirects, $timeout, true);
         $results    = $result['response'];
         $err        = $result['error'];
-
         if ($err) {
             echo "cURL Error #:" . $err;
             die();
         }
-
-        $logger->log('debug', 'AD API URL--------: ' . $url);
-        $logger->log('debug', 'AD API Response--------: ' . var_export($results,true));
-        
         $results = (json_decode($results, true));
         $results = $results['matches'];
-
         foreach ($results as $result) {
             try {
                 return $result;
             } catch (Exception $e) {
-                $logger->log('error', 'Exception in saving'. $ngId . $e->getMessage());
                 echo "Exception in saving $ngId" . $e->getMessage();
             }
         }
@@ -923,15 +899,15 @@ function getDataFromAS($ngId) {
 
 function getDataFromAdrenalin($ngid){
     global $db;
-    $query      = "select employee_code, company_name, mail_id, reporting_manager, designation_name, department_name, modified_on from adrenalin_user_info where employee_code ='".$ngid."'";
-    $results    = $db->query($query);
-    $response   = array();
+    $query = "select employee_code, company_name, mail_id, reporting_manager, designation_name, department_name, modified_on from adrenalin_user_info where employee_code ='".$ngid."'";
+    $results = $db->query($query);
+    $response = array();
     while($row = $db->fetchByAssoc($results)){
-        $response['employee_code'][0]   = $row['employee_code'];
-        $response['mail'][0]            = $row['mail_id'];
-        $response['manager'][0]         = $row['reporting_manager'];
-        $response['department'][0]      = $row['department_name'];
-        $response['objectGUID'][0]      = "-";
+        $response['employee_code'][0] = $row['employee_code'];
+        $response['mail'][0] = $row['mail_id'];
+        $response['manager'][0] = $row['reporting_manager'];
+        $response['department'][0] = $row['department_name'];
+        $response['objectGUID'][0] = "-";
     }
     return $response;
 }

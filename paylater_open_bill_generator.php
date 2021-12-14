@@ -5,7 +5,8 @@ if (!defined('sugarEntry'))
 require_once('include/entryPoint.php'); 
 $application_id = $_REQUEST['application_id'];
 if (!empty($application_id)) {
-    $url = getenv('SCRM_LMM_URI') .'/api/v2/paylater_accounts/'.$application_id.'/account_statement';
+    global $sugar_config;
+    $url = $sugar_config('SCRM_LMM_URI') .'/api/v2/paylater_accounts/'.$application_id.'/account_statement';
 //    $url = 'https://uat.advancesuite.in:3039/api/v2/paylater_accounts/0247437373/account_statement';
     $response = customCurlRequest($url);
     header('Content-Type: application/pdf');

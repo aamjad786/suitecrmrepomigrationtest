@@ -7,7 +7,7 @@ date_default_timezone_set('Asia/Kolkata');
 function getClosedAsApplications() {
     global $sugar_config;
     $previousDayDate = date('Y-m-d', strtotime('-1 day'));
-    $url = $sugar_config['getClosedAsApplications'] . $previousDayDate;
+    $url =  getenv('SCRM_AS_API_BASE_URL') . "/crm/closed_applications?product=neocash&date=$previousDayDate";
    // $url = "https://dev.advancesuite.in:3003/crm/closed_applications?product=neocash&date=2013-12-02";    
     $curl = new CurlReq();
     $header = array(

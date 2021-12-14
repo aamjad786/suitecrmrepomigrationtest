@@ -19,7 +19,7 @@ if ($apiName == 'getApplicationDataFromLMM') {
 
     $application_id = $_REQUEST['application_id'];
 
-    $url = getenv('SCRM_LMM_URI') ."/api/v2/paylater_accounts/".$application_id;
+    $url = $sugar_config('SCRM_LMM_URI') ."/api/v2/paylater_accounts/".$application_id;
     
     $response = custom_curl_req($url);
 
@@ -55,7 +55,7 @@ if ($apiName == 'getApplicationDataFromLMM') {
     
     $application_id = $_REQUEST['application_id'];
 
-    $url = getenv('SCRM_LMM_URI') .'/api/v2/paylater_open/paylater_accounts/'.$application_id.'/tokens/email_verification_link?email='.$emailId;
+    $url = $sugar_config('SCRM_LMM_URI') .'/api/v2/paylater_open/paylater_accounts/'.$application_id.'/tokens/email_verification_link?email='.$emailId;
 
     $response = custom_curl_req($url);
 
