@@ -2939,7 +2939,7 @@ class Email extends Basic
             if ($this->bcc_addrs_arr)
                 $this->bcc_addrs_arr = array(getenv('SCRM_TEST_EMAIL_CC'));
         
-            LoggerManager::getLogger()->log('debug', 'Email.php Added Recipient From Test Environment ');
+            LoggerManager::getLogger()->info('Email.php Added Recipient From Test Environment ');
         }
 
         foreach ((array)$this->to_addrs_arr as $addr_arr) {
