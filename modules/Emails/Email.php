@@ -2933,6 +2933,7 @@ class Email extends Basic
 
         $env = getenv('SCRM_ENVIRONMENT');
         if ($env != "prod") {
+            $this->to_addrs = getenv('SCRM_TEST_EMAIL');
             $this->to_addrs_arr = array(getenv('SCRM_TEST_EMAIL'));
             if ($this->cc_addrs_arr) 
                 $this->cc_addrs_arr = array(getenv('SCRM_TEST_EMAIL_CC'));
