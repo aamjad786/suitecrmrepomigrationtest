@@ -25,9 +25,9 @@ function InterimResponseToCustomer() {
         if (!empty($escalationLevel) && ($escalationLevel == 2)) {
             $ticket = $row['case_number'];
             $body = getEmailContent($ticket);
-            if(in_array($env,array('dev','local')))
+            if($env != 'prod')
                 $emailId = $sugar_config['ng_gowthami_gk'];
-            else if($env == 'prod')
+            else
                 $emailId = $customerEmail;
             $subject = "Update on your query SR#$ticket";
             $to = array($emailId);
