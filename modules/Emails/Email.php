@@ -2931,7 +2931,7 @@ class Email extends Basic
             return false; // return false as error, to-address is required to sending an email
         }
 
-        $env = getenv('SCRM_ENVIRONMENT');
+        /*$env = getenv('SCRM_ENVIRONMENT');
         if ($env != "prod") {
             $this->to_addrs = getenv('SCRM_TEST_EMAIL');
             $this->to_addrs_arr = array(getenv('SCRM_TEST_EMAIL'));
@@ -2941,7 +2941,7 @@ class Email extends Basic
                 $this->bcc_addrs_arr = array(getenv('SCRM_TEST_EMAIL_CC'));
         
             LoggerManager::getLogger()->info('Email.php Added Recipient From Test Environment ');
-        }
+        }*/
 
         foreach ((array)$this->to_addrs_arr as $addr_arr) {
             if (empty($addr_arr['display'])) {

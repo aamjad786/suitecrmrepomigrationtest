@@ -406,10 +406,10 @@ class CustomCaseUpdatesHook
 
         $email = $contact->emailAddress->getPrimaryAddress($contact);
         
-        $env = getenv('SCRM_ENVIRONMENT');
+        /*$env = getenv('SCRM_ENVIRONMENT');
         if ($env != "prod") {
             $email = getenv('SCRM_TEST_EMAIL');
-        }
+        }*/
 
         $mailer->addAddress($email);
 
@@ -555,10 +555,10 @@ class CustomCaseUpdatesHook
             $email = $contact->email1;
         }
         
-        $env = getenv('SCRM_ENVIRONMENT');
+        /*$env = getenv('SCRM_ENVIRONMENT');
         if ($env != "prod") {
             $email = getenv('SCRM_TEST_EMAIL');
-        }
+        }*/
 
         $mailer->addAddress($email);
         
@@ -657,10 +657,10 @@ class CustomCaseUpdatesHook
                     $emails = [];
                     $emails[] = $contact->emailAddress->getPrimaryAddress($contact);
 
-                    $env = getenv('SCRM_ENVIRONMENT');
+                    /*$env = getenv('SCRM_ENVIRONMENT');
                     if ($env != "prod") {
                         $emails = array(getenv('SCRM_TEST_EMAIL'));
-                    }
+                    }*/
 
                     $caseUpdate->sendEmail(
                         $emails,
@@ -681,10 +681,10 @@ class CustomCaseUpdatesHook
             if ($emails && $email_template->id) {
                 LoggerManager::getLogger()->info('AOPCaseUpdates: Calling send email');
                 
-                $env = getenv('SCRM_ENVIRONMENT');
+                /*$env = getenv('SCRM_ENVIRONMENT');
                 if ($env != "prod") {
                     $emails = array(getenv('SCRM_TEST_EMAIL'));
-                }
+                }*/
 
                 $caseUpdate->sendEmail(
                     $emails,
