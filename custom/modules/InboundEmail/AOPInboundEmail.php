@@ -142,7 +142,7 @@ class AOPInboundEmail extends InboundEmail
         //Added for Ticket CSI-1167
         $this->loggerTesting = new CustomLogger('TestingCases1');
 
-        $GLOBALS['log']->fatal(print_r($email->name,true));
+        // $GLOBALS['log']->fatal(print_r($email->name,true));
         if((strcasecmp($email->from_addr, $sugar_config['ng_khatal_jay']) == 0) && (strpos($email->name, $sugar_config['skip_handleCreateCase_email_name']) !== false)) {
             $this->loggerTesting->log('info', "Skipping the case creation for [$email->name] as its mail from $email->from_addr AND subject starts with Re : Auto Acknowledgement for Service");
             return;

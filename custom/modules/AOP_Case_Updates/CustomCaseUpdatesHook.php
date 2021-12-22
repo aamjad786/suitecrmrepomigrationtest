@@ -405,6 +405,11 @@ class CustomCaseUpdatesHook
         $mailer->FromName = $emailSettings['from_name'];
 
         $email = $contact->emailAddress->getPrimaryAddress($contact);
+        
+        /*$env = getenv('SCRM_ENVIRONMENT');
+        if ($env != "prod") {
+            $email = getenv('SCRM_TEST_EMAIL');
+        }*/
 
         $mailer->addAddress($email);
 
@@ -549,8 +554,14 @@ class CustomCaseUpdatesHook
         if (empty($email) && !empty($contact->email1)) {
             $email = $contact->email1;
         }
-        $mailer->addAddress($email);
+        
+        /*$env = getenv('SCRM_ENVIRONMENT');
+        if ($env != "prod") {
+            $email = getenv('SCRM_TEST_EMAIL');
+        }*/
 
+        $mailer->addAddress($email);
+        
         try {
             if ($mailer->send()) {
                 $this->logEmail($email, $mailer, $bean->id);
@@ -645,6 +656,12 @@ class CustomCaseUpdatesHook
                     $GLOBALS['log']->info('AOPCaseUpdates: Calling send email');
                     $emails = [];
                     $emails[] = $contact->emailAddress->getPrimaryAddress($contact);
+
+                    /*$env = getenv('SCRM_ENVIRONMENT');
+                    if ($env != "prod") {
+                        $emails = array(getenv('SCRM_TEST_EMAIL'));
+                    }*/
+
                     $caseUpdate->sendEmail(
                         $emails,
                         $email_template,
@@ -663,6 +680,12 @@ class CustomCaseUpdatesHook
             $addDelimiter = false;
             if ($emails && $email_template->id) {
                 LoggerManager::getLogger()->info('AOPCaseUpdates: Calling send email');
+                
+                /*$env = getenv('SCRM_ENVIRONMENT');
+                if ($env != "prod") {
+                    $emails = array(getenv('SCRM_TEST_EMAIL'));
+                }*/
+
                 $caseUpdate->sendEmail(
                     $emails,
                     $email_template,

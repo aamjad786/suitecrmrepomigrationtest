@@ -62,8 +62,9 @@ class SendEmail
 			}
 
 			if (!empty($replyTo)) {
-				foreach ($replyTo as $email) {
-					$mail->addReplyTo($email, 'Neogrowth');
+				foreach ($replyTo as $replyToemail) {
+					if (!empty($replyToemail))
+						$mail->addReplyTo($replyToemail, 'Neogrowth');
 				}
 			}
 
