@@ -1876,7 +1876,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         );
     }
 
-
+}
 echo json_encode($msg);
 exit;
 
@@ -2028,4 +2028,3 @@ function get_var_value($var){
     return "";
 }
 
-?>
