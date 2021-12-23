@@ -10,8 +10,8 @@ class scrm_CasesViewCase_escalation_matrix extends SugarView {
     }
 
 	function displayHeaders(){
-        echo "
-                <div id='detailpanel_1' class='list view  list508 expanded' style='overflow-x:auto;'>
+			echo "
+				<div id='detailpanel_1' class='list view  list508 expanded' style='overflow-x:auto;'>
                 <h4>
                     <a href='javascript:void(0)' class='collapseLink' onclick='collapsePanel(1);'>
                     <img border='0' id='detailpanel_1_img_hide' src='themes/SuiteR/images/basic_search.gif?v=s4x4C4dlTyXYwTkkd0QXjA'></a>
@@ -22,42 +22,42 @@ class scrm_CasesViewCase_escalation_matrix extends SugarView {
                         document.getElementById('detailpanel_1').className += ' expanded';
                     </script>
                 </h4>
-                <table border='0' cellpadding='0' cellspacing='0' width='100%' class='panelContainer list view table default footable-loaded footable'>
+                <table border='0' cellpadding='0' cellspacing='0' width='100%' class='panelContainer list view table default'>
             ";
         echo $HTML = <<<DISP1
         <div style='border-bottom:1px solid #dddddd; align:left;'>
-            <th scope='col>
-                <div style='white-space: normal;'width='100%' align='left'>
-                        Assigned User
-                        &nbsp;&nbsp;
-                </div>
-            </th>
+			<th scope='col'>
+				<div style='white-space: normal;color:black;width:100%;'>
+						Assigned User
+						&nbsp;&nbsp;
+				</div>
+			</th>
             <th scope='col'>
-                <div style='white-space: normal;' align='left'>
+				<div style='white-space: normal;color:black;'>
                         Department
                         &nbsp;&nbsp;
                 </div>
             </th>
             <th scope='col'>
-                <div style='white-space: normal;' align='left'>
+				<div style='white-space: normal;color:black;'>
                         Escalation Level 1
                         &nbsp;&nbsp;
                 </div>
             </th>
             <th scope='col'>
-                <div style='white-space: normal;' align='left'>
+				<div style='white-space: normal;color:black;'>
                         Escalation Level 2
                         &nbsp;&nbsp;
                 </div>
             </th>
             <th scope='col'>
-                <div style='white-space: normal;' align='left'>
+				<div style='white-space: normal;color:black;'>
                         Escalation Level 3
                         &nbsp;&nbsp;
                 </div>
             </th>
             <th scope='col'>
-                <div style='white-space: normal;' align='left'>
+				<div style='white-space: normal;color:black;'>
                         # of current cases assigned
                         &nbsp;&nbsp;
                 </div>
