@@ -67,6 +67,8 @@ class BeforeSaveLead {
 
 		$bean->primary_address_city = strtoupper($bean->primary_address_city);
 
+		$bean->pickup_appointment_city_c = strtoupper($bean->pickup_appointment_city_c);		
+
 		$cities = array(
             'BENGALURU' => 'BANGALORE',
             'BHUBANESWAR' => 'BHUBANESHWAR',
@@ -79,6 +81,9 @@ class BeforeSaveLead {
             $bean->primary_address_city = $cities[$bean->primary_address_city];
         }
 
+		if (array_key_exists($bean->pickup_appointment_city_c, $cities)) {
+            $bean->pickup_appointment_city_c = $cities[$bean->pickup_appointment_city_c];
+        }
 
 		$this->logger->log('debug', 'BeforeSaveLead fieldSanity completed');
 	}
