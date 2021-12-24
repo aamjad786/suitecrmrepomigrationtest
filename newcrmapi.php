@@ -481,6 +481,9 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                         }
                     }
 
+                    // Converting pickup_appointment_city_c to primary_address_city because leads dosen't contain pickup_appointment_city_c field
+                    ($k == 'pickup_appointment_city_c') ? $k='primary_address_city': "";
+
                     // Field Mapping with new schema
 
                     ($k == 'source_type') ? $k='source_type_c': "";

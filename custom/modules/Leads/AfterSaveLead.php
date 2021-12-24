@@ -67,7 +67,7 @@ class AfterSaveLead
 		$phone_mobile = $bean->phone_mobile;
 		$loan_amount_c = isset($bean->loan_amount_c) ? $bean->loan_amount_c : "";
 		$postalcode = $bean->primary_address_postalcode;
-		$city = $bean->pickup_appointment_city_c;
+		$city = $bean->primary_address_city;
 		$street = $bean->primary_address_street;
 		$digital_c = strtolower($bean->digital_c);
 		$pickup_appointment_date_time_c = isset($_REQUEST['pickup_appointment_date_time_c'])?$_REQUEST['pickup_appointment_date_time_c']:"" ;
