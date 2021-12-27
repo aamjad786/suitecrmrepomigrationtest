@@ -67,7 +67,9 @@ class BeforeSaveLead {
 
 		$bean->primary_address_city = strtoupper($bean->primary_address_city);
 
-		$bean->pickup_appointment_city_c = strtoupper($bean->pickup_appointment_city_c);		
+		if(isset($bean->pickup_appointment_city_c)){
+			$bean->pickup_appointment_city_c = strtoupper($bean->pickup_appointment_city_c);		
+		}
 
 		$cities = array(
             'BENGALURU' => 'BANGALORE',
@@ -80,8 +82,8 @@ class BeforeSaveLead {
         if (array_key_exists($bean->primary_address_city, $cities)) {
             $bean->primary_address_city = $cities[$bean->primary_address_city];
         }
-
-		if (array_key_exists($bean->pickup_appointment_city_c, $cities)) {
+		
+		if (isset($bean->pickup_appointment_city_c) && array_key_exists($bean->pickup_appointment_city_c, $cities)) {
             $bean->pickup_appointment_city_c = $cities[$bean->pickup_appointment_city_c];
         }
 
