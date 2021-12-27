@@ -277,7 +277,7 @@ array (
             'name' => 'description',
             'nl2br' => true,
           ),
-          1 => '',
+          
         ),
         6 => 
         array (
@@ -286,7 +286,7 @@ array (
             'name' => 'resolution',
             'nl2br' => true,
           ),
-          1 => '',
+          
         ),
         7 => 
         array (
@@ -296,12 +296,7 @@ array (
             'studio' => 'visible',
             'label' => 'LBL_UPDATE_TEXT',
           ),
-          1 => 
-          array (
-            'name' => 'internal',
-            'studio' => 'visible',
-            'label' => 'LBL_INTERNAL',
-          ),
+          1 => '',
         ),
         8 => 
         array (
@@ -310,13 +305,14 @@ array (
             'name' => 'case_update_form',
             'studio' => 'visible',
           ),
-          1 => '',
+          1 => 
+          array (
+            'name' => 'internal',
+            'studio' => 'visible',
+            'label' => 'LBL_INTERNAL',
+          ),
         ),
-        9 => 
-        array (
-          0 => '',
-          1 => '',
-        ),
+        
       ),
     ),
   ),
