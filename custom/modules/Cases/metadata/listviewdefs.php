@@ -63,7 +63,7 @@ array (
     'label' => 'LBL_DATE_ENTERED',
     'default' => true,
   ),
-  'EMAIL_SOURCE' => 
+  'EMAIL_SOURCE_C' => 
   array (
     'type' => 'varchar',
     'label' => 'LBL_EMAIL_SOURCE',

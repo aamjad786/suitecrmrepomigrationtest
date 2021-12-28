@@ -1,5 +1,5 @@
 <?php
-// created: 2021-09-21 05:47:06
+// created: 2021-12-28 13:46:24
 $mod_strings = array (
   'LBL_CATEGORY' => 'Category',
   'LBL_SUB_CATEOGRY' => 'Sub Cateogry',
@@ -49,4 +49,5 @@ $mod_strings = array (
   'LBL_PROCESSOR_NAME' => 'Processor Name',
   'LBL_SUMMARY' => 'Summary:',
   'LBL_RESOLUTION' => 'Resolution:',
+  'LBL_CONTACTS_SUBPANEL_TITLE' => 'Contacts',
 );

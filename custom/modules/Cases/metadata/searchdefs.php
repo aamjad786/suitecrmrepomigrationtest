@@ -257,13 +257,13 @@ array (
         'default' => true,
         'name' => 'description',
       ),
-      'email_source' => 
+      'email_source_c' => 
       array (
         'type' => 'enum',
         'label' => 'LBL_EMAIL_SOURCE',
         'width' => '10%',
         'default' => true,
-        'name' => 'email_source',
+        'name' => 'email_source_c',
       ),
     ),
   ),
