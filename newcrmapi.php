@@ -1086,7 +1086,13 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                     if (!empty($rawData->reject_reason)) $oppBean->reject_reason_c = $rawData->reject_reason;
                     if (!empty($rawData->is_eligible)) $oppBean->is_eligible_c = $rawData->is_eligible;
                     if (!empty($rawData->alliance_opportunities_status)) $oppBean->alliance_opp_status_c = $rawData->alliance_opportunities_status;
-                   
+                    if (!empty($rawData->eos_disposition_c)) $oppBean->eos_disposition_c = $rawData->eos_disposition_c;
+                    if (!empty($rawData->eos_sub_disposition_c)) $oppBean->eos_sub_disposition_c = $rawData->eos_sub_disposition_c;
+                    if (!empty($rawData->eos_opportunity_status_c)) $oppBean->eos_opportunity_status_c = $rawData->eos_opportunity_status_c;
+                    if (!empty($rawData->eos_opportunity_sub_status_c)) $oppBean->eos_opportunity_sub_status_c = $rawData->eos_opportunity_sub_status_c;
+                    if (!empty($rawData->eos_remark_c)) $oppBean->eos_remark_c = $rawData->eos_remark_c;
+                    if (!empty($rawData->date_updated_EOS)) $oppBean->date_updated_by_eos_c = $rawData->date_updated_EOS;
+                    if (!empty($rawData->user_id)) $oppBean->assigned_user_id = $rawData->user_id;
                     $oppId=$oppBean->save();
                     
                     if(!empty($oppId)){
