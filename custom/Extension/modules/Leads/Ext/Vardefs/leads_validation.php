@@ -161,13 +161,29 @@ $dictionary['Lead']['fields']['business_vintage_c']['validation'] = array (
     }',
 );
 
-$dictionary['Lead']['fields']['business_vintage_years_c']['validation'] = array (
+// Validation Removed for Business Year(Estabilished)	business_vintage_years_c
+
+// $dictionary['Lead']['fields']['business_vintage_years_c']['validation'] = array (
+//     'type' => 'callback',
+//     'callback' => 'function(formname, nameIndex) {
+//         var regEx=/^(18|19|20)\d{2}$/;
+//         var value=$("#" + nameIndex).val();
+//         if (value != "" && regEx.test(value)== false) {
+//             add_error_style(formname, nameIndex, "Please Enter Valid Year!");
+//             return false;
+//         };
+//         return true;
+//     }',
+// );
+
+
+$dictionary['Lead']['fields']['phone_mobile']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        var regEx=/^(18|19|20)\d{2}$/;
+        var regEx=/^[0-9]{10}$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
-            add_error_style(formname, nameIndex, "Please Enter Valid Year!");
+            add_error_style(formname, nameIndex, "Please Enter Valid 10 Digit Mobile Number!");
             return false;
         };
         return true;
