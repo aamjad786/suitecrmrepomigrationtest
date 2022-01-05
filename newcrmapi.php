@@ -194,16 +194,17 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             );
         }
 
+// Validation Removed for Business Year(Estabilished)	business_vintage_years_c
 
-        if(!empty($rawData->business_vintage_years_c) && !preg_match($business_vintage_years_c_regEx,$rawData->business_vintage_years_c)){
+        // if(!empty($rawData->business_vintage_years_c) && !preg_match($business_vintage_years_c_regEx,$rawData->business_vintage_years_c)){
             
-            $isDataValid=false;
+        //     $isDataValid=false;
             
-            $msg = array(
-                'Success' => false,
-                'Message' => 'Invalid Business Vintage Year!'
-            );
-        }
+        //     $msg = array(
+        //         'Success' => false,
+        //         'Message' => 'Invalid Business Vintage Year!'
+        //     );
+        // }
 
 
         if(!empty($rawData->sub_source_c) && !preg_match($sub_source_c_regEx,$rawData->sub_source_c)){
@@ -639,7 +640,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         if (!isset($lead_id) or empty($lead_id)) {
             $msg = array(
                 'Success' => false,
-                'Message' => 'Mandatory field(s) are missing'
+                'Message' => 'Mandatory field(s) are missing. leads_id is empty'
             );
         }
         else if(!empty($rawData->disposition_c) &&  ($rawData->disposition_c =='interested' || $rawData->disposition_c=='pick_up') && empty($rawData->pickup_appointment_city_c))
@@ -727,7 +728,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         if (empty($user_id) && empty($user) && empty($lead_id)) {
             $msg = array(
                 'Success' => false,
-                'Message' => 'Mandatory field(s) are missing'
+                'Message' => 'Mandatory field(s) are missing. Mandatory fields are user_id,user and lead_id'
             );
         }
         else {
@@ -1164,7 +1165,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         if (empty($user_id) && empty($user) && empty($opp_id) && empty($opp_id_list)) {
             $msg = array(
                 'Success' => false,
-                'Message' => 'Mandatory field(s) are missing'
+                'Message' => 'Mandatory field(s) are missing.Mandatory fields user_id,user and opp_id_list'
             );
         }
         else {
@@ -1256,7 +1257,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         if (empty($rawData->name) or empty($rawData->status) or empty($rawData->date_start)) {
             $msg = array(
                 'Success' => false,
-                'Message' => 'Mandatory field(s) are missing'
+                'Message' => 'Mandatory field(s) are missing.Mandatory fields name,status and date_start '
             );
         }
         else {
@@ -1327,7 +1328,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         if (!isset($user_id) or empty($user_id)) {
             $msg = array(
                 'Success' => false,
-                'Message' => 'Mandatory field(s) are missing'
+                'Message' => 'Mandatory field(s) are missing. Empty user_id.'
             );
         }
         else {
@@ -1615,7 +1616,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         if(empty($application_id) && empty($customer_id)){
             $msg = array(
                 'Success' => false,
-                'Message' => 'Mandatory field(s) are missing'
+                'Message' => 'Mandatory field(s) are missing. Mandatory Fields are application_id and customer_id'
             );
         }
         else if(!empty($customer_id))
