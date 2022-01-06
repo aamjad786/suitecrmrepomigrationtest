@@ -176,7 +176,7 @@ class CasesViewDetail extends SugarView {
             //Getting Service manager through Service Manager module
         
         
-        var newRow = $('<tr><td width="12.5%" scope="col">Service Manager:</td> <td> <span id="case_service_manager"></span></td><td></td><td><?php global $current_user; 
+        var newRow = $('<div class="row detail-view-row"><div class="col-xs-12 col-sm-6 detail-view-row-item"><div class="col-xs-12 col-sm-4 label col-1-label">Service Manager:</div><div class="col-xs-12 col-sm-8 detail-view-field"><span class="sugar_field" id="case_service_manager"></span></div><?php global $current_user; 
         $env = getenv('SCRM_ENVIRONMENT');
         $category = $this->bean->case_subcategory_c_new_c;
         $isApproved = $this->bean->fetched_row['case_category_approval_c'];
@@ -192,7 +192,7 @@ class CasesViewDetail extends SugarView {
         if(in_array(strtolower($current_user->user_name),$checker_c)){ ?> <button id="approve_category" style="padding: 5px 8px 5px 8px;" class="utilsLink" data-user_id="<?php echo $current_user->id; ?>" data-id="<?php 
            echo $this->bean->id; ?>">Approve New Category</button>&nbsp;&nbsp;&nbsp;<button id="reject_category" style="padding: 5px 8px 5px 8px;" class="utilsLink" data-id="<?php 
            echo $this->bean->id; ?>">Reject New Category</button><?php }
-        } ?></td></tr>');
+        } ?></div></div>');
       <?php   
         
         if(in_array(strtolower($current_user->user_name),$checker_c)){ ?>
@@ -202,7 +202,7 @@ class CasesViewDetail extends SugarView {
             });
        <?php  } ?>
         
-            newRow.insertAfter($('#LBL_EDITVIEW_PANEL1 tbody tr:nth(-1)'));
+            newRow.insertAfter($('#tab-content-0').children().last());
 
             $(document).on('click','#approve_category',function(){
                 if($('#checker_comments').val()==''){

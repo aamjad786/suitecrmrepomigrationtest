@@ -9,7 +9,7 @@ $dictionary['Case']['fields']['merchant_establisment_c']['validation'] = array (
         var value=$("#" + nameIndex).val();
         //console.log("field value"+value);
         if (regEx.test(value)== false) {
-            add_error_style(formname, nameIndex, "Numbers are not allowed.");
+            add_error_style(formname, nameIndex, "Invalid value.Please enter correct value");
             return false;
         };
         return true;

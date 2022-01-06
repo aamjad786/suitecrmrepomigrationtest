@@ -146,6 +146,7 @@ class AfterSaveLead
 		$opportunity_bean->eos_opportunity_status_c=$bean->eos_opportunity_status_c;
 		$opportunity_bean->eos_sub_status_c=$bean->eos_sub_status_c;
 		$opportunity_bean->eos_remark_c=$bean->eos_remark_c;
+		$opportunity_bean->opportunity_status_c=$bean->eos_opportunity_status_c;
 	
 		$opportunity_bean->save();
 
