@@ -122,7 +122,7 @@ class SMAcc_SM_AccountViewDetail extends SugarView {
             </script>
 <?php  }
      echo '<br><style>body .navbar .navbar-inverse .navbar-fixed-top{margin-top: -54px;}</style>';
-     echo'<iframe style="margin-top: 13px;margin-left: -279px;" class= "test" id="mapDisplayIframe" src="index.php?module=Cases&amp;action=customer_application_profile&amp;applicationID='.$this->bean->app_id.'"
+     echo'<iframe class= "test" id="mapDisplayIframe" src="index.php?module=Cases&amp;action=customer_application_profile&amp;applicationID='.$this->bean->app_id.'"
       width="100%" height="800" frameborder="0" marginheight="0" marginwidth="0"
       scrolling="auto"><p>Sorry, your browser does not support iframes.</p></iframe>';
     }
