@@ -905,7 +905,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             $logger->log('debug', 'Dsa_leads Lead Fetch Query: '.$query);
             $logger->log('debug', 'Dsa_leads Lead Fetch Query: '.var_export($res,true));
                  while($row = $db->fetchByAssoc($res)){                
-                     $output = $row;
+                     $output[] = $row;
                      $logger->log('debug', 'Dsa_leads Output inside while: '.$row);
                 }
 
