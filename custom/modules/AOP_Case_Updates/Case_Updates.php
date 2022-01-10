@@ -135,7 +135,7 @@ function caseUpdates(record,user_id){
             if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 showSubPanel('history', null, true);
                 //Reload the case updates stream and history panels
-                $("#detailpanel_3").load("index.php?module=Cases&action=DetailView&record="+record + " #detailpanel_3", function(){
+                $("#top-panel-1").load("index.php?module=Cases&action=DetailView&record="+record + " #top-panel-1", function(){
                     //alert('here');
                     //Collapse all except newest update
                     $('.caseUpdateImage').attr("src",showUpdateImage);
