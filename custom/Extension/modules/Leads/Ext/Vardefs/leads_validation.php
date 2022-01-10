@@ -207,7 +207,7 @@ $dictionary['Lead']['fields']['dsa_code_c']['validation'] = array (
 $dictionary['Lead']['fields']['first_name']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        var regEx=/^[A-Za-z]+$/;
+        var regEx=/^[A-Za-z ]+$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
             add_error_style(formname, nameIndex, "First Name Should Contain Alphabets Only!");
@@ -259,7 +259,7 @@ $dictionary['Lead']['fields']['gst_registration_c']['validation'] = array (
 $dictionary['Lead']['fields']['last_name']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        var regEx=/^[A-Za-z]+$/;
+        var regEx=/^[A-Za-z ]+$/;
         var value=$("#" + nameIndex).val();
         if (value != "" && regEx.test(value)== false) {
             add_error_style(formname, nameIndex, "Last Name Should Contain Alphabets Only!");

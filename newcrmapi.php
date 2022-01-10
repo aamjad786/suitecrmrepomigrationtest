@@ -94,8 +94,8 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         
         $isDataValid=true;
 
-        $first_name_regEx = "/^[A-Za-z]+$/";
-        $last_name_regEx = "/^[A-Za-z]+$/";
+        $first_name_regEx = "/^[A-Za-z ]+$/";
+        $last_name_regEx = "/^[A-Za-z ]+$/";
         $business_vintage_years_c_regEx = "/^(18|19|20)\d{2}$/";
         $sub_source_c_regEx = "/^[a-zA-Z ]*$/";
         $loan_amount_c_regEx = "/^[0-9]*$/";
@@ -122,7 +122,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         $average_settlements_c_regEx="/^[0-9]*$/";
         //  Mandatory Fields 
 
-        if (validate_mobile(trim($rawData->phone_mobile)) != 1) {
+        if (validate_mobile(trim($rawData->phone_mobile)) != 1 or ctype_space($rawData->phone_mobile)) {
             $isDataValid=false;
             $logger->log('error', 'Invalid Mobile Number Present In The Request....!');
             $msg = array(
@@ -131,7 +131,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             );
         }
 
-        if (empty($rawData->lead_source)) {
+        if (empty($rawData->lead_source) or ctype_space($rawData->lead_source)) {
             $isDataValid=false;
             $logger->log('error', 'Mandatory field(s) are missing. Empty Lead Source....!');
             $msg = array(
@@ -140,7 +140,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             );
         }
 
-        if (empty($rawData->first_name)) {
+        if (empty($rawData->first_name) or ctype_space($rawData->first_name)) {
             $isDataValid=false;
             $logger->log('error', 'Mandatory field(s) are missing.Empty First Name....!');
             $msg = array(
@@ -165,6 +165,10 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                 'Success' => false,
                 'Message' => 'Mandatory field(s) are missing. Empty Merchant Name'
             );
+        }else if(ctype_space($rawData->merchant_name_c)){
+            $logger->log('error', 'Merchant Namecontain only spaces...!');
+            
+            $rawData->merchant_name_c="NA";
         }
 
         //  Mandatory Fields END
@@ -184,7 +188,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             );
         }
 
-        if(!empty($rawData->last_name) && !preg_match($last_name_regEx,$rawData->last_name)){
+        if(!ctype_space($rawData->last_name) && !empty($rawData->last_name) && !preg_match($last_name_regEx,$rawData->last_name)){
             
             $isDataValid=false;
             
@@ -192,6 +196,12 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                 'Success' => false,
                 'Message' => 'Last Name Should Contain Alphabets Only!'
             );
+        }else if(ctype_space($rawData->last_name)){
+            
+            $logger->log('error', 'Last name contain only spaces...!');
+            
+            $rawData->last_name="NA";
+
         }
 
 // Validation Removed for Business Year(Estabilished)	business_vintage_years_c
@@ -470,7 +480,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                 $lead = new Lead();
 
                 foreach ($rawData as $k => $v) {
-
+                    $v=trim($v);
                     if ($k == 'Description') $v = htmlentities($v);
 
                     if ($k == 'assigned_user_id') {

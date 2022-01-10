@@ -247,6 +247,46 @@ array (
             'label' => 'Indicative Deal Amount',
           ),
         ),
+        14 => 
+        array (
+          0 => 
+          array (
+            'name' => 'eos_disposition_c',
+            'studio' => 'visible',
+            'label' => 'EOS DISPOSITION',
+          ),
+          1 => 
+          array (
+            'name' => 'eos_sub_disposition_c',
+            'studio' => 'visible',
+            'label' => 'EOS SUB-DISPOSITION',
+          ),
+        ),
+        15 => 
+        array (
+          0 => 
+          array (
+            'name' => 'eos_opportunity_status_c',
+            'studio' => 'visible',
+            'label' => 'EOS OPPORTUNITY STATUS',
+          ),
+          1 => 
+          array (
+            'name' => 'eos_sub_status_c',
+            'studio' => 'visible',
+            'label' => 'EOS OPPORTUNITY SUB-STATUS',
+          ),
+        ),
+        16 => 
+        array (
+          0 => 
+          array (
+            'name' => 'eos_remark_c',
+            'studio' => 'visible',
+            'label' => 'LBL_EOS_REMARK_C',
+          ),
+          1 => '',
+        ),
       ),
       'LBL_EDITVIEW_PANEL3' => 
       array (
