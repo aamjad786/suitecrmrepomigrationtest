@@ -35,6 +35,6 @@ DISP11;
 						document.getElementById('detailpanel_4').className += ' expanded';
 					</script>
 				</h4>
-				<table border='0' cellpadding='0' cellspacing='0' width='100%' class='panelContainer list view table default footable-loaded footable'>
+				<table border='0' cellpadding='0' cellspacing='0' width='100%' >
 			";		
 ?>
