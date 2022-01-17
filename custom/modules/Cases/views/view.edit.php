@@ -1048,7 +1048,7 @@ EOQ1;
                     if(env =='prod'){
                         maker =['ng478','ng866','ng887', 'ng2029','ng2054'];
                     } else {
-                        maker = ['ng1273','ng1274', 'nucsoft4'];
+                        maker = ['ng2155', 'ng887', 'ng2223', 'ng2071','ng1273','ng1274', 'nucsoft4'];
                     }
                   
                     var username = "<?php echo strtolower($GLOBALS['current_user']->user_name); ?>";
@@ -1094,7 +1094,7 @@ EOQ1;
                     if(env =='prod'){
                         maker = ['ng478','ng866','ng887', 'ng2029','ng2054'];
                     } else {
-                        maker = ['ng1273','ng1274','nucsoft4'];
+                        maker = ['ng2155', 'ng887', 'ng2223', 'ng2071','ng1273','ng1274','nucsoft4'];
                     }
                     var cat="<?php echo $this->bean->case_category_c?>";
                     var sub_cat="<?php echo $this->bean->case_subcategory_c?>";
@@ -1131,7 +1131,7 @@ EOQ1;
                     if(env =='prod'){
                         maker =['ng478','ng866','ng887', 'ng2029','ng2054'];
                     } else {
-                        maker = ['ng1273','ng1274','nucsoft1','nucsoft4'];
+                        maker = ['ng2155', 'ng887', 'ng2223', 'ng2071','ng1273','ng1274','nucsoft4'];
                     }
                     var username = "<?php echo strtolower($GLOBALS['current_user']->user_name); ?>";
                     if(jQuery.inArray(username, maker) != -1) {
