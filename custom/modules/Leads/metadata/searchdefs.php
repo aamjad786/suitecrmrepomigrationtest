@@ -161,6 +161,15 @@ array (
         'width' => '10%',
         'name' => 'dsa_code_c',
       ),
+      'eos_opportunity_status_c' => 
+      array (
+        'type' => 'enum',
+        'default' => true,
+        'studio' => 'visible',
+        'label' => 'EOS OPPORTUNITY STATUS',
+        'width' => '10%',
+        'name' => 'eos_opportunity_status_c',
+      ),
     ),
   ),
   'templateMeta' => 
@@ -174,4 +183,5 @@ array (
     ),
   ),
 );
+;
 ?>

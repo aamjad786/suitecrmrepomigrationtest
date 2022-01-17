@@ -488,7 +488,7 @@ array (
           ),
           1 => 
           array (
-            'name' => 'digital',
+            'name' => 'digital_c',
             'label' => 'LBL_DIGITAL',
           ),
         ),

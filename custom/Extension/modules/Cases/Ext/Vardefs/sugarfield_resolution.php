@@ -8,7 +8,7 @@ $dictionary['Case']['fields']['resolution']['audited']=true;
 $dictionary['Case']['fields']['resolution']['validation'] = array (
     'type' => 'callback',
     'callback' => 'function(formname, nameIndex) {
-        var regEx=/^[ A-Za-z0-9_.()@]*$/;
+        var regEx=/^[ A-Za-z0-9_.()@\\/%:,"!#$&-–\n\t]*$/;
         var value=$("#" + nameIndex).val();
         //console.log("field value"+value);
         if (regEx.test(value)== false) {

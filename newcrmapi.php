@@ -94,8 +94,8 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         
         $isDataValid=true;
 
-        $first_name_regEx = "/^[A-Za-z]+$/";
-        $last_name_regEx = "/^[A-Za-z]+$/";
+        $first_name_regEx = "/^[A-Za-z ]+$/";
+        $last_name_regEx = "/^[A-Za-z ]+$/";
         $business_vintage_years_c_regEx = "/^(18|19|20)\d{2}$/";
         $sub_source_c_regEx = "/^[a-zA-Z ]*$/";
         $loan_amount_c_regEx = "/^[0-9]*$/";
@@ -122,7 +122,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         $average_settlements_c_regEx="/^[0-9]*$/";
         //  Mandatory Fields 
 
-        if (validate_mobile(trim($rawData->phone_mobile)) != 1) {
+        if (validate_mobile(trim($rawData->phone_mobile)) != 1 or ctype_space($rawData->phone_mobile)) {
             $isDataValid=false;
             $logger->log('error', 'Invalid Mobile Number Present In The Request....!');
             $msg = array(
@@ -131,7 +131,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             );
         }
 
-        if (empty($rawData->lead_source)) {
+        if (empty($rawData->lead_source) or ctype_space($rawData->lead_source)) {
             $isDataValid=false;
             $logger->log('error', 'Mandatory field(s) are missing. Empty Lead Source....!');
             $msg = array(
@@ -140,7 +140,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             );
         }
 
-        if (empty($rawData->first_name)) {
+        if (empty($rawData->first_name) or ctype_space($rawData->first_name)) {
             $isDataValid=false;
             $logger->log('error', 'Mandatory field(s) are missing.Empty First Name....!');
             $msg = array(
@@ -165,6 +165,10 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                 'Success' => false,
                 'Message' => 'Mandatory field(s) are missing. Empty Merchant Name'
             );
+        }else if(ctype_space($rawData->merchant_name_c)){
+            $logger->log('error', 'Merchant Namecontain only spaces...!');
+            
+            $rawData->merchant_name_c="NA";
         }
 
         //  Mandatory Fields END
@@ -184,7 +188,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             );
         }
 
-        if(!empty($rawData->last_name) && !preg_match($last_name_regEx,$rawData->last_name)){
+        if(!ctype_space($rawData->last_name) && !empty($rawData->last_name) && !preg_match($last_name_regEx,$rawData->last_name)){
             
             $isDataValid=false;
             
@@ -192,18 +196,25 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                 'Success' => false,
                 'Message' => 'Last Name Should Contain Alphabets Only!'
             );
+        }else if(ctype_space($rawData->last_name)){
+            
+            $logger->log('error', 'Last name contain only spaces...!');
+            
+            $rawData->last_name="NA";
+
         }
 
+// Validation Removed for Business Year(Estabilished)	business_vintage_years_c
 
-        if(!empty($rawData->business_vintage_years_c) && !preg_match($business_vintage_years_c_regEx,$rawData->business_vintage_years_c)){
+        // if(!empty($rawData->business_vintage_years_c) && !preg_match($business_vintage_years_c_regEx,$rawData->business_vintage_years_c)){
             
-            $isDataValid=false;
+        //     $isDataValid=false;
             
-            $msg = array(
-                'Success' => false,
-                'Message' => 'Invalid Business Vintage Year!'
-            );
-        }
+        //     $msg = array(
+        //         'Success' => false,
+        //         'Message' => 'Invalid Business Vintage Year!'
+        //     );
+        // }
 
 
         if(!empty($rawData->sub_source_c) && !preg_match($sub_source_c_regEx,$rawData->sub_source_c)){
@@ -469,7 +480,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                 $lead = new Lead();
 
                 foreach ($rawData as $k => $v) {
-
+                    $v=trim($v);
                     if ($k == 'Description') $v = htmlentities($v);
 
                     if ($k == 'assigned_user_id') {
@@ -639,7 +650,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         if (!isset($lead_id) or empty($lead_id)) {
             $msg = array(
                 'Success' => false,
-                'Message' => 'Mandatory field(s) are missing'
+                'Message' => 'Mandatory field(s) are missing. leads_id is empty'
             );
         }
         else if(!empty($rawData->disposition_c) &&  ($rawData->disposition_c =='interested' || $rawData->disposition_c=='pick_up') && empty($rawData->pickup_appointment_city_c))
@@ -727,7 +738,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         if (empty($user_id) && empty($user) && empty($lead_id)) {
             $msg = array(
                 'Success' => false,
-                'Message' => 'Mandatory field(s) are missing'
+                'Message' => 'Mandatory field(s) are missing. Mandatory fields are user_id,user and lead_id'
             );
         }
         else {
@@ -904,7 +915,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
             $logger->log('debug', 'Dsa_leads Lead Fetch Query: '.$query);
             $logger->log('debug', 'Dsa_leads Lead Fetch Query: '.var_export($res,true));
                  while($row = $db->fetchByAssoc($res)){                
-                     $output = $row;
+                     $output[] = $row;
                      $logger->log('debug', 'Dsa_leads Output inside while: '.$row);
                 }
 
@@ -1086,7 +1097,13 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
                     if (!empty($rawData->reject_reason)) $oppBean->reject_reason_c = $rawData->reject_reason;
                     if (!empty($rawData->is_eligible)) $oppBean->is_eligible_c = $rawData->is_eligible;
                     if (!empty($rawData->alliance_opportunities_status)) $oppBean->alliance_opp_status_c = $rawData->alliance_opportunities_status;
-                   
+                    if (!empty($rawData->eos_disposition_c)) $oppBean->eos_disposition_c = $rawData->eos_disposition_c;
+                    if (!empty($rawData->eos_sub_disposition_c)) $oppBean->eos_sub_disposition_c = $rawData->eos_sub_disposition_c;
+                    if (!empty($rawData->eos_opportunity_status_c)) $oppBean->eos_opportunity_status_c = $rawData->eos_opportunity_status_c;
+                    if (!empty($rawData->eos_opportunity_sub_status_c)) $oppBean->eos_opportunity_sub_status_c = $rawData->eos_opportunity_sub_status_c;
+                    if (!empty($rawData->eos_remark_c)) $oppBean->eos_remark_c = $rawData->eos_remark_c;
+                    if (!empty($rawData->date_updated_EOS)) $oppBean->date_updated_by_eos_c = $rawData->date_updated_EOS;
+                    if (!empty($rawData->user_id)) $oppBean->assigned_user_id = $rawData->user_id;
                     $oppId=$oppBean->save();
                     
                     if(!empty($oppId)){
@@ -1158,7 +1175,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         if (empty($user_id) && empty($user) && empty($opp_id) && empty($opp_id_list)) {
             $msg = array(
                 'Success' => false,
-                'Message' => 'Mandatory field(s) are missing'
+                'Message' => 'Mandatory field(s) are missing.Mandatory fields user_id,user and opp_id_list'
             );
         }
         else {
@@ -1250,7 +1267,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         if (empty($rawData->name) or empty($rawData->status) or empty($rawData->date_start)) {
             $msg = array(
                 'Success' => false,
-                'Message' => 'Mandatory field(s) are missing'
+                'Message' => 'Mandatory field(s) are missing.Mandatory fields name,status and date_start '
             );
         }
         else {
@@ -1321,7 +1338,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         if (!isset($user_id) or empty($user_id)) {
             $msg = array(
                 'Success' => false,
-                'Message' => 'Mandatory field(s) are missing'
+                'Message' => 'Mandatory field(s) are missing. Empty user_id.'
             );
         }
         else {
@@ -1609,7 +1626,7 @@ if ($_SERVER['HTTP_AUTHORIZEDAPPLICATION'] == $scrm_key && in_array($_SERVER['HT
         if(empty($application_id) && empty($customer_id)){
             $msg = array(
                 'Success' => false,
-                'Message' => 'Mandatory field(s) are missing'
+                'Message' => 'Mandatory field(s) are missing. Mandatory Fields are application_id and customer_id'
             );
         }
         else if(!empty($customer_id))
