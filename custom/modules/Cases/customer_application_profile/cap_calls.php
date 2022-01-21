@@ -24,7 +24,7 @@ DISP11;
         }
 		echo "
 			<div>
-				<div id='detailpanel_4' class='detail view  detail508 expanded'>
+				<div id='detailpanel_4' class=list view  list508 expanded>
 				<h4>
 					<a href='javascript:void(0)' class='collapseLink' onclick='collapsePanel(4);'>
 					<img border='0' id='detailpanel_4_img_hide' src='themes/SuiteR/images/basic_search.gif?v=s4x4C4dlTyXYwTkkd0QXjA'></a>
@@ -35,6 +35,6 @@ DISP11;
 						document.getElementById('detailpanel_4').className += ' expanded';
 					</script>
 				</h4>
-				<table border='0' cellpadding='0' cellspacing='0' width='100%' >
+				<table border='0' cellpadding='0' cellspacing='0' width='100%' class='panelContainer list view table default'>
 			";		
 ?>

@@ -9,72 +9,72 @@ if(!empty($app_id)) {
 			if ($items){
 				echo $HTML = <<<DISP5
 					<th scope='col' data-hide="phone" class="sorting_asc" tabindex="0" aria-controls="output" rowspan="1" colspan="1" aria-sort="ascending"  style="width: 143.889px;">
-						<div style='white-space: normal;'width='100%' align='left'>
+						<div style='white-space: normal;color:black;'width='100%' align='left'>
 		                		Number
 			                	&nbsp;&nbsp;
 						</div>
 					</th>
 					<th scope='col' data-toggle="true" class="sorting_asc" tabindex="0" aria-controls="output" rowspan="1" colspan="1" aria-sort="ascending"  style="width: 143.889px;">
-						<div style='white-space: normal;' align='left'>
+						<div style='white-space: normal;color:black;' align='left'>
 		                        Subject
 								&nbsp;&nbsp;
 						</div>
 					</th>
 					<th scope='col' data-hide="phone" class="sorting_asc" tabindex="0" aria-controls="output" rowspan="1" colspan="1" aria-sort="ascending"  style="width: 143.889px;">
-						<div style='white-space: normal;'width='100%' align='left'>
+						<div style='white-space: normal;color:black;'width='100%' align='left'>
 			                	Establishment
 								&nbsp;&nbsp;
 						</div>
 					</th>
 					
 				    <th scope='col' data-hide="phone,phonelandscape" class="sorting_asc" tabindex="0" aria-controls="output" rowspan="1" colspan="1" aria-sort="ascending"  style="width: 143.889px;">					
-				    	<div style='white-space: normal;'width='100%' align='left'>
+				    	<div style='white-space: normal;color:black;'width='100%' align='left'>
 							Name
 							&nbsp;&nbsp;
 						</div>
 					</th>
 
 					<th scope='col' data-hide="phone,phonelandscape,tablet" class="sorting_asc" tabindex="0" aria-controls="output" rowspan="1" colspan="1" aria-sort="ascending"  style="width: 143.889px;">					
-						<div style='white-space: normal;'width='100%' align='left'>
+						<div style='white-space: normal;color:black;'width='100%' align='left'>
 								Priority
 								&nbsp;&nbsp;
 						</div>
 					</th>
 
 					<th scope='col' data-hide="phone,phonelandscape,tablet" class="sorting_asc" tabindex="0" aria-controls="output" rowspan="1" colspan="1" aria-sort="ascending"  style="width: 143.889px;">					
-						<div style='white-space: normal;'width='100%' align='left'>
+						<div style='white-space: normal;color:black;'width='100%' align='left'>
 								Status
 								&nbsp;&nbsp;
 						</div>
 					</th>
 
 					<th scope='col' data-hide="phone,phonelandscape,tablet" class="sorting_asc" tabindex="0" aria-controls="output" rowspan="1" colspan="1" aria-sort="ascending"  style="width: 143.889px;">	
-						<div style='white-space: normal;'width='100%' align='left'>
+						<div style='white-space: normal;color:black;'width='100%' align='left'>
 								Assigned to
 								&nbsp;&nbsp;
 						</div>
 					</th>
 
 					<th scope='col' data-hide="phone,phonelandscape,tablet" class="sorting_asc" tabindex="0" aria-controls="output" rowspan="1" colspan="1" aria-sort="ascending"  style="width: 143.889px;">					
-						<div style='white-space: normal;'width='100%' align='left'>
+						<div style='white-space: normal;color:black;'width='100%' align='left'>
 								Date Created
 								&nbsp;&nbsp;
 							</th>
 
 					<th scope='col' data-hide="phone,phonelandscape,tablet" class="sorting_asc" tabindex="0" aria-controls="output" rowspan="1" colspan="1" aria-sort="ascending"  style="width: 143.889px;">
-						<div style='white-space: normal;'width='100%' align='left'>
+						<div style='white-space: normal;color:black;'width='100%' align='left'>
 								Complainant
 								&nbsp;&nbsp;
 						</div>
 					</th>
 					<th scope='col' data-hide="phone,phonelandscape,tablet" class="sorting_asc" tabindex="0" aria-controls="output" rowspan="1" colspan="1" aria-sort="ascending"  style="width: 143.889px;">					
-						<div style='white-space: normal;'width='100%' align='left'>
+						<div style='white-space: normal;color:black;'width='100%' align='left'>
 								Created By
 								&nbsp;&nbsp;
 						</div>
 					</th>
 					<th scope='col' data-hide="phone,phonelandscape,tablet" class="sorting_asc" tabindex="0" aria-controls="output" rowspan="1" colspan="1" aria-sort="ascending"  style="width: 143.889px;">					
-						<div style='white-space: normal;'width='100%' align='left'>
+						<div style='white-space: normal;color:black;'width='100%' align='left'>
 								Modified By Name
 								&nbsp;&nbsp;
 						</div>
