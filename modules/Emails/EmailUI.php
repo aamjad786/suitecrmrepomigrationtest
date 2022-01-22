@@ -814,7 +814,7 @@ HTML;
         foreach ($peopleTables as $table) {
             $module = ucfirst($table);
             $class = substr($module, 0, strlen($module) - 1);
-            require_once("modules/{$module}/{$class}.php");
+            $table=='leads'?require_once("custom/modules/{$module}/{$class}.php"):require_once("modules/{$module}/{$class}.php");
             $person = new $class();
 
             if (!$person->ACLAccess('list')) {
